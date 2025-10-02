@@ -23,8 +23,8 @@ export const TOOLTIPS: TooltipConfig[] = [
   },
   {
     id: 'ai_coach',
-    title: 'Meet Your AI Coach',
-    description: 'Get personalized task suggestions, motivation, and strategies tailored to your needs.',
+    title: 'Meet Nexa',
+    description: 'Your AI coach provides personalized task suggestions, motivation, and strategies tailored to your needs.',
     targetFeature: 'coach',
     priority: 3,
     showAfterStep: 'first_task_complete',

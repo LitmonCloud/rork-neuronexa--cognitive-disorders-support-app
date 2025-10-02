@@ -97,7 +97,7 @@ export default function CoachScreen() {
 
   useEffect(() => {
     if (messages.length === 0) {
-      const welcomeContent = `Hi! I'm your AI Coach. I'm here to help you manage tasks, stay motivated, and support your cognitive wellness journey.\\n\\nI can help you:\\n• Create and organize tasks\\n• Break down complex tasks into simple steps\\n• Track your progress\\n• Provide encouragement and support\\n• Adjust task priorities\\n\\nWhat would you like to work on today?`;
+      const welcomeContent = `Hi! I'm Nexa, your AI Coach. I'm here to help you manage tasks, stay motivated, and support your cognitive wellness journey.\\n\\nI can help you:\\n• Create and organize tasks\\n• Break down complex tasks into simple steps\\n• Track your progress\\n• Provide encouragement and support\\n• Adjust task priorities\\n\\nWhat would you like to work on today?`;
       
       sendMessage(welcomeContent);
     }
@@ -445,7 +445,7 @@ export default function CoachScreen() {
 
   return (
     <PremiumGate
-      feature="AI Coach"
+      feature="Nexa"
       featureDescription="Get personalized cognitive support with AI-powered task management, intelligent breakdowns, and motivational guidance tailored to your needs."
     >
     <KeyboardAvoidingView
@@ -459,9 +459,9 @@ export default function CoachScreen() {
             <Sparkles size={24} color={colors.primary} />
           </View>
           <View>
-            <Text style={[styles.headerTitle, { fontSize: 24 * textSize }]}>AI Coach</Text>
+            <Text style={[styles.headerTitle, { fontSize: 24 * textSize }]}>Nexa</Text>
             <Text style={[styles.headerSubtitle, { fontSize: 14 * textSize }]}>
-              Your personal cognitive support assistant
+              Your AI cognitive support coach
             </Text>
           </View>
         </View>

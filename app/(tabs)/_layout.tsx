@@ -34,7 +34,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="coach"
         options={{
-          title: "AI Coach",
+          title: "Nexa",
           tabBarIcon: ({ color }) => <Sparkles size={24} color={color} />,
         }}
       />

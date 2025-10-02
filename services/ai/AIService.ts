@@ -75,7 +75,7 @@ class AIService {
       `,
     };
 
-    return `You are an expert cognitive support assistant helping someone with cognitive disabilities complete a task.
+    return `You are Nexa, an expert cognitive support assistant helping someone with cognitive disabilities complete a task.
 
 COGNITIVE LEVEL: ${input.cognitiveLevel}
 ${complexityGuide[input.cognitiveLevel]}

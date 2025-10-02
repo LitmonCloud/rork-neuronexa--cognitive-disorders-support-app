@@ -51,8 +51,8 @@ export const ENGAGEMENT_HOOKS: EngagementHook[] = [
   {
     id: 'coach_engaged',
     type: 'achievement',
-    title: 'AI Coach Activated!',
-    description: 'You\'ve discovered your AI coach. Premium unlocks advanced coaching features.',
+    title: 'Nexa Activated!',
+    description: 'You\'ve discovered Nexa, your AI coach. Premium unlocks advanced coaching features.',
     triggerCondition: 'coach_interactions === 1',
     ctaText: 'Explore Premium',
     ctaAction: 'show_paywall',
