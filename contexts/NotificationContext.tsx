@@ -9,7 +9,6 @@ import { AppNotification, NotificationPreferences, NotificationStats, Notificati
 
 const NOTIFICATIONS_KEY = '@neuronexa_notifications';
 const PREFERENCES_KEY = '@neuronexa_notification_preferences';
-const PUSH_TOKEN_KEY = '@neuronexa_push_token';
 
 const DEFAULT_PREFERENCES: NotificationPreferences = {
   enabled: true,
@@ -83,6 +82,11 @@ async function savePreferences(preferences: NotificationPreferences): Promise<No
 }
 
 async function registerForPushNotificationsAsync(): Promise<string | null> {
+  if (Platform.OS === 'web') {
+    console.log('[NotificationContext] Push notifications not supported on web');
+    return null;
+  }
+
   if (!Device.isDevice) {
     console.log('[NotificationContext] Push notifications only work on physical devices');
     return null;
@@ -102,11 +106,6 @@ async function registerForPushNotificationsAsync(): Promise<string | null> {
       return null;
     }
 
-    const tokenData = await Notifications.getExpoPushTokenAsync();
-    
-    const token = tokenData.data;
-    await AsyncStorage.setItem(PUSH_TOKEN_KEY, token);
-    
     if (Platform.OS === 'android') {
       await Notifications.setNotificationChannelAsync('default', {
         name: 'default',
@@ -116,10 +115,10 @@ async function registerForPushNotificationsAsync(): Promise<string | null> {
       });
     }
 
-    console.log('[NotificationContext] Push token:', token);
-    return token;
+    console.log('[NotificationContext] Local notifications enabled');
+    return 'local-only';
   } catch (error) {
-    console.error('[NotificationContext] Error registering for push notifications:', error);
+    console.error('[NotificationContext] Error setting up notifications:', error);
     return null;
   }
 }
@@ -160,7 +159,9 @@ export const [NotificationProvider, useNotifications] = createContextHook(() => 
   const preferences = useMemo(() => preferencesQuery.data || DEFAULT_PREFERENCES, [preferencesQuery.data]);
 
   useEffect(() => {
-    if (preferences.pushNotificationsEnabled && Platform.OS !== 'web') {
+    if (Platform.OS === 'web') return;
+
+    if (preferences.pushNotificationsEnabled) {
       registerForPushNotificationsAsync();
 
       notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
