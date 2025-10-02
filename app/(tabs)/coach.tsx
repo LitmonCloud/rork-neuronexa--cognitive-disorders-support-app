@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTasks } from '@/contexts/TaskContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 import { Sparkles, Send, User, Bot, CheckCircle2, AlertCircle } from 'lucide-react-native';
 import { useRorkAgent, createRorkTool } from '@rork/toolkit-sdk';
 import { z } from 'zod';
@@ -13,6 +14,7 @@ export default function CoachScreen() {
   const { settings } = useAccessibility();
   const { allTasks, addTask, updateTask, completeTask, breakdownTask } = useTasks();
   const { colors } = useTheme();
+  const { profile, learnPreference, recordInteraction, recordHabit } = useUserProfile();
   const insets = useSafeAreaInsets();
   
   const [inputText, setInputText] = useState('');
@@ -31,6 +33,8 @@ export default function CoachScreen() {
           const task = await addTask(input.title, input.description, input.priority);
           if (task) {
             await breakdownTask(task.id);
+            recordInteraction('task_completed', 'positive', { taskId: task.id, source: 'nexa' });
+            learnPreference('task', `creates_${input.priority}_priority_tasks`, 0.3);
           }
           return JSON.stringify({ success: true, taskId: task?.id });
         },
@@ -60,6 +64,8 @@ export default function CoachScreen() {
         }),
         execute(input) {
           completeTask(input.taskId);
+          recordInteraction('task_completed', 'positive', { taskId: input.taskId });
+          learnPreference('motivation', 'responds_to_completion_celebration', 1);
           return JSON.stringify({ success: true });
         },
       }),
@@ -85,10 +91,25 @@ export default function CoachScreen() {
           const completedTasks = allTasks.filter(t => t.status === 'completed').length;
           const totalTasks = allTasks.length;
           
+          recordInteraction('encouragement_received', 'positive', { context: input.context });
+          learnPreference('motivation', 'seeks_encouragement', 0.5);
+          
+          const hour = new Date().getHours();
+          if (hour < 12) {
+            recordHabit('seeks_morning_encouragement');
+          } else if (hour >= 18) {
+            recordHabit('seeks_evening_encouragement');
+          }
+          
           return JSON.stringify({
             completedTasks,
             totalTasks,
             message: `You're doing great! You've completed ${completedTasks} out of ${totalTasks} tasks.`,
+            userProfile: profile ? {
+              name: profile.name,
+              communicationStyle: profile.communicationStyle,
+              favoriteEncouragements: profile.favoriteEncouragements,
+            } : undefined,
           });
         },
       }),
@@ -96,12 +117,17 @@ export default function CoachScreen() {
   });
 
   useEffect(() => {
-    if (messages.length === 0) {
-      const welcomeContent = `Hi! I'm Nexa, your AI Coach. I'm here to help you manage tasks, stay motivated, and support your cognitive wellness journey.\\n\\nI can help you:\\n• Create and organize tasks\\n• Break down complex tasks into simple steps\\n• Track your progress\\n• Provide encouragement and support\\n• Adjust task priorities\\n\\nWhat would you like to work on today?`;
+    if (messages.length === 0 && profile) {
+      const greeting = profile.name ? `Hi ${profile.name}!` : 'Hi!';
+      const personalTouch = profile.interactions.length > 10 
+        ? "It's great to see you again! I've been learning what works best for you." 
+        : "I'm excited to get to know you and learn how I can best support you.";
+      
+      const welcomeContent = `${greeting} I'm Nexa, your personal AI coach. ${personalTouch}\\n\\nI can help you:\\n• Create and organize tasks\\n• Break down complex tasks into simple steps\\n• Track your progress\\n• Provide personalized encouragement\\n• Learn your preferences and adapt to your style\\n\\nWhat would you like to work on today?`;
       
       sendMessage(welcomeContent);
     }
-  }, [messages.length, sendMessage]);
+  }, [messages.length, profile, sendMessage]);
 
   const handleSend = async () => {
     if (!inputText.trim()) return;

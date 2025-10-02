@@ -14,6 +14,7 @@ import { CaregiverProvider } from "@/contexts/CaregiverContext";
 import { FunnelProvider } from "@/contexts/FunnelContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
+import { UserProfileProvider } from "@/contexts/UserProfileContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -75,13 +76,15 @@ export default function RootLayout() {
             <RetentionProvider>
               <AccessibilityProvider>
                 <NotificationProvider>
-                  <CaregiverProvider>
-                    <TaskProvider>
-                      <GestureHandlerRootView>
-                        <RootLayoutNav />
-                      </GestureHandlerRootView>
-                    </TaskProvider>
-                  </CaregiverProvider>
+                  <UserProfileProvider>
+                    <CaregiverProvider>
+                      <TaskProvider>
+                        <GestureHandlerRootView>
+                          <RootLayoutNav />
+                        </GestureHandlerRootView>
+                      </TaskProvider>
+                    </CaregiverProvider>
+                  </UserProfileProvider>
                 </NotificationProvider>
               </AccessibilityProvider>
             </RetentionProvider>

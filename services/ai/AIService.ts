@@ -1,4 +1,5 @@
 import { generateText } from '@rork/toolkit-sdk';
+import { UserProfile } from '@/types/userProfile';
 
 export interface AIProvider {
   name: string;
@@ -13,6 +14,7 @@ export interface TaskBreakdownInput {
   userContext?: {
     disabilities?: string[];
     preferences?: string[];
+    userProfile?: UserProfile;
   };
 }
 
@@ -34,7 +36,65 @@ class AIService {
   private provider: AIProvider | null = null;
 
   async initialize(): Promise<void> {
-    console.log('[AIService] Using Rork Toolkit AI');
+    console.log('[Nexa] AI Coach initialized and ready to help!');
+  }
+
+  private buildUserContext(profile?: UserProfile): string {
+    if (!profile) {
+      return 'You are meeting this person for the first time. Be warm, patient, and observant.';
+    }
+
+    const parts: string[] = [];
+
+    if (profile.name) {
+      parts.push(`You're helping ${profile.name}.`);
+    }
+
+    if (profile.communicationStyle) {
+      const styleGuide = {
+        casual: 'Use a friendly, conversational tone. Be like a supportive friend.',
+        formal: 'Be respectful and professional, but still warm.',
+        encouraging: 'Be enthusiastic and celebrate every win, big or small.',
+        direct: 'Be clear and concise. Get straight to the point.',
+      };
+      parts.push(styleGuide[profile.communicationStyle]);
+    }
+
+    const strongPreferences = profile.preferences
+      .filter(p => p.strength >= 5)
+      .slice(0, 5);
+    
+    if (strongPreferences.length > 0) {
+      parts.push('\nWhat you know about them:');
+      strongPreferences.forEach(p => {
+        parts.push(`- ${p.preference}`);
+      });
+    }
+
+    const strongHabits = profile.habits
+      .filter(h => h.confidence >= 0.6)
+      .slice(0, 3);
+    
+    if (strongHabits.length > 0) {
+      parts.push('\nPatterns you\'ve noticed:');
+      strongHabits.forEach(h => {
+        parts.push(`- ${h.pattern}`);
+      });
+    }
+
+    if (profile.favoriteEncouragements.length > 0) {
+      parts.push(`\nThey respond well to: ${profile.favoriteEncouragements.slice(0, 3).join(', ')}`);
+    }
+
+    if (profile.avoidTopics.length > 0) {
+      parts.push(`\nAvoid mentioning: ${profile.avoidTopics.join(', ')}`);
+    }
+
+    if (profile.motivationTriggers.length > 0) {
+      parts.push(`\nMotivated by: ${profile.motivationTriggers.join(', ')}`);
+    }
+
+    return parts.join('\n');
   }
 
   async generateTaskBreakdown(input: TaskBreakdownInput): Promise<TaskBreakdownOutput> {
@@ -75,7 +135,11 @@ class AIService {
       `,
     };
 
-    return `You are Nexa, an expert cognitive support assistant helping someone with cognitive disabilities complete a task.
+    const userContext = this.buildUserContext(input.userContext?.userProfile);
+
+    return `You are Nexa, a warm, personable AI coach who genuinely cares about helping people with cognitive disabilities. You learn from each interaction and adapt your communication style to what works best for each person.
+
+${userContext}
 
 COGNITIVE LEVEL: ${input.cognitiveLevel}
 ${complexityGuide[input.cognitiveLevel]}
@@ -221,17 +285,24 @@ Remember: Be patient, clear, and supportive. Celebrate small wins. Reduce cognit
     completedSteps: number;
     totalSteps: number;
     strugglingWith?: string;
+    userProfile?: UserProfile;
   }): Promise<string> {
-    const prompt = `Generate a brief, encouraging message (1-2 sentences) for someone with cognitive disabilities who is working on: "${context.taskTitle}"
+    const userContext = this.buildUserContext(context.userProfile);
+    
+    const prompt = `You are Nexa, their personal AI coach. Generate a brief, encouraging message (1-2 sentences) for someone working on: "${context.taskTitle}"
+
+${userContext}
 
 Progress: ${context.completedSteps}/${context.totalSteps} steps completed
 ${context.strugglingWith ? `They mentioned: "${context.strugglingWith}"` : ''}
 
-Be warm, specific, and genuinely supportive. Acknowledge their effort and progress.`;
+Be warm, personal, and genuinely supportive. Use what you know about them to make this message feel tailored to them specifically.`;
 
     try {
       const response = await generateText(prompt);
-      return response.trim();
+      const message = response.trim();
+      console.log('[Nexa] Generated personalized message:', message);
+      return message;
     } catch (error) {
       console.error('[AIService] Error generating supportive message:', error);
       return this.getFallbackSupportiveMessage(context);
