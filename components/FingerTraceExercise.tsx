@@ -32,8 +32,6 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
   const [startTime, setStartTime] = useState<number | null>(null);
   const [allPaths, setAllPaths] = useState<TracePoint[][]>([]);
   
-  const pulseAnim = useRef(new Animated.Value(1)).current;
-  const glowAnim = useRef(new Animated.Value(0)).current;
   const successAnim = useRef(new Animated.Value(0)).current;
 
   const { width } = Dimensions.get('window');
@@ -258,37 +256,7 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
       difficulty: exercise.difficulty,
       type: exercise.type,
     });
-
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(glowAnim, {
-          toValue: 1,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(glowAnim, {
-          toValue: 0,
-          duration: 1500,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  }, [triggerHaptic, pulseAnim, glowAnim, exercise.id, exercise.name, exercise.difficulty, exercise.type]);
+  }, [triggerHaptic, exercise.id, exercise.name, exercise.difficulty, exercise.type]);
 
   const handleReset = useCallback(() => {
     setIsActive(false);
@@ -298,10 +266,8 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
     setCurrentPath([]);
     setAllPaths([]);
     setStartTime(null);
-    pulseAnim.setValue(1);
-    glowAnim.setValue(0);
     successAnim.setValue(0);
-  }, [pulseAnim, glowAnim, successAnim]);
+  }, [successAnim]);
 
   const userPathString = currentPath.length > 0
     ? `M ${currentPath.map(p => `${p.x},${p.y}`).join(' L ')}`
@@ -337,13 +303,8 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
       </View>
 
       <View style={styles.canvasContainer}>
-        <Animated.View
-          style={[
-            styles.canvas,
-            {
-              transform: [{ scale: isActive ? pulseAnim : 1 }],
-            },
-          ]}
+        <View
+          style={styles.canvas}
           {...panResponder.panHandlers}
         >
           <Svg width={canvasSize} height={canvasSize}>
@@ -396,7 +357,7 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
               </Text>
             </Animated.View>
           )}
-        </Animated.View>
+        </View>
       </View>
 
       <View style={styles.instructionContainer}>
