@@ -45,7 +45,7 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
     },
   });
 
-  const { mutate: mutateTasks } = saveMutation;
+  const { mutate: mutateTasks, mutateAsync: mutateTasksAsync } = saveMutation;
   const tasks = useMemo(() => tasksQuery.data || [], [tasksQuery.data]);
 
   const addTask = useCallback(async (
@@ -65,7 +65,7 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
     };
 
     const updatedTasks = [...tasks, newTask];
-    mutateTasks(updatedTasks);
+    await mutateTasksAsync(updatedTasks);
 
     addNotification({
       type: 'task_created',
@@ -78,7 +78,7 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
     });
 
     return newTask;
-  }, [tasks, mutateTasks, addNotification]);
+  }, [tasks, mutateTasksAsync, addNotification]);
 
   const updateTask = useCallback((taskId: string, updates: Partial<Task>) => {
     const task = tasks.find(t => t.id === taskId);
@@ -180,9 +180,11 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
   }, [tasks, mutateTasks, addNotification]);
 
   const breakdownTask = useCallback(async (taskId: string, cognitiveLevel: 'simple' | 'moderate' | 'complex' = 'moderate') => {
-    const task = tasks.find(t => t.id === taskId);
+    const currentTasks = queryClient.getQueryData<Task[]>(['tasks']) || [];
+    const task = currentTasks.find(t => t.id === taskId);
     if (!task) {
       console.error('[TaskContext] Task not found for breakdown:', taskId);
+      console.error('[TaskContext] Available task IDs:', currentTasks.map(t => t.id));
       return;
     }
 
@@ -241,13 +243,17 @@ CONTEXT: [why this matters]
         throw new Error('Failed to generate steps from AI response');
       }
 
-      updateTask(taskId, { steps, status: 'in-progress', cognitiveLevel });
+      const currentTasks = queryClient.getQueryData<Task[]>(['tasks']) || [];
+      const updatedTasks = currentTasks.map(t =>
+        t.id === taskId ? { ...t, steps, status: 'in-progress' as TaskStatus, cognitiveLevel } : t
+      );
+      await mutateTasksAsync(updatedTasks);
       console.log('[TaskContext] Task updated with steps');
     } catch (error) {
       console.error('[TaskContext] Error breaking down task:', error);
       throw error;
     }
-  }, [tasks, updateTask]);
+  }, [queryClient, mutateTasksAsync]);
 
   const filteredTasks = useMemo(() => {
     return tasks.filter(task => {
