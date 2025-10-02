@@ -17,26 +17,6 @@ export default function WellnessScreen() {
   const { colors } = useTheme();
   const [selectedPattern, setSelectedPattern] = useState<BreathingPattern | null>(null);
 
-  const renderBreathingPatternCard = (pattern: BreathingPattern) => (
-    <TouchableOpacity
-      key={pattern.id}
-      style={[styles.breathingCard, { borderLeftColor: pattern.color }]}
-      onPress={() => setSelectedPattern(pattern)}
-      activeOpacity={0.7}
-    >
-      <View style={styles.breathingCardContent}>
-        <Text style={styles.breathingCardTitle}>{pattern.name}</Text>
-        <Text style={styles.breathingCardDescription}>{pattern.description}</Text>
-        <View style={styles.breathingCardMeta}>
-          <Text style={styles.breathingCardMetaText}>
-            {pattern.inhale}s in • {pattern.exhale}s out • {pattern.cycles} cycles
-          </Text>
-        </View>
-      </View>
-      <View style={[styles.breathingCardIndicator, { backgroundColor: pattern.color }]} />
-    </TouchableOpacity>
-  );
-
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -197,7 +177,25 @@ export default function WellnessScreen() {
             Guided breathing exercises to reduce stress, calm anxiety, and improve focus. 
             Choose an exercise below to begin.
           </Text>
-          {breathingPatterns.map(renderBreathingPatternCard)}
+          {breathingPatterns.map((pattern) => (
+            <TouchableOpacity
+              key={pattern.id}
+              style={[styles.breathingCard, { borderLeftColor: pattern.color }]}
+              onPress={() => setSelectedPattern(pattern)}
+              activeOpacity={0.7}
+            >
+              <View style={styles.breathingCardContent}>
+                <Text style={styles.breathingCardTitle}>{pattern.name}</Text>
+                <Text style={styles.breathingCardDescription}>{pattern.description}</Text>
+                <View style={styles.breathingCardMeta}>
+                  <Text style={styles.breathingCardMetaText}>
+                    {pattern.inhale}s in • {pattern.exhale}s out • {pattern.cycles} cycles
+                  </Text>
+                </View>
+              </View>
+              <View style={[styles.breathingCardIndicator, { backgroundColor: pattern.color }]} />
+            </TouchableOpacity>
+          ))}
         </View>
       </ScrollView>
     </View>

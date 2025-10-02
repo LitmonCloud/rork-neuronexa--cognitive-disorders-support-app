@@ -97,7 +97,7 @@ export default function CoachScreen() {
 
   useEffect(() => {
     if (messages.length === 0) {
-      const welcomeContent = `Hi! I'm your AI Coach. I'm here to help you manage tasks, stay motivated, and support your cognitive wellness journey.\n\nI can help you:\n• Create and organize tasks\n• Break down complex tasks into simple steps\n• Track your progress\n• Provide encouragement and support\n• Adjust task priorities\n\nWhat would you like to work on today?`;
+      const welcomeContent = `Hi! I'm your AI Coach. I'm here to help you manage tasks, stay motivated, and support your cognitive wellness journey.\\n\\nI can help you:\\n• Create and organize tasks\\n• Break down complex tasks into simple steps\\n• Track your progress\\n• Provide encouragement and support\\n• Adjust task priorities\\n\\nWhat would you like to work on today?`;
       
       sendMessage(welcomeContent);
     }
@@ -117,112 +117,6 @@ export default function CoachScreen() {
   };
 
   const textSize = settings.largeText ? 1.2 : 1;
-
-  const renderMessage = (msg: any, index: number) => {
-    const isUser = msg.role === 'user';
-    
-    return (
-      <View
-        key={msg.id || index}
-        style={[
-          styles.messageContainer,
-          isUser ? styles.userMessageContainer : styles.assistantMessageContainer,
-        ]}
-      >
-        <View style={[styles.avatarContainer, isUser ? styles.userAvatar : styles.assistantAvatar]}>
-          {isUser ? (
-            <User size={18} color={colors.surface} />
-          ) : (
-            <Bot size={18} color={colors.surface} />
-          )}
-        </View>
-        
-        <View style={[styles.messageBubble, isUser ? styles.userBubble : styles.assistantBubble]}>
-          {msg.parts?.map((part: any, i: number) => {
-            switch (part.type) {
-              case 'text':
-                return (
-                  <Text
-                    key={`${msg.id}-${i}`}
-                    style={[
-                      styles.messageText,
-                      { fontSize: 15 * textSize },
-                      isUser ? styles.userMessageText : styles.assistantMessageText,
-                    ]}
-                  >
-                    {part.text}
-                  </Text>
-                );
-              
-              case 'tool':
-                const toolName = part.toolName;
-                
-                switch (part.state) {
-                  case 'input-streaming':
-                  case 'input-available':
-                    return (
-                      <View key={`${msg.id}-${i}`} style={styles.toolCallContainer}>
-                        <ActivityIndicator size="small" color={colors.primary} />
-                        <Text style={[styles.toolCallText, { fontSize: 13 * textSize }]}>
-                          {toolName === 'createTask' && 'Creating task...'}
-                          {toolName === 'listTasks' && 'Fetching your tasks...'}
-                          {toolName === 'completeTask' && 'Marking task complete...'}
-                          {toolName === 'updateTaskPriority' && 'Updating priority...'}
-                          {toolName === 'provideEncouragement' && 'Preparing encouragement...'}
-                        </Text>
-                      </View>
-                    );
-                  
-                  case 'output-available':
-                    return (
-                      <View key={`${msg.id}-${i}`} style={styles.toolSuccessContainer}>
-                        <CheckCircle2 size={16} color={colors.success} />
-                        <Text style={[styles.toolSuccessText, { fontSize: 13 * textSize }]}>
-                          {toolName === 'createTask' && 'Task created successfully!'}
-                          {toolName === 'completeTask' && 'Task completed!'}
-                          {toolName === 'updateTaskPriority' && 'Priority updated!'}
-                          {toolName === 'listTasks' && `Found ${part.output?.tasks?.length || 0} tasks`}
-                        </Text>
-                      </View>
-                    );
-                  
-                  case 'output-error':
-                    return (
-                      <View key={`${msg.id}-${i}`} style={styles.toolErrorContainer}>
-                        <AlertCircle size={16} color={colors.error} />
-                        <Text style={[styles.toolErrorText, { fontSize: 13 * textSize }]}>
-                          Error: {part.errorText}
-                        </Text>
-                      </View>
-                    );
-                }
-                break;
-            }
-            return null;
-          })}
-          
-          {!msg.parts && msg.content && (
-            <Text
-              style={[
-                styles.messageText,
-                { fontSize: 15 * textSize },
-                isUser ? styles.userMessageText : styles.assistantMessageText,
-              ]}
-            >
-              {msg.content}
-            </Text>
-          )}
-        </View>
-      </View>
-    );
-  };
-
-  const quickActions = [
-    { label: 'Show my tasks', message: 'Can you show me all my tasks?' },
-    { label: 'Create a task', message: 'I need help creating a new task' },
-    { label: 'How am I doing?', message: 'How am I doing with my tasks?' },
-    { label: 'Need motivation', message: 'I need some encouragement' },
-  ];
 
   const styles = StyleSheet.create({
     container: {
@@ -443,6 +337,112 @@ export default function CoachScreen() {
     },
   });
 
+  const renderMessage = (msg: any, index: number) => {
+    const isUser = msg.role === 'user';
+    
+    return (
+      <View
+        key={msg.id || index}
+        style={[
+          styles.messageContainer,
+          isUser ? styles.userMessageContainer : styles.assistantMessageContainer,
+        ]}
+      >
+        <View style={[styles.avatarContainer, isUser ? styles.userAvatar : styles.assistantAvatar]}>
+          {isUser ? (
+            <User size={18} color={colors.surface} />
+          ) : (
+            <Bot size={18} color={colors.surface} />
+          )}
+        </View>
+        
+        <View style={[styles.messageBubble, isUser ? styles.userBubble : styles.assistantBubble]}>
+          {msg.parts?.map((part: any, i: number) => {
+            switch (part.type) {
+              case 'text':
+                return (
+                  <Text
+                    key={`${msg.id}-${i}`}
+                    style={[
+                      styles.messageText,
+                      { fontSize: 15 * textSize },
+                      isUser ? styles.userMessageText : styles.assistantMessageText,
+                    ]}
+                  >
+                    {part.text}
+                  </Text>
+                );
+              
+              case 'tool':
+                const toolName = part.toolName;
+                
+                switch (part.state) {
+                  case 'input-streaming':
+                  case 'input-available':
+                    return (
+                      <View key={`${msg.id}-${i}`} style={styles.toolCallContainer}>
+                        <ActivityIndicator size="small" color={colors.primary} />
+                        <Text style={[styles.toolCallText, { fontSize: 13 * textSize }]}>
+                          {toolName === 'createTask' && 'Creating task...'}
+                          {toolName === 'listTasks' && 'Fetching your tasks...'}
+                          {toolName === 'completeTask' && 'Marking task complete...'}
+                          {toolName === 'updateTaskPriority' && 'Updating priority...'}
+                          {toolName === 'provideEncouragement' && 'Preparing encouragement...'}
+                        </Text>
+                      </View>
+                    );
+                  
+                  case 'output-available':
+                    return (
+                      <View key={`${msg.id}-${i}`} style={styles.toolSuccessContainer}>
+                        <CheckCircle2 size={16} color={colors.success} />
+                        <Text style={[styles.toolSuccessText, { fontSize: 13 * textSize }]}>
+                          {toolName === 'createTask' && 'Task created successfully!'}
+                          {toolName === 'completeTask' && 'Task completed!'}
+                          {toolName === 'updateTaskPriority' && 'Priority updated!'}
+                          {toolName === 'listTasks' && `Found ${part.output?.tasks?.length || 0} tasks`}
+                        </Text>
+                      </View>
+                    );
+                  
+                  case 'output-error':
+                    return (
+                      <View key={`${msg.id}-${i}`} style={styles.toolErrorContainer}>
+                        <AlertCircle size={16} color={colors.error} />
+                        <Text style={[styles.toolErrorText, { fontSize: 13 * textSize }]}>
+                          Error: {part.errorText}
+                        </Text>
+                      </View>
+                    );
+                }
+                break;
+            }
+            return null;
+          })}
+          
+          {!msg.parts && msg.content && (
+            <Text
+              style={[
+                styles.messageText,
+                { fontSize: 15 * textSize },
+                isUser ? styles.userMessageText : styles.assistantMessageText,
+              ]}
+            >
+              {msg.content}
+            </Text>
+          )}
+        </View>
+      </View>
+    );
+  };
+
+  const quickActions = [
+    { label: 'Show my tasks', message: 'Can you show me all my tasks?' },
+    { label: 'Create a task', message: 'I need help creating a new task' },
+    { label: 'How am I doing?', message: 'How am I doing with my tasks?' },
+    { label: 'Need motivation', message: 'I need some encouragement' },
+  ];
+
   return (
     <PremiumGate
       feature="AI Coach"
@@ -532,5 +532,4 @@ export default function CoachScreen() {
     </PremiumGate>
   );
 }
-
 
