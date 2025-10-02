@@ -438,6 +438,23 @@ export default function CaregiverDashboardScreen() {
       color: colors.textLight,
       marginTop: spacing.xs,
     },
+    manageButton: {
+      backgroundColor: colors.primary,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      borderRadius: borderRadius.md,
+    },
+    manageButtonText: {
+      fontSize: fontSizes.sm,
+      fontWeight: fontWeights.semibold,
+      color: colors.surface,
+    },
+    sectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      marginBottom: spacing.md,
+    },
     unreadCard: {
       borderLeftWidth: 3,
       borderLeftColor: colors.primary,
@@ -572,8 +589,19 @@ export default function CaregiverDashboardScreen() {
 
   const renderTasks = () => (
     <View style={styles.tabContent}>
-      <Text style={styles.sectionTitle}>Patient Tasks</Text>
-      <Text style={styles.sectionSubtitle}>Read-only view of current tasks</Text>
+      <View style={styles.sectionHeader}>
+        <View>
+          <Text style={styles.sectionTitle}>Patient Tasks</Text>
+          <Text style={styles.sectionSubtitle}>View and manage patient tasks</Text>
+        </View>
+        <TouchableOpacity
+          style={styles.manageButton}
+          onPress={() => router.push('/caregiver-task-manager')}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.manageButtonText}>Manage Tasks</Text>
+        </TouchableOpacity>
+      </View>
       
       {recentTasks.length === 0 ? (
         <Card style={styles.emptyCard}>

@@ -2,7 +2,7 @@ import createContextHook from '@nkzw/create-context-hook';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, useCallback, useMemo } from 'react';
-import { Task, TaskPriority, TaskStatus } from '@/types/task';
+import { Task, TaskPriority, TaskStatus, TaskStep } from '@/types/task';
 import { generateText } from '@rork/toolkit-sdk';
 import { useNotifications } from './NotificationContext';
 
@@ -179,6 +179,65 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
       }
     }
   }, [tasks, mutateTasks, addNotification]);
+
+  const addStep = useCallback((taskId: string, description: string, simplifiedText?: string, contextualPrompt?: string) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    const newStep: TaskStep = {
+      id: `${taskId}-step-${Date.now()}`,
+      description,
+      simplifiedText,
+      contextualPrompt,
+      completed: false,
+      order: task.steps.length,
+    };
+
+    const updatedTasks = tasks.map(t =>
+      t.id === taskId ? { ...t, steps: [...t.steps, newStep] } : t
+    );
+    mutateTasks(updatedTasks);
+  }, [tasks, mutateTasks]);
+
+  const editStep = useCallback((taskId: string, stepId: string, updates: Partial<TaskStep>) => {
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        const updatedSteps = task.steps.map(step =>
+          step.id === stepId ? { ...step, ...updates } : step
+        );
+        return { ...task, steps: updatedSteps };
+      }
+      return task;
+    });
+    mutateTasks(updatedTasks);
+  }, [tasks, mutateTasks]);
+
+  const deleteStep = useCallback((taskId: string, stepId: string) => {
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        const updatedSteps = task.steps
+          .filter(step => step.id !== stepId)
+          .map((step, index) => ({ ...step, order: index }));
+        return { ...task, steps: updatedSteps };
+      }
+      return task;
+    });
+    mutateTasks(updatedTasks);
+  }, [tasks, mutateTasks]);
+
+  const reorderSteps = useCallback((taskId: string, stepIds: string[]) => {
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        const reorderedSteps = stepIds
+          .map(id => task.steps.find(s => s.id === id))
+          .filter((s): s is TaskStep => s !== undefined)
+          .map((step, index) => ({ ...step, order: index }));
+        return { ...task, steps: reorderedSteps };
+      }
+      return task;
+    });
+    mutateTasks(updatedTasks);
+  }, [tasks, mutateTasks]);
 
   const breakdownTask = useCallback(async (taskId: string, cognitiveLevel: 'simple' | 'moderate' | 'complex' = 'moderate') => {
     await queryClient.invalidateQueries({ queryKey: ['tasks'] });
@@ -358,5 +417,9 @@ CONTEXT: [why this matters]
     completeTask,
     updateStep,
     breakdownTask,
-  }), [filteredTasks, tasks, tasksQuery.isLoading, filter, addTask, updateTask, deleteTask, completeTask, updateStep, breakdownTask]);
+    addStep,
+    editStep,
+    deleteStep,
+    reorderSteps,
+  }), [filteredTasks, tasks, tasksQuery.isLoading, filter, addTask, updateTask, deleteTask, completeTask, updateStep, breakdownTask, addStep, editStep, deleteStep, reorderSteps]);
 });
