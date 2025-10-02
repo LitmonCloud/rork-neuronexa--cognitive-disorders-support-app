@@ -22,6 +22,8 @@ async function loadUserProfile(): Promise<UserProfile> {
       motivationTriggers: [],
       avoidTopics: [],
       favoriteEncouragements: [],
+      termsAcceptedAt: undefined,
+      termsVersion: undefined,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -39,6 +41,8 @@ async function loadUserProfile(): Promise<UserProfile> {
       motivationTriggers: [],
       avoidTopics: [],
       favoriteEncouragements: [],
+      termsAcceptedAt: undefined,
+      termsVersion: undefined,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

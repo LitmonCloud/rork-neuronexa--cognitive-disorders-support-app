@@ -37,6 +37,8 @@ export interface UserProfile {
   bestTimeOfDay?: 'morning' | 'afternoon' | 'evening';
   averageTaskDuration?: number;
   completionRate?: number;
+  termsAcceptedAt?: string;
+  termsVersion?: string;
   createdAt: string;
   updatedAt: string;
 }
