@@ -154,7 +154,9 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => isActive,
+      onStartShouldSetPanResponderCapture: () => isActive,
       onMoveShouldSetPanResponder: () => isActive,
+      onMoveShouldSetPanResponderCapture: () => isActive,
       
       onPanResponderGrant: (evt) => {
         if (!isActive) return;
@@ -432,7 +434,6 @@ const createStyles = (colors: ReturnType<typeof useTheme>['colors'], canvasSize:
   StyleSheet.create({
     container: {
       flex: 1,
-      padding: spacing.xl,
       backgroundColor: colors.background,
     },
     header: {
@@ -440,6 +441,8 @@ const createStyles = (colors: ReturnType<typeof useTheme>['colors'], canvasSize:
       alignItems: 'center',
       gap: spacing.md,
       marginBottom: spacing.md,
+      paddingHorizontal: spacing.xl,
+      paddingTop: spacing.xl,
     },
     badge: {
       paddingHorizontal: spacing.md,
@@ -461,11 +464,13 @@ const createStyles = (colors: ReturnType<typeof useTheme>['colors'], canvasSize:
       color: colors.textSecondary,
       lineHeight: 22,
       marginBottom: spacing.lg,
+      paddingHorizontal: spacing.xl,
     },
     statsContainer: {
       flexDirection: 'row',
       gap: spacing.md,
       marginBottom: spacing.xl,
+      paddingHorizontal: spacing.xl,
     },
     statBox: {
       flex: 1,
@@ -526,6 +531,7 @@ const createStyles = (colors: ReturnType<typeof useTheme>['colors'], canvasSize:
       borderWidth: 1,
       borderColor: colors.border,
       marginBottom: spacing.lg,
+      marginHorizontal: spacing.xl,
     },
     instructionTitle: {
       fontSize: fontSizes.lg,
@@ -553,6 +559,7 @@ const createStyles = (colors: ReturnType<typeof useTheme>['colors'], canvasSize:
     },
     controls: {
       marginBottom: spacing.lg,
+      paddingHorizontal: spacing.xl,
     },
     controlButton: {
       flexDirection: 'row',
@@ -586,6 +593,8 @@ const createStyles = (colors: ReturnType<typeof useTheme>['colors'], canvasSize:
       borderRadius: borderRadius.lg,
       borderWidth: 1,
       borderColor: colors.border,
+      marginHorizontal: spacing.xl,
+      marginBottom: spacing.xl,
     },
     benefitsHeader: {
       flexDirection: 'row',

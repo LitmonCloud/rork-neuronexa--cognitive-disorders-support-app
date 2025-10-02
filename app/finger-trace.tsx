@@ -217,12 +217,12 @@ export default function FingerTraceScreen() {
             <Text style={styles.headerTitle}>Finger Trace Exercise</Text>
             <View style={{ width: 40 }} />
           </View>
-          <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
             <FingerTraceExercise
               exercise={selectedExercise}
               onComplete={handleExerciseComplete}
             />
-          </ScrollView>
+          </View>
       </View>
     );
   }
