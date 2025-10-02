@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -9,18 +9,41 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Stack, router } from 'expo-router';
 import { ArrowLeft, Sparkles, Filter } from 'lucide-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@/contexts/ThemeContext';
 import { spacing, borderRadius } from '@/theme/spacing';
 import { fontSizes, fontWeights } from '@/theme/typography';
 import { traceExercises } from '@/constants/traceExercises';
-import { TraceExercise } from '@/types/fingerTrace';
+import { TraceExercise, TraceSession } from '@/types/fingerTrace';
 import FingerTraceExercise from '@/components/FingerTraceExercise';
+
+const TRACE_SESSIONS_KEY = '@neuronexa_trace_sessions';
 
 export default function FingerTraceScreen() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const [selectedExercise, setSelectedExercise] = useState<TraceExercise | null>(null);
   const [filterDifficulty, setFilterDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
+
+  const saveSession = useCallback(async (session: TraceSession) => {
+    try {
+      const stored = await AsyncStorage.getItem(TRACE_SESSIONS_KEY);
+      const sessions: TraceSession[] = stored ? JSON.parse(stored) : [];
+      sessions.push(session);
+      await AsyncStorage.setItem(TRACE_SESSIONS_KEY, JSON.stringify(sessions));
+      console.log('[Progress] Finger trace session saved:', session);
+    } catch (error) {
+      console.error('[Progress] Error saving trace session:', error);
+    }
+  }, []);
+
+  const handleExerciseComplete = useCallback((session: TraceSession) => {
+    console.log('[Analytics] Exercise completed with accuracy:', session.accuracy);
+    saveSession(session);
+    setTimeout(() => {
+      setSelectedExercise(null);
+    }, 2000);
+  }, [saveSession]);
 
   const styles = StyleSheet.create({
     container: {
@@ -197,9 +220,7 @@ export default function FingerTraceScreen() {
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
             <FingerTraceExercise
               exercise={selectedExercise}
-              onComplete={(accuracy) => {
-                console.log(`Exercise completed with ${accuracy}% accuracy`);
-              }}
+              onComplete={handleExerciseComplete}
             />
           </ScrollView>
       </View>

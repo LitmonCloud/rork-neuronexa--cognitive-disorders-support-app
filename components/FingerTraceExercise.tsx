@@ -217,6 +217,18 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
               paths: allPaths.map(p => ({ points: p, completed: true })),
             };
             
+            const duration = Math.floor((Date.now() - (startTime || Date.now())) / 1000);
+            
+            console.log('[Analytics] Finger trace completed:', {
+              exerciseId: exercise.id,
+              exerciseName: exercise.name,
+              difficulty: exercise.difficulty,
+              type: exercise.type,
+              accuracy: currentAccuracy,
+              duration,
+              loops: newCompletedLoops,
+            });
+            
             onComplete?.(session);
           }
         }
@@ -239,6 +251,13 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
     setAllPaths([]);
     setStartTime(Date.now());
     triggerHaptic();
+
+    console.log('[Analytics] Finger trace started:', {
+      exerciseId: exercise.id,
+      exerciseName: exercise.name,
+      difficulty: exercise.difficulty,
+      type: exercise.type,
+    });
 
     Animated.loop(
       Animated.sequence([
@@ -269,7 +288,7 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
         }),
       ])
     ).start();
-  }, [triggerHaptic, pulseAnim, glowAnim]);
+  }, [triggerHaptic, pulseAnim, glowAnim, exercise.id, exercise.name, exercise.difficulty, exercise.type]);
 
   const handleReset = useCallback(() => {
     setIsActive(false);
