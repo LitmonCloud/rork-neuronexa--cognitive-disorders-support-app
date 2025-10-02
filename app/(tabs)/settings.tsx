@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTheme, ThemeMode } from '@/contexts/ThemeContext';
-import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail } from 'lucide-react-native';
+import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database } from 'lucide-react-native';
 import { mentalHealthResources } from '@/constants/mentalHealthResources';
 import { MentalHealthResource } from '@/types/mentalHealth';
 
@@ -648,6 +648,23 @@ export default function SettingsScreen() {
               <View style={styles.settingText}>
                 <Text style={styles.settingLabel}>Accessibility Statement</Text>
                 <Text style={styles.settingDescription}>Our commitment to accessibility</Text>
+              </View>
+            </View>
+            <ChevronRight size={20} color={colors.textLight} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_DATA_RETENTION_URL || 'https://neuronexa.app/legal/data-retention')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.warning + '20' }]}>
+                <Database size={20} color={colors.warning} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Data Retention Policy</Text>
+                <Text style={styles.settingDescription}>How long we keep your data</Text>
               </View>
             </View>
             <ChevronRight size={20} color={colors.textLight} />

@@ -128,6 +128,10 @@ Visit: https://neuronexa.app
 
 **Terms of Service:** https://neuronexa.app/legal/terms
 
+**Accessibility Statement:** https://neuronexa.app/legal/accessibility
+
+**Data Retention Policy:** https://neuronexa.app/legal/data-retention
+
 ---
 
 ## Screenshots & Graphics

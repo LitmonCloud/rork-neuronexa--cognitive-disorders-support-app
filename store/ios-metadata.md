@@ -140,6 +140,10 @@ ADHD,autism,neurodiversity,cognitive support,task coach,breathing,focus,executiv
 
 **Terms of Service URL:** https://neuronexa.app/legal/terms
 
+**Accessibility Statement URL:** https://neuronexa.app/legal/accessibility
+
+**Data Retention Policy URL:** https://neuronexa.app/legal/data-retention
+
 ---
 
 ## App Review Information
