@@ -5,7 +5,7 @@ import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useRetention } from '@/contexts/RetentionContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useSubscription } from '@/contexts/SubscriptionContext';
-import { CheckCircle2, Trash2, ArrowLeft, Volume2, Clock, Sparkles, Crown } from 'lucide-react-native';
+import { CheckCircle2, Trash2, ArrowLeft, Volume2, Clock, Sparkles, Crown, MessageCircle } from 'lucide-react-native';
 import * as Speech from 'expo-speech';
 import { useState } from 'react';
 import VisualTimer from '@/components/VisualTimer';
@@ -317,6 +317,29 @@ export default function TaskDetailScreen() {
       fontWeight: '700' as const,
       color: colors.surface,
     },
+    nexaButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      backgroundColor: colors.accent,
+      borderRadius: 12,
+      padding: 16,
+      marginTop: 16,
+      shadowColor: colors.accent,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    nexaButtonText: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: colors.surface,
+    },
+    nexaButtonLocked: {
+      backgroundColor: colors.border,
+    },
   });
 
   if (!task) {
@@ -613,6 +636,34 @@ export default function TaskDetailScreen() {
               Great job! You completed this task!
             </Text>
           </View>
+        )}
+
+        {task.status !== 'completed' && !useCoachMode && (
+          <TouchableOpacity
+            style={[
+              styles.nexaButton,
+              !isPremium && !isInTrial && styles.nexaButtonLocked,
+            ]}
+            onPress={() => {
+              if (isPremium || isInTrial) {
+                router.push({
+                  pathname: '/(tabs)/coach',
+                  params: { taskId: task.id, taskTitle: task.title },
+                });
+              } else {
+                router.push('/paywall');
+              }
+            }}
+            activeOpacity={0.7}
+          >
+            <MessageCircle size={20} color={colors.surface} />
+            <Text style={[styles.nexaButtonText, { fontSize: 16 * textSize }]}>
+              {isPremium || isInTrial ? 'Ask Nexa for Help' : 'Unlock Nexa AI Coach'}
+            </Text>
+            {!isPremium && !isInTrial && (
+              <Crown size={16} color={colors.surface} />
+            )}
+          </TouchableOpacity>
         )}
       </ScrollView>
     </View>

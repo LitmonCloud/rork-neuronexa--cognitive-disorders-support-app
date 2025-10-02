@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState, useRef, useEffect } from 'react';
+import { useLocalSearchParams } from 'expo-router';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTasks } from '@/contexts/TaskContext';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -11,6 +12,7 @@ import { z } from 'zod';
 import PremiumGate from '@/components/PremiumGate';
 
 export default function CoachScreen() {
+  const { taskId, taskTitle } = useLocalSearchParams<{ taskId?: string; taskTitle?: string }>();
   const { settings } = useAccessibility();
   const { allTasks, addTask, updateTask, completeTask, breakdownTask } = useTasks();
   const { colors } = useTheme();
@@ -123,11 +125,27 @@ export default function CoachScreen() {
         ? "It's great to see you again! I've been learning what works best for you." 
         : "I'm excited to get to know you and learn how I can best support you.";
       
-      const welcomeContent = `${greeting} I'm Nexa, your personal AI coach. ${personalTouch}\\n\\nI can help you:\\n• Create and organize tasks\\n• Break down complex tasks into simple steps\\n• Track your progress\\n• Provide personalized encouragement\\n• Learn your preferences and adapt to your style\\n\\nWhat would you like to work on today?`;
+      let welcomeContent = `${greeting} I'm Nexa, your personal AI coach. ${personalTouch}\\n\\n`;
+      
+      if (taskId && taskTitle) {
+        const task = allTasks.find(t => t.id === taskId);
+        if (task) {
+          welcomeContent += `I see you're working on "${taskTitle}". `;
+          if (task.steps.length > 0) {
+            const completedSteps = task.steps.filter(s => s.completed).length;
+            welcomeContent += `You've completed ${completedSteps} out of ${task.steps.length} steps. `;
+          }
+          welcomeContent += `How can I help you with this task?`;
+        } else {
+          welcomeContent += `I can help you:\\n• Create and organize tasks\\n• Break down complex tasks into simple steps\\n• Track your progress\\n• Provide personalized encouragement\\n• Learn your preferences and adapt to your style\\n\\nWhat would you like to work on today?`;
+        }
+      } else {
+        welcomeContent += `I can help you:\\n• Create and organize tasks\\n• Break down complex tasks into simple steps\\n• Track your progress\\n• Provide personalized encouragement\\n• Learn your preferences and adapt to your style\\n\\nWhat would you like to work on today?`;
+      }
       
       sendMessage(welcomeContent);
     }
-  }, [messages.length, profile, sendMessage]);
+  }, [messages.length, profile, sendMessage, taskId, taskTitle, allTasks]);
 
   const handleSend = async () => {
     if (!inputText.trim()) return;
