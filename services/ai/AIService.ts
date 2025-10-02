@@ -325,6 +325,176 @@ Be warm, personal, and genuinely supportive. Use what you know about them to mak
       return 'You did it! Take a moment to celebrate this accomplishment! 🎉';
     }
   }
+
+  async generateCheckIn(context: {
+    userProfile?: UserProfile;
+    recentActivity?: {
+      tasksCompleted: number;
+      tasksAbandoned: number;
+      lastActiveDate?: string;
+    };
+    timeOfDay?: 'morning' | 'afternoon' | 'evening';
+  }): Promise<string> {
+    const userContext = this.buildUserContext(context.userProfile);
+    
+    const timeGreeting = {
+      morning: 'Good morning',
+      afternoon: 'Good afternoon',
+      evening: 'Good evening',
+    };
+
+    const greeting = context.timeOfDay ? timeGreeting[context.timeOfDay] : 'Hello';
+    const name = context.userProfile?.name || 'friend';
+
+    const prompt = `You are Nexa, checking in with ${name}. Generate a warm, personable check-in message (2-3 sentences).
+
+${userContext}
+
+Time: ${greeting}
+${context.recentActivity ? `
+Recent activity:
+- Completed: ${context.recentActivity.tasksCompleted} tasks
+- Abandoned: ${context.recentActivity.tasksAbandoned} tasks
+${context.recentActivity.lastActiveDate ? `- Last active: ${context.recentActivity.lastActiveDate}` : ''}` : ''}
+
+Your check-in should:
+1. Feel personal and genuine, like a friend checking in
+2. Acknowledge their recent activity (if any) in a supportive way
+3. Ask how they're doing or what they're working on today
+4. Be encouraging without being pushy
+5. Use what you know about them to make it feel tailored
+
+Keep it conversational and warm.`;
+
+    try {
+      const response = await generateText(prompt);
+      const message = response.trim();
+      console.log('[Nexa] Generated check-in:', message);
+      return message;
+    } catch (error) {
+      console.error('[AIService] Error generating check-in:', error);
+      return this.getFallbackCheckIn(name, greeting, context.recentActivity);
+    }
+  }
+
+  private getFallbackCheckIn(
+    name: string,
+    greeting: string,
+    recentActivity?: { tasksCompleted: number; tasksAbandoned: number }
+  ): string {
+    if (recentActivity && recentActivity.tasksCompleted > 0) {
+      return `${greeting}, ${name}! I noticed you completed ${recentActivity.tasksCompleted} task${recentActivity.tasksCompleted > 1 ? 's' : ''} recently - that's wonderful! How are you feeling today?`;
+    }
+    return `${greeting}, ${name}! How are you doing today? I'm here to help with whatever you're working on. 😊`;
+  }
+
+  async generateMotivation(context: {
+    userProfile?: UserProfile;
+    currentTask?: string;
+    strugglingWith?: string;
+    recentSetbacks?: number;
+  }): Promise<string> {
+    const userContext = this.buildUserContext(context.userProfile);
+
+    const prompt = `You are Nexa, providing motivation to someone who needs encouragement.
+
+${userContext}
+
+${context.currentTask ? `They're working on: "${context.currentTask}"` : ''}
+${context.strugglingWith ? `They mentioned: "${context.strugglingWith}"` : ''}
+${context.recentSetbacks ? `They've faced ${context.recentSetbacks} recent setback${context.recentSetbacks > 1 ? 's' : ''}` : ''}
+
+Generate a motivational message (2-3 sentences) that:
+1. Acknowledges their struggle without dwelling on it
+2. Reminds them of their strengths and past successes
+3. Provides specific, actionable encouragement
+4. Feels genuine and personal, not generic
+5. Uses what you know about what motivates them
+
+Be warm, empathetic, and genuinely supportive.`;
+
+    try {
+      const response = await generateText(prompt);
+      const message = response.trim();
+      console.log('[Nexa] Generated motivation:', message);
+      return message;
+    } catch (error) {
+      console.error('[AIService] Error generating motivation:', error);
+      return this.getFallbackMotivation(context);
+    }
+  }
+
+  private getFallbackMotivation(context: {
+    currentTask?: string;
+    strugglingWith?: string;
+  }): string {
+    if (context.strugglingWith) {
+      return `I know this feels challenging right now, but remember: every expert was once a beginner. You're building skills with each attempt. Let's break this down into smaller steps together. 💪`;
+    }
+    if (context.currentTask) {
+      return `You've got this! ${context.currentTask} might seem big, but you've handled tough things before. Take it one step at a time, and celebrate each small win along the way. 🌟`;
+    }
+    return `Remember: progress isn't always linear, and that's okay. Every step forward, no matter how small, is worth celebrating. You're doing better than you think! ✨`;
+  }
+
+  async generateAffirmation(context: {
+    userProfile?: UserProfile;
+    achievement?: string;
+    personalQuality?: string;
+    timeOfDay?: 'morning' | 'afternoon' | 'evening';
+  }): Promise<string> {
+    const userContext = this.buildUserContext(context.userProfile);
+    const name = context.userProfile?.name || 'friend';
+
+    const prompt = `You are Nexa, providing a genuine affirmation to ${name}.
+
+${userContext}
+
+${context.achievement ? `Recent achievement: ${context.achievement}` : ''}
+${context.personalQuality ? `Quality to affirm: ${context.personalQuality}` : ''}
+${context.timeOfDay ? `Time: ${context.timeOfDay}` : ''}
+
+Generate a heartfelt affirmation (1-2 sentences) that:
+1. Feels personal and specific to them
+2. Acknowledges their inherent worth and capabilities
+3. Is genuine and not overly saccharine
+4. Builds their confidence authentically
+5. Uses what you know about what they respond well to
+
+Make it feel like it comes from someone who truly sees and values them.`;
+
+    try {
+      const response = await generateText(prompt);
+      const message = response.trim();
+      console.log('[Nexa] Generated affirmation:', message);
+      return message;
+    } catch (error) {
+      console.error('[AIService] Error generating affirmation:', error);
+      return this.getFallbackAffirmation(context);
+    }
+  }
+
+  private getFallbackAffirmation(context: {
+    achievement?: string;
+    personalQuality?: string;
+  }): string {
+    if (context.achievement) {
+      return `${context.achievement} - that took real effort and determination. You should be proud of yourself! 🌟`;
+    }
+    if (context.personalQuality) {
+      return `Your ${context.personalQuality} is one of your greatest strengths. Never forget how valuable that makes you. ✨`;
+    }
+    
+    const affirmations = [
+      'You are capable of amazing things, even on the days when it doesn\'t feel like it. 💫',
+      'Your effort matters more than perfection. You\'re doing great! 🌟',
+      'You bring unique value to the world just by being you. That\'s something to celebrate! ✨',
+      'Every challenge you face is making you stronger and more resilient. You\'ve got this! 💪',
+      'You deserve kindness and patience - especially from yourself. 🌸',
+    ];
+    
+    return affirmations[Math.floor(Math.random() * affirmations.length)];
+  }
 }
 
 export const aiService = new AIService();
