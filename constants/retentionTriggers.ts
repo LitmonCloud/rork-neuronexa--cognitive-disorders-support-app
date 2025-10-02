@@ -1,0 +1,68 @@
+import { RetentionTrigger } from '@/types/funnel';
+
+export const RETENTION_TRIGGERS: RetentionTrigger[] = [
+  {
+    id: 'inactive_1_day',
+    type: 'reminder',
+    condition: 'inactive_1d',
+    message: 'We miss you! Complete a quick task to keep your streak alive.',
+    action: 'navigate_to_tasks',
+    priority: 1,
+  },
+  {
+    id: 'inactive_3_days',
+    type: 'win_back',
+    condition: 'inactive_3d',
+    message: 'Your tasks are waiting! Come back and tackle them with AI assistance.',
+    action: 'show_value_proposition',
+    priority: 2,
+  },
+  {
+    id: 'inactive_7_days',
+    type: 'win_back',
+    condition: 'inactive_7d',
+    message: 'We\'ve added new features! Check out what\'s new in NeuroNexa.',
+    action: 'show_whats_new',
+    priority: 3,
+  },
+  {
+    id: 'incomplete_onboarding',
+    type: 'reminder',
+    condition: 'incomplete_onboarding',
+    message: 'Finish setting up your profile to get personalized task recommendations.',
+    action: 'resume_onboarding',
+    priority: 1,
+  },
+  {
+    id: 'unused_breathing',
+    type: 'feature_highlight',
+    condition: 'unused_feature',
+    message: 'Feeling stressed? Try our guided breathing exercises for instant calm.',
+    action: 'navigate_to_wellness',
+    priority: 2,
+  },
+  {
+    id: 'unused_coach',
+    type: 'feature_highlight',
+    condition: 'unused_feature',
+    message: 'Your AI coach can help break down overwhelming tasks. Give it a try!',
+    action: 'navigate_to_coach',
+    priority: 2,
+  },
+  {
+    id: 'unused_caregiver',
+    type: 'social',
+    condition: 'unused_feature',
+    message: 'Share your progress with a caregiver for extra support and accountability.',
+    action: 'navigate_to_caregiver',
+    priority: 3,
+  },
+  {
+    id: 'streak_about_to_break',
+    type: 'reminder',
+    condition: 'inactive_1d',
+    message: 'Don\'t break your streak! Complete one task to keep it going.',
+    action: 'navigate_to_tasks',
+    priority: 1,
+  },
+];
