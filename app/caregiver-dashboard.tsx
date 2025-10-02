@@ -67,6 +67,436 @@ export default function CaregiverDashboardScreen() {
     weeklyProgress: 85,
   };
 
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return { backgroundColor: colors.success + '20' };
+      case 'in-progress':
+        return { backgroundColor: colors.warning + '20' };
+      default:
+        return { backgroundColor: colors.textLight + '20' };
+    }
+  };
+
+  const getStatusTextStyle = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return { color: colors.success };
+      case 'in-progress':
+        return { color: colors.warning };
+      default:
+        return { color: colors.textSecondary };
+    }
+  };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: spacing.lg,
+      paddingBottom: spacing.md,
+      backgroundColor: colors.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    backButton: {
+      width: 40,
+      height: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    headerTitle: {
+      fontSize: fontSizes.xl,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
+    },
+    tabBar: {
+      flexDirection: 'row',
+      backgroundColor: colors.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    tab: {
+      flex: 1,
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: spacing.md,
+      gap: 4,
+    },
+    tabActive: {
+      borderBottomWidth: 2,
+      borderBottomColor: colors.primary,
+    },
+    tabText: {
+      fontSize: fontSizes.xs,
+      color: colors.textLight,
+      fontWeight: fontWeights.medium,
+    },
+    tabTextActive: {
+      color: colors.primary,
+      fontWeight: fontWeights.bold,
+    },
+    content: {
+      flex: 1,
+    },
+    contentContainer: {
+      padding: spacing.lg,
+    },
+    tabContent: {
+      gap: spacing.lg,
+    },
+    statusCard: {
+      padding: spacing.lg,
+    },
+    statusHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+      marginBottom: spacing.md,
+    },
+    statusTitle: {
+      fontSize: fontSizes.lg,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
+    },
+    statusBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+      marginBottom: spacing.xs,
+    },
+    statusDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+    },
+    statusText: {
+      fontSize: fontSizes.md,
+      fontWeight: fontWeights.semibold,
+      color: colors.text,
+    },
+    statusSubtext: {
+      fontSize: fontSizes.sm,
+      color: colors.textSecondary,
+    },
+    statsGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap' as const,
+      gap: spacing.md,
+    },
+    statCard: {
+      width: (width - spacing.lg * 2 - spacing.md) / 2,
+      padding: spacing.lg,
+      alignItems: 'center',
+      gap: spacing.sm,
+    },
+    statValue: {
+      fontSize: fontSizes.xxxl,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
+    },
+    statLabel: {
+      fontSize: fontSizes.sm,
+      color: colors.textSecondary,
+      fontWeight: fontWeights.medium,
+    },
+    insightCard: {
+      padding: spacing.lg,
+      backgroundColor: colors.primaryLight + '15',
+      borderColor: colors.primaryLight,
+    },
+    insightHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+      marginBottom: spacing.md,
+    },
+    insightTitle: {
+      fontSize: fontSizes.md,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
+    },
+    insightText: {
+      fontSize: fontSizes.sm,
+      color: colors.textSecondary,
+      lineHeight: 20,
+      marginBottom: spacing.md,
+    },
+    insightButton: {
+      alignSelf: 'flex-start',
+      paddingVertical: spacing.sm,
+    },
+    insightButtonText: {
+      fontSize: fontSizes.sm,
+      fontWeight: fontWeights.semibold,
+      color: colors.primary,
+    },
+    summaryCard: {
+      padding: spacing.lg,
+    },
+    summaryTitle: {
+      fontSize: fontSizes.lg,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
+      marginBottom: spacing.md,
+    },
+    summaryRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: spacing.sm,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    summaryLabel: {
+      fontSize: fontSizes.sm,
+      color: colors.textSecondary,
+    },
+    summaryValue: {
+      fontSize: fontSizes.sm,
+      fontWeight: fontWeights.semibold,
+      color: colors.text,
+    },
+    sectionTitle: {
+      fontSize: fontSizes.xl,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
+    },
+    sectionSubtitle: {
+      fontSize: fontSizes.sm,
+      color: colors.textSecondary,
+      marginTop: -spacing.sm,
+    },
+    emptyCard: {
+      alignItems: 'center',
+      padding: spacing.xxxl,
+    },
+    emptyText: {
+      fontSize: fontSizes.md,
+      color: colors.textLight,
+      marginTop: spacing.md,
+    },
+    taskCard: {
+      padding: spacing.lg,
+    },
+    taskHeader: {
+      marginBottom: spacing.md,
+    },
+    taskTitleRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      marginBottom: spacing.xs,
+    },
+    taskTitle: {
+      flex: 1,
+      fontSize: fontSizes.md,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
+      marginRight: spacing.sm,
+    },
+    statusBadgeSmall: {
+      paddingHorizontal: spacing.sm,
+      paddingVertical: 4,
+      borderRadius: borderRadius.sm,
+    },
+    statusBadgeText: {
+      fontSize: fontSizes.xs,
+      fontWeight: fontWeights.semibold,
+      textTransform: 'capitalize' as const,
+    },
+    taskDescription: {
+      fontSize: fontSizes.sm,
+      color: colors.textSecondary,
+      lineHeight: 18,
+    },
+    taskSteps: {
+      gap: spacing.sm,
+    },
+    taskStepsTitle: {
+      fontSize: fontSizes.sm,
+      fontWeight: fontWeights.medium,
+      color: colors.textSecondary,
+    },
+    progressBar: {
+      height: 6,
+      backgroundColor: colors.border,
+      borderRadius: 3,
+      overflow: 'hidden',
+    },
+    progressFill: {
+      height: '100%',
+      backgroundColor: colors.primary,
+      borderRadius: 3,
+    },
+    wellnessCard: {
+      padding: spacing.lg,
+    },
+    wellnessHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+      marginBottom: spacing.md,
+    },
+    wellnessTitle: {
+      fontSize: fontSizes.md,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
+    },
+    wellnessValue: {
+      fontSize: fontSizes.xxxl,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
+      marginBottom: spacing.xs,
+    },
+    wellnessSubtext: {
+      fontSize: fontSizes.sm,
+      color: colors.textSecondary,
+    },
+    alertCard: {
+      padding: spacing.lg,
+    },
+    alertHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: spacing.sm,
+    },
+    alertTime: {
+      fontSize: fontSizes.xs,
+      color: colors.textLight,
+    },
+    alertMessage: {
+      fontSize: fontSizes.sm,
+      color: colors.text,
+      marginBottom: spacing.sm,
+    },
+    severityBadge: {
+      alignSelf: 'flex-start',
+      paddingHorizontal: spacing.sm,
+      paddingVertical: 4,
+      borderRadius: borderRadius.sm,
+    },
+    severityText: {
+      fontSize: fontSizes.xs,
+      fontWeight: fontWeights.semibold,
+      textTransform: 'capitalize' as const,
+    },
+    infoCard: {
+      padding: spacing.lg,
+      alignItems: 'center',
+      gap: spacing.sm,
+    },
+    infoTitle: {
+      fontSize: fontSizes.md,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
+    },
+    infoText: {
+      fontSize: fontSizes.sm,
+      color: colors.textSecondary,
+      textAlign: 'center' as const,
+      lineHeight: 20,
+    },
+    messageButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+      backgroundColor: colors.primary,
+      paddingHorizontal: spacing.lg,
+      paddingVertical: spacing.md,
+      borderRadius: borderRadius.md,
+      marginTop: spacing.sm,
+    },
+    messageButtonText: {
+      fontSize: fontSizes.sm,
+      fontWeight: fontWeights.semibold,
+      color: colors.surface,
+    },
+    alertsHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    markAllButton: {
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+    },
+    markAllText: {
+      fontSize: fontSizes.sm,
+      fontWeight: fontWeights.semibold,
+      color: colors.primary,
+    },
+    emptySubtext: {
+      fontSize: fontSizes.sm,
+      color: colors.textLight,
+      marginTop: spacing.xs,
+    },
+    unreadCard: {
+      borderLeftWidth: 3,
+      borderLeftColor: colors.primary,
+    },
+    alertIconRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+    },
+    unreadDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: colors.primary,
+    },
+    alertTitle: {
+      fontSize: fontSizes.md,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
+      marginBottom: spacing.xs,
+    },
+    taskBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+      marginTop: spacing.sm,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: 4,
+      backgroundColor: colors.primaryLight + '20',
+      borderRadius: borderRadius.sm,
+      alignSelf: 'flex-start',
+    },
+    taskBadgeText: {
+      fontSize: fontSizes.xs,
+      fontWeight: fontWeights.medium,
+      color: colors.primary,
+    },
+    tabIconContainer: {
+      position: 'relative',
+    },
+    badge: {
+      position: 'absolute',
+      top: -4,
+      right: -8,
+      backgroundColor: colors.error,
+      borderRadius: 10,
+      minWidth: 16,
+      height: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 4,
+    },
+    badgeText: {
+      fontSize: 10,
+      fontWeight: fontWeights.bold,
+      color: colors.surface,
+    },
+  });
+
   const renderOverview = () => (
     <View style={styles.tabContent}>
       <Card style={styles.statusCard}>
@@ -383,455 +813,3 @@ export default function CaregiverDashboardScreen() {
     </PremiumGate>
   );
 }
-
-function getStatusStyle(status: string) {
-  switch (status) {
-    case 'completed':
-      return { backgroundColor: colors.success + '20' };
-    case 'in-progress':
-      return { backgroundColor: colors.warning + '20' };
-    default:
-      return { backgroundColor: colors.textLight + '20' };
-  }
-}
-
-function getStatusTextStyle(status: string) {
-  switch (status) {
-    case 'completed':
-      return { color: colors.success };
-    case 'in-progress':
-      return { color: colors.warning };
-    default:
-      return { color: colors.textSecondary };
-  }
-}
-
-function getSeverityStyle(severity: string) {
-  switch (severity) {
-    case 'high':
-      return { backgroundColor: colors.error + '20' };
-    case 'medium':
-      return { backgroundColor: colors.warning + '20' };
-    default:
-      return { backgroundColor: colors.success + '20' };
-  }
-}
-
-function getSeverityTextStyle(severity: string) {
-  switch (severity) {
-    case 'high':
-      return { color: colors.error };
-    case 'medium':
-      return { color: colors.warning };
-    default:
-      return { color: colors.success };
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.md,
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: fontSizes.xl,
-    fontWeight: fontWeights.bold,
-    color: colors.text,
-  },
-  tabBar: {
-    flexDirection: 'row',
-    backgroundColor: colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  tab: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: spacing.md,
-    gap: 4,
-  },
-  tabActive: {
-    borderBottomWidth: 2,
-    borderBottomColor: colors.primary,
-  },
-  tabText: {
-    fontSize: fontSizes.xs,
-    color: colors.textLight,
-    fontWeight: fontWeights.medium,
-  },
-  tabTextActive: {
-    color: colors.primary,
-    fontWeight: fontWeights.bold,
-  },
-  content: {
-    flex: 1,
-  },
-  contentContainer: {
-    padding: spacing.lg,
-  },
-  tabContent: {
-    gap: spacing.lg,
-  },
-  statusCard: {
-    padding: spacing.lg,
-  },
-  statusHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.md,
-  },
-  statusTitle: {
-    fontSize: fontSizes.lg,
-    fontWeight: fontWeights.bold,
-    color: colors.text,
-  },
-  statusBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.xs,
-  },
-  statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  statusText: {
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.semibold,
-    color: colors.text,
-  },
-  statusSubtext: {
-    fontSize: fontSizes.sm,
-    color: colors.textSecondary,
-  },
-  statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap' as const,
-    gap: spacing.md,
-  },
-  statCard: {
-    width: (width - spacing.lg * 2 - spacing.md) / 2,
-    padding: spacing.lg,
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  statValue: {
-    fontSize: fontSizes.xxxl,
-    fontWeight: fontWeights.bold,
-    color: colors.text,
-  },
-  statLabel: {
-    fontSize: fontSizes.sm,
-    color: colors.textSecondary,
-    fontWeight: fontWeights.medium,
-  },
-  insightCard: {
-    padding: spacing.lg,
-    backgroundColor: colors.primaryLight + '15',
-    borderColor: colors.primaryLight,
-  },
-  insightHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.md,
-  },
-  insightTitle: {
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.bold,
-    color: colors.text,
-  },
-  insightText: {
-    fontSize: fontSizes.sm,
-    color: colors.textSecondary,
-    lineHeight: 20,
-    marginBottom: spacing.md,
-  },
-  insightButton: {
-    alignSelf: 'flex-start',
-    paddingVertical: spacing.sm,
-  },
-  insightButtonText: {
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.semibold,
-    color: colors.primary,
-  },
-  summaryCard: {
-    padding: spacing.lg,
-  },
-  summaryTitle: {
-    fontSize: fontSizes.lg,
-    fontWeight: fontWeights.bold,
-    color: colors.text,
-    marginBottom: spacing.md,
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  summaryLabel: {
-    fontSize: fontSizes.sm,
-    color: colors.textSecondary,
-  },
-  summaryValue: {
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.semibold,
-    color: colors.text,
-  },
-  sectionTitle: {
-    fontSize: fontSizes.xl,
-    fontWeight: fontWeights.bold,
-    color: colors.text,
-  },
-  sectionSubtitle: {
-    fontSize: fontSizes.sm,
-    color: colors.textSecondary,
-    marginTop: -spacing.sm,
-  },
-  emptyCard: {
-    alignItems: 'center',
-    padding: spacing.xxxl,
-  },
-  emptyText: {
-    fontSize: fontSizes.md,
-    color: colors.textLight,
-    marginTop: spacing.md,
-  },
-  taskCard: {
-    padding: spacing.lg,
-  },
-  taskHeader: {
-    marginBottom: spacing.md,
-  },
-  taskTitleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: spacing.xs,
-  },
-  taskTitle: {
-    flex: 1,
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.bold,
-    color: colors.text,
-    marginRight: spacing.sm,
-  },
-  statusBadgeSmall: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
-    borderRadius: borderRadius.sm,
-  },
-  statusBadgeText: {
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.semibold,
-    textTransform: 'capitalize' as const,
-  },
-  taskDescription: {
-    fontSize: fontSizes.sm,
-    color: colors.textSecondary,
-    lineHeight: 18,
-  },
-  taskSteps: {
-    gap: spacing.sm,
-  },
-  taskStepsTitle: {
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.medium,
-    color: colors.textSecondary,
-  },
-  progressBar: {
-    height: 6,
-    backgroundColor: colors.border,
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: colors.primary,
-    borderRadius: 3,
-  },
-  wellnessCard: {
-    padding: spacing.lg,
-  },
-  wellnessHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.md,
-  },
-  wellnessTitle: {
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.bold,
-    color: colors.text,
-  },
-  wellnessValue: {
-    fontSize: fontSizes.xxxl,
-    fontWeight: fontWeights.bold,
-    color: colors.text,
-    marginBottom: spacing.xs,
-  },
-  wellnessSubtext: {
-    fontSize: fontSizes.sm,
-    color: colors.textSecondary,
-  },
-  alertCard: {
-    padding: spacing.lg,
-  },
-  alertHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.sm,
-  },
-  alertTime: {
-    fontSize: fontSizes.xs,
-    color: colors.textLight,
-  },
-  alertMessage: {
-    fontSize: fontSizes.sm,
-    color: colors.text,
-    marginBottom: spacing.sm,
-  },
-  severityBadge: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
-    borderRadius: borderRadius.sm,
-  },
-  severityText: {
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.semibold,
-    textTransform: 'capitalize' as const,
-  },
-  infoCard: {
-    padding: spacing.lg,
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  infoTitle: {
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.bold,
-    color: colors.text,
-  },
-  infoText: {
-    fontSize: fontSizes.sm,
-    color: colors.textSecondary,
-    textAlign: 'center' as const,
-    lineHeight: 20,
-  },
-  messageButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    backgroundColor: colors.primary,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    borderRadius: borderRadius.md,
-    marginTop: spacing.sm,
-  },
-  messageButtonText: {
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.semibold,
-    color: colors.surface,
-  },
-  alertsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  markAllButton: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  markAllText: {
-    fontSize: fontSizes.sm,
-    fontWeight: fontWeights.semibold,
-    color: colors.primary,
-  },
-  emptySubtext: {
-    fontSize: fontSizes.sm,
-    color: colors.textLight,
-    marginTop: spacing.xs,
-  },
-  unreadCard: {
-    borderLeftWidth: 3,
-    borderLeftColor: colors.primary,
-  },
-  alertIconRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  unreadDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.primary,
-  },
-  alertTitle: {
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.bold,
-    color: colors.text,
-    marginBottom: spacing.xs,
-  },
-  taskBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    marginTop: spacing.sm,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
-    backgroundColor: colors.primaryLight + '20',
-    borderRadius: borderRadius.sm,
-    alignSelf: 'flex-start',
-  },
-  taskBadgeText: {
-    fontSize: fontSizes.xs,
-    fontWeight: fontWeights.medium,
-    color: colors.primary,
-  },
-  tabIconContainer: {
-    position: 'relative',
-  },
-  badge: {
-    position: 'absolute',
-    top: -4,
-    right: -8,
-    backgroundColor: colors.error,
-    borderRadius: 10,
-    minWidth: 16,
-    height: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 4,
-  },
-  badgeText: {
-    fontSize: 10,
-    fontWeight: fontWeights.bold,
-    color: colors.surface,
-  },
-});

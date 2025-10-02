@@ -22,6 +22,238 @@ export default function TaskDetailScreen() {
 
   const task = allTasks.find(t => t.id === id);
 
+  const textSize = settings.largeText ? 1.2 : 1;
+  const completedSteps = task ? task.steps.filter(s => s.completed).length : 0;
+  const progress = task && task.steps.length > 0 ? (completedSteps / task.steps.length) * 100 : 0;
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    backButton: {
+      padding: 8,
+    },
+    deleteButton: {
+      padding: 8,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    content: {
+      padding: 20,
+      paddingBottom: 40,
+    },
+    header: {
+      marginBottom: 32,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: '700' as const,
+      color: colors.text,
+      lineHeight: 36,
+      flex: 1,
+    },
+    description: {
+      fontSize: 16,
+      color: colors.textSecondary,
+      lineHeight: 24,
+    },
+    progressSection: {
+      marginBottom: 32,
+    },
+    progressHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 12,
+    },
+    progressTitle: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: colors.text,
+    },
+    progressText: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      fontWeight: '600' as const,
+    },
+    progressBarContainer: {
+      height: 8,
+      backgroundColor: colors.border,
+      borderRadius: 4,
+      overflow: 'hidden',
+    },
+    progressBar: {
+      height: '100%',
+      backgroundColor: colors.primary,
+      borderRadius: 4,
+    },
+    stepsSection: {
+      marginBottom: 24,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: '700' as const,
+      color: colors.text,
+      marginBottom: 8,
+    },
+    sectionSubtitle: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginBottom: 20,
+      lineHeight: 20,
+    },
+    stepsList: {
+      gap: 12,
+    },
+    stepCard: {
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      padding: 16,
+      shadowColor: colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 1,
+      shadowRadius: 8,
+      elevation: 2,
+    },
+    stepCardCompleted: {
+      backgroundColor: colors.success + '10',
+      borderWidth: 1,
+      borderColor: colors.success + '30',
+    },
+    stepCardHighContrast: {
+      borderWidth: 2,
+      borderColor: colors.text,
+    },
+    stepLeft: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: 12,
+    },
+    stepNumber: {
+      marginTop: 2,
+    },
+    stepNumberCircle: {
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: colors.primary + '20',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    stepNumberText: {
+      fontSize: 14,
+      fontWeight: '600' as const,
+      color: colors.primary,
+    },
+    stepText: {
+      flex: 1,
+      fontSize: 16,
+      color: colors.text,
+      lineHeight: 24,
+    },
+    stepTextCompleted: {
+      color: colors.textSecondary,
+    },
+    noStepsContainer: {
+      padding: 40,
+      alignItems: 'center',
+    },
+    noStepsText: {
+      fontSize: 16,
+      color: colors.textSecondary,
+      textAlign: 'center',
+      lineHeight: 24,
+    },
+    completeButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.success,
+      borderRadius: 12,
+      padding: 16,
+      gap: 8,
+      marginTop: 8,
+    },
+    completeButtonDisabled: {
+      opacity: 0.5,
+    },
+    completeButtonText: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: colors.surface,
+    },
+    completedBanner: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.success + '20',
+      borderRadius: 12,
+      padding: 20,
+      gap: 12,
+      marginTop: 8,
+      borderWidth: 1,
+      borderColor: colors.success,
+    },
+    completedText: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: colors.success,
+    },
+    errorText: {
+      fontSize: 16,
+      color: colors.error,
+      textAlign: 'center',
+      marginTop: 40,
+    },
+    stepMainContent: {
+      flex: 1,
+    },
+    speakButton: {
+      padding: 8,
+      marginTop: 8,
+      alignSelf: 'flex-end',
+      borderRadius: 8,
+      backgroundColor: colors.background,
+    },
+    speakButtonActive: {
+      backgroundColor: colors.primary + '20',
+    },
+    titleRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 12,
+    },
+    timerToggle: {
+      padding: 8,
+      borderRadius: 8,
+      backgroundColor: colors.primary + '20',
+    },
+    timerSection: {
+      marginBottom: 32,
+    },
+    timerTitle: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: colors.text,
+      marginBottom: 12,
+    },
+    headerActions: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    coachToggle: {
+      padding: 8,
+      borderRadius: 8,
+      backgroundColor: colors.primary + '20',
+    },
+    coachToggleActive: {
+      backgroundColor: colors.primary,
+    },
+  });
+
   if (!task) {
     return (
       <View style={styles.container}>
@@ -84,10 +316,6 @@ export default function TaskDetailScreen() {
       });
     }
   };
-
-  const textSize = settings.largeText ? 1.2 : 1;
-  const completedSteps = task.steps.filter(s => s.completed).length;
-  const progress = task.steps.length > 0 ? (completedSteps / task.steps.length) * 100 : 0;
 
   return (
     <View style={styles.container}>
@@ -287,231 +515,3 @@ export default function TaskDetailScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  backButton: {
-    padding: 8,
-  },
-  deleteButton: {
-    padding: 8,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  content: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  header: {
-    marginBottom: 32,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700' as const,
-    color: colors.text,
-    lineHeight: 36,
-    flex: 1,
-  },
-  description: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    lineHeight: 24,
-  },
-  progressSection: {
-    marginBottom: 32,
-  },
-  progressHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  progressTitle: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: colors.text,
-  },
-  progressText: {
-    fontSize: 14,
-    color: colors.textSecondary,
-    fontWeight: '600' as const,
-  },
-  progressBarContainer: {
-    height: 8,
-    backgroundColor: colors.border,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  progressBar: {
-    height: '100%',
-    backgroundColor: colors.primary,
-    borderRadius: 4,
-  },
-  stepsSection: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700' as const,
-    color: colors.text,
-    marginBottom: 8,
-  },
-  sectionSubtitle: {
-    fontSize: 14,
-    color: colors.textSecondary,
-    marginBottom: 20,
-    lineHeight: 20,
-  },
-  stepsList: {
-    gap: 12,
-  },
-  stepCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: 16,
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  stepCardCompleted: {
-    backgroundColor: colors.success + '10',
-    borderWidth: 1,
-    borderColor: colors.success + '30',
-  },
-  stepCardHighContrast: {
-    borderWidth: 2,
-    borderColor: colors.text,
-  },
-  stepLeft: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-  },
-  stepNumber: {
-    marginTop: 2,
-  },
-  stepNumberCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: colors.primary + '20',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stepNumberText: {
-    fontSize: 14,
-    fontWeight: '600' as const,
-    color: colors.primary,
-  },
-  stepText: {
-    flex: 1,
-    fontSize: 16,
-    color: colors.text,
-    lineHeight: 24,
-  },
-  stepTextCompleted: {
-    color: colors.textSecondary,
-  },
-  noStepsContainer: {
-    padding: 40,
-    alignItems: 'center',
-  },
-  noStepsText: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  completeButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.success,
-    borderRadius: 12,
-    padding: 16,
-    gap: 8,
-    marginTop: 8,
-  },
-  completeButtonDisabled: {
-    opacity: 0.5,
-  },
-  completeButtonText: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: colors.surface,
-  },
-  completedBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.success + '20',
-    borderRadius: 12,
-    padding: 20,
-    gap: 12,
-    marginTop: 8,
-    borderWidth: 1,
-    borderColor: colors.success,
-  },
-  completedText: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: colors.success,
-  },
-  errorText: {
-    fontSize: 16,
-    color: colors.error,
-    textAlign: 'center',
-    marginTop: 40,
-  },
-  stepMainContent: {
-    flex: 1,
-  },
-  speakButton: {
-    padding: 8,
-    marginTop: 8,
-    alignSelf: 'flex-end',
-    borderRadius: 8,
-    backgroundColor: colors.background,
-  },
-  speakButtonActive: {
-    backgroundColor: colors.primary + '20',
-  },
-  titleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  timerToggle: {
-    padding: 8,
-    borderRadius: 8,
-    backgroundColor: colors.primary + '20',
-  },
-  timerSection: {
-    marginBottom: 32,
-  },
-  timerTitle: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: colors.text,
-    marginBottom: 12,
-  },
-  headerActions: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  coachToggle: {
-    padding: 8,
-    borderRadius: 8,
-    backgroundColor: colors.primary + '20',
-  },
-  coachToggleActive: {
-    backgroundColor: colors.primary,
-  },
-});

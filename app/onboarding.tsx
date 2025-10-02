@@ -54,6 +54,95 @@ export default function OnboardingScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const slideAnim = useRef(new Animated.Value(0)).current;
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      paddingHorizontal: 20,
+      paddingTop: 10,
+      alignItems: 'flex-end',
+    },
+    skipButton: {
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+    },
+    skipText: {
+      fontSize: 16,
+      color: colors.textSecondary,
+      fontWeight: '600' as const,
+    },
+    content: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 32,
+    },
+    iconContainer: {
+      width: 140,
+      height: 140,
+      borderRadius: 70,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 48,
+    },
+    textContainer: {
+      alignItems: 'center',
+      marginBottom: 48,
+    },
+    title: {
+      fontSize: 32,
+      fontWeight: '800' as const,
+      color: colors.text,
+      textAlign: 'center',
+      marginBottom: 16,
+      letterSpacing: -0.5,
+    },
+    description: {
+      fontSize: 17,
+      color: colors.textSecondary,
+      textAlign: 'center',
+      lineHeight: 26,
+      paddingHorizontal: 8,
+    },
+    pagination: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    paginationDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: colors.border,
+    },
+    paginationDotActive: {
+      width: 32,
+    },
+    footer: {
+      paddingHorizontal: 20,
+      paddingBottom: 20,
+    },
+    nextButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      paddingVertical: 18,
+      borderRadius: 16,
+      shadowColor: colors.shadow,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 12,
+      elevation: 6,
+    },
+    nextButtonText: {
+      fontSize: 18,
+      fontWeight: '700' as const,
+      color: colors.surface,
+    },
+  });
+
   useEffect(() => {
     trackStep('onboarding_start');
   }, [trackStep]);
@@ -173,92 +262,3 @@ export default function OnboardingScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    alignItems: 'flex-end',
-  },
-  skipButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  skipText: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    fontWeight: '600' as const,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
-  },
-  iconContainer: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 48,
-  },
-  textContainer: {
-    alignItems: 'center',
-    marginBottom: 48,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '800' as const,
-    color: colors.text,
-    textAlign: 'center',
-    marginBottom: 16,
-    letterSpacing: -0.5,
-  },
-  description: {
-    fontSize: 17,
-    color: colors.textSecondary,
-    textAlign: 'center',
-    lineHeight: 26,
-    paddingHorizontal: 8,
-  },
-  pagination: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  paginationDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.border,
-  },
-  paginationDotActive: {
-    width: 32,
-  },
-  footer: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  nextButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 18,
-    borderRadius: 16,
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 6,
-  },
-  nextButtonText: {
-    fontSize: 18,
-    fontWeight: '700' as const,
-    color: colors.surface,
-  },
-});
