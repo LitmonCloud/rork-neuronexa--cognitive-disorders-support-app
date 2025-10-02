@@ -37,18 +37,27 @@ export default function TasksScreen() {
       const task = await addTask(newTaskTitle, newTaskDescription || undefined, newTaskPriority);
       if (task) {
         incrementTaskUsage();
+        setNewTaskTitle('');
+        setNewTaskDescription('');
+        setNewTaskPriority('medium');
+        setShowAddWidget(false);
+        setIsCreating(false);
+        
         console.log('[TaskCreation] Task created:', task.id);
         console.log('[TaskCreation] Starting AI breakdown for task:', task.id);
-        await breakdownTask(task.id);
-        console.log('[TaskCreation] AI breakdown completed for task:', task.id);
+        router.push(`/task/${task.id}` as any);
+        
+        setTimeout(async () => {
+          try {
+            await breakdownTask(task.id);
+            console.log('[TaskCreation] AI breakdown completed for task:', task.id);
+          } catch (error) {
+            console.error('[TaskCreation] Error in breakdown:', error);
+          }
+        }, 100);
       }
-      setNewTaskTitle('');
-      setNewTaskDescription('');
-      setNewTaskPriority('medium');
-      setShowAddWidget(false);
     } catch (error) {
       console.error('[TaskCreation] Error creating task:', error);
-    } finally {
       setIsCreating(false);
     }
   };

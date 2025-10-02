@@ -181,7 +181,8 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
   }, [tasks, mutateTasks, addNotification]);
 
   const breakdownTask = useCallback(async (taskId: string, cognitiveLevel: 'simple' | 'moderate' | 'complex' = 'moderate') => {
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    await new Promise(resolve => setTimeout(resolve, 200));
     
     const currentTasks = queryClient.getQueryData<Task[]>(['tasks']) || [];
     console.log('[TaskContext] Looking for task:', taskId);
