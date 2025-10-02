@@ -211,6 +211,133 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
     outputRange: ['0deg', '180deg', '360deg'],
   });
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: 20,
+    },
+    cycleContainer: {
+      marginBottom: 20,
+    },
+    cycleText: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: colors.textSecondary,
+    },
+    circleContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginVertical: 20,
+      position: 'relative' as const,
+    },
+    circle: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: colors.shadow,
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.3,
+      shadowRadius: 16,
+      elevation: 8,
+    },
+    innerCircle: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    pulseRing1: {
+      position: 'absolute' as const,
+      width: 320,
+      height: 320,
+      borderRadius: 160,
+      borderWidth: 2,
+      borderColor: colors.primaryLight,
+      opacity: 0.2,
+    },
+    pulseRing2: {
+      position: 'absolute' as const,
+      width: 360,
+      height: 360,
+      borderRadius: 180,
+      borderWidth: 1,
+      borderColor: colors.primaryLight,
+      opacity: 0.1,
+    },
+    phaseText: {
+      fontSize: 24,
+      fontWeight: '700' as const,
+      color: colors.surface,
+      marginBottom: 8,
+    },
+    timerText: {
+      fontSize: 48,
+      fontWeight: '800' as const,
+      color: colors.surface,
+    },
+    instructionContainer: {
+      paddingHorizontal: 32,
+      marginBottom: 20,
+      alignItems: 'center',
+    },
+    instructionText: {
+      fontSize: 16,
+      color: colors.textSecondary,
+      textAlign: 'center' as const,
+      lineHeight: 24,
+    },
+    controls: {
+      flexDirection: 'row',
+      gap: 16,
+      marginBottom: 20,
+    },
+    controlButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      paddingHorizontal: 24,
+      paddingVertical: 14,
+      borderRadius: 12,
+      minWidth: 120,
+      justifyContent: 'center',
+    },
+    primaryButton: {
+      backgroundColor: colors.primary,
+    },
+    secondaryButton: {
+      backgroundColor: colors.surface,
+      borderWidth: 2,
+      borderColor: colors.primary,
+    },
+    primaryButtonText: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: colors.surface,
+    },
+    secondaryButtonText: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: colors.primary,
+    },
+    patternInfo: {
+      flexDirection: 'row',
+      gap: 24,
+      paddingHorizontal: 32,
+    },
+    patternInfoRow: {
+      alignItems: 'center',
+    },
+    patternInfoLabel: {
+      fontSize: 12,
+      color: colors.textLight,
+      marginBottom: 4,
+    },
+    patternInfoValue: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: colors.text,
+    },
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.cycleContainer}>
@@ -305,130 +432,3 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 20,
-  },
-  cycleContainer: {
-    marginBottom: 20,
-  },
-  cycleText: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: colors.textSecondary,
-  },
-  circleContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 20,
-    position: 'relative' as const,
-  },
-  circle: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  innerCircle: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  pulseRing1: {
-    position: 'absolute' as const,
-    width: 320,
-    height: 320,
-    borderRadius: 160,
-    borderWidth: 2,
-    borderColor: colors.primaryLight,
-    opacity: 0.2,
-  },
-  pulseRing2: {
-    position: 'absolute' as const,
-    width: 360,
-    height: 360,
-    borderRadius: 180,
-    borderWidth: 1,
-    borderColor: colors.primaryLight,
-    opacity: 0.1,
-  },
-  phaseText: {
-    fontSize: 24,
-    fontWeight: '700' as const,
-    color: colors.surface,
-    marginBottom: 8,
-  },
-  timerText: {
-    fontSize: 48,
-    fontWeight: '800' as const,
-    color: colors.surface,
-  },
-  instructionContainer: {
-    paddingHorizontal: 32,
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  instructionText: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    textAlign: 'center' as const,
-    lineHeight: 24,
-  },
-  controls: {
-    flexDirection: 'row',
-    gap: 16,
-    marginBottom: 20,
-  },
-  controlButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 24,
-    paddingVertical: 14,
-    borderRadius: 12,
-    minWidth: 120,
-    justifyContent: 'center',
-  },
-  primaryButton: {
-    backgroundColor: colors.primary,
-  },
-  secondaryButton: {
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.primary,
-  },
-  primaryButtonText: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: colors.surface,
-  },
-  secondaryButtonText: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: colors.primary,
-  },
-  patternInfo: {
-    flexDirection: 'row',
-    gap: 24,
-    paddingHorizontal: 32,
-  },
-  patternInfoRow: {
-    alignItems: 'center',
-  },
-  patternInfoLabel: {
-    fontSize: 12,
-    color: colors.textLight,
-    marginBottom: 4,
-  },
-  patternInfoValue: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: colors.text,
-  },
-});
