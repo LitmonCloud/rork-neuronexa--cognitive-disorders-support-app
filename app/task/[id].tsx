@@ -4,7 +4,8 @@ import { useTasks } from '@/contexts/TaskContext';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useRetention } from '@/contexts/RetentionContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { CheckCircle2, Trash2, ArrowLeft, Volume2, Clock, Sparkles } from 'lucide-react-native';
+import { useSubscription } from '@/contexts/SubscriptionContext';
+import { CheckCircle2, Trash2, ArrowLeft, Volume2, Clock, Sparkles, Crown } from 'lucide-react-native';
 import * as Speech from 'expo-speech';
 import { useState } from 'react';
 import VisualTimer from '@/components/VisualTimer';
@@ -16,6 +17,7 @@ export default function TaskDetailScreen() {
   const { settings } = useAccessibility();
   const { updateStreak } = useRetention();
   const { colors } = useTheme();
+  const { isPremium, isInTrial } = useSubscription();
   const [speakingStepId, setSpeakingStepId] = useState<string | null>(null);
   const [showTimer, setShowTimer] = useState<boolean>(false);
   const [useCoachMode, setUseCoachMode] = useState<boolean>(false);
@@ -252,6 +254,69 @@ export default function TaskDetailScreen() {
     coachToggleActive: {
       backgroundColor: colors.primary,
     },
+    premiumBadge: {
+      position: 'absolute' as const,
+      top: -4,
+      right: -4,
+      backgroundColor: colors.warning,
+      borderRadius: 8,
+      padding: 2,
+    },
+    premiumOverlay: {
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      padding: 24,
+      marginVertical: 20,
+      borderWidth: 2,
+      borderColor: colors.primary,
+      alignItems: 'center',
+      gap: 16,
+    },
+    premiumIconContainer: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: colors.primaryLight + '20',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative' as const,
+    },
+    premiumCrown: {
+      position: 'absolute' as const,
+      top: -8,
+      right: -8,
+    },
+    premiumTitle: {
+      fontSize: 20,
+      fontWeight: '700' as const,
+      color: colors.text,
+      textAlign: 'center',
+    },
+    premiumDescription: {
+      fontSize: 15,
+      color: colors.textSecondary,
+      textAlign: 'center',
+      lineHeight: 22,
+    },
+    premiumButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      backgroundColor: colors.primary,
+      paddingHorizontal: 24,
+      paddingVertical: 14,
+      borderRadius: 12,
+      shadowColor: colors.primary,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    premiumButtonText: {
+      fontSize: 16,
+      fontWeight: '700' as const,
+      color: colors.surface,
+    },
   });
 
   if (!task) {
@@ -347,10 +412,21 @@ export default function TaskDetailScreen() {
               {settings.stepByStepMode && task.steps.length > 0 && (
                 <TouchableOpacity
                   style={[styles.coachToggle, useCoachMode && styles.coachToggleActive]}
-                  onPress={() => setUseCoachMode(!useCoachMode)}
+                  onPress={() => {
+                    if (isPremium || isInTrial) {
+                      setUseCoachMode(!useCoachMode);
+                    } else {
+                      router.push('/paywall');
+                    }
+                  }}
                   activeOpacity={0.7}
                 >
                   <Sparkles size={20} color={useCoachMode ? colors.surface : colors.primary} />
+                  {!isPremium && !isInTrial && (
+                    <View style={styles.premiumBadge}>
+                      <Crown size={12} color={colors.surface} />
+                    </View>
+                  )}
                 </TouchableOpacity>
               )}
               {settings.cognitiveMode && (
@@ -382,11 +458,38 @@ export default function TaskDetailScreen() {
         )}
 
         {useCoachMode && settings.stepByStepMode && task.steps.length > 0 ? (
-          <AITaskCoach
-            task={task}
-            onStepComplete={handleStepCompleteFromCoach}
-            onTaskComplete={handleTaskCompleteFromCoach}
-          />
+          (isPremium || isInTrial) ? (
+            <AITaskCoach
+              task={task}
+              onStepComplete={handleStepCompleteFromCoach}
+              onTaskComplete={handleTaskCompleteFromCoach}
+            />
+          ) : (
+            <View style={styles.premiumOverlay}>
+              <View style={styles.premiumIconContainer}>
+                <Sparkles size={40} color={colors.primary} />
+                <View style={styles.premiumCrown}>
+                  <Crown size={24} color={colors.warning} />
+                </View>
+              </View>
+              <Text style={[styles.premiumTitle, { fontSize: 20 * textSize }]}>
+                AI Coach Mode
+              </Text>
+              <Text style={[styles.premiumDescription, { fontSize: 15 * textSize }]}>
+                Get personalized step-by-step guidance with AI-powered coaching. Nexa will help you complete each step with encouragement and support tailored to your needs.
+              </Text>
+              <TouchableOpacity
+                style={styles.premiumButton}
+                onPress={() => router.push('/paywall')}
+                activeOpacity={0.7}
+              >
+                <Crown size={20} color={colors.surface} />
+                <Text style={[styles.premiumButtonText, { fontSize: 16 * textSize }]}>
+                  Unlock Premium
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )
         ) : task.steps.length > 0 && (
           <>
             <View style={styles.progressSection}>
