@@ -47,7 +47,7 @@ function RootLayoutNav() {
       }
     }
     checkTermsAcceptance();
-  }, []);
+  }, [segments]);
 
   useEffect(() => {
     if (isLoading || termsAccepted === null) return;
