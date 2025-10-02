@@ -37,6 +37,7 @@ export default function TasksScreen() {
       const task = await addTask(newTaskTitle, newTaskDescription || undefined, newTaskPriority);
       if (task) {
         incrementTaskUsage();
+        console.log('[TaskCreation] Task created:', task.id);
         console.log('[TaskCreation] Starting AI breakdown for task:', task.id);
         await breakdownTask(task.id);
         console.log('[TaskCreation] AI breakdown completed for task:', task.id);

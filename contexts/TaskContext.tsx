@@ -66,6 +66,7 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
 
     const updatedTasks = [...tasks, newTask];
     await mutateTasksAsync(updatedTasks);
+    console.log('[TaskContext] Task saved to storage:', newTask.id);
 
     addNotification({
       type: 'task_created',
@@ -180,7 +181,12 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
   }, [tasks, mutateTasks, addNotification]);
 
   const breakdownTask = useCallback(async (taskId: string, cognitiveLevel: 'simple' | 'moderate' | 'complex' = 'moderate') => {
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
     const currentTasks = queryClient.getQueryData<Task[]>(['tasks']) || [];
+    console.log('[TaskContext] Looking for task:', taskId);
+    console.log('[TaskContext] Available tasks:', currentTasks.map(t => ({ id: t.id, title: t.title })));
+    
     const task = currentTasks.find(t => t.id === taskId);
     if (!task) {
       console.error('[TaskContext] Task not found for breakdown:', taskId);
