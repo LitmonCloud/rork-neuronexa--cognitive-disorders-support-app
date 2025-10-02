@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTheme, ThemeMode } from '@/contexts/ThemeContext';
-import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor } from 'lucide-react-native';
+import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail } from 'lucide-react-native';
 import { mentalHealthResources } from '@/constants/mentalHealthResources';
 import { MentalHealthResource } from '@/types/mentalHealth';
 
@@ -599,11 +599,97 @@ export default function SettingsScreen() {
           </View>
         </View>
 
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Legal & Support</Text>
+          
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_PRIVACY_POLICY_URL || 'https://neuronexa.app/legal/privacy')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+                <Shield size={20} color={colors.primary} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Privacy Policy</Text>
+                <Text style={styles.settingDescription}>How we protect your data</Text>
+              </View>
+            </View>
+            <ChevronRight size={20} color={colors.textLight} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_TERMS_URL || 'https://neuronexa.app/legal/terms')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.secondary + '20' }]}>
+                <FileText size={20} color={colors.secondary} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Terms of Service</Text>
+                <Text style={styles.settingDescription}>Usage terms and conditions</Text>
+              </View>
+            </View>
+            <ChevronRight size={20} color={colors.textLight} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_ACCESSIBILITY_URL || 'https://neuronexa.app/legal/accessibility')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.accent + '20' }]}>
+                <HelpCircle size={20} color={colors.accent} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Accessibility Statement</Text>
+                <Text style={styles.settingDescription}>Our commitment to accessibility</Text>
+              </View>
+            </View>
+            <ChevronRight size={20} color={colors.textLight} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_SUPPORT_URL || 'https://neuronexa.app/support')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.success + '20' }]}>
+                <Mail size={20} color={colors.success} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Support</Text>
+                <Text style={styles.settingDescription}>Get help and contact us</Text>
+              </View>
+            </View>
+            <ChevronRight size={20} color={colors.textLight} />
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>About NeuroNexa</Text>
           <Text style={styles.infoText}>
             Designed with neurodiversity in mind. We support individuals with ADHD, Autism, 
             Anxiety, and cognitive challenges through compassionate, AI-powered task guidance.
+          </Text>
+          <Text style={[styles.infoText, { marginTop: 12, fontSize: 13, fontStyle: 'italic' as const }]}>
+            Version {process.env.EXPO_PUBLIC_APP_VERSION || '1.0.0'}
+          </Text>
+          <Text style={[styles.infoText, { marginTop: 8, fontSize: 12, color: colors.textLight }]}>
+            © 2025 NeuroNexa. All rights reserved.
+          </Text>
+        </View>
+
+        <View style={[styles.infoCard, { backgroundColor: colors.warning + '15', borderColor: colors.warning, marginTop: 16 }]}>
+          <Text style={[styles.infoTitle, { color: colors.warning }]}>Medical Disclaimer</Text>
+          <Text style={[styles.infoText, { color: colors.text }]}>
+            NeuroNexa is not a medical device and does not provide medical advice, diagnosis, or treatment. 
+            Always consult with a qualified healthcare professional for medical concerns.
           </Text>
         </View>
       </ScrollView>
