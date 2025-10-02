@@ -14,12 +14,12 @@ import * as Haptics from 'expo-haptics';
 import { useTheme } from '@/contexts/ThemeContext';
 import { spacing, borderRadius } from '@/theme/spacing';
 import { fontSizes, fontWeights } from '@/theme/typography';
-import { TraceExercise, TracePoint } from '@/types/fingerTrace';
+import { TraceExercise, TracePoint, TraceSession } from '@/types/fingerTrace';
 import Svg, { Path } from 'react-native-svg';
 
 interface FingerTraceExerciseProps {
   exercise: TraceExercise;
-  onComplete?: (accuracy: number) => void;
+  onComplete?: (session: TraceSession) => void;
 }
 
 export default function FingerTraceExercise({ exercise, onComplete }: FingerTraceExerciseProps) {
@@ -30,6 +30,7 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
   const [completedLoops, setCompletedLoops] = useState(0);
   const [accuracy, setAccuracy] = useState(100);
   const [startTime, setStartTime] = useState<number | null>(null);
+  const [allPaths, setAllPaths] = useState<TracePoint[][]>([]);
   
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const glowAnim = useRef(new Animated.Value(0)).current;
@@ -206,8 +207,22 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
           if (newCompletedLoops >= requiredLoops) {
             setIsActive(false);
             setIsCompleted(true);
-            onComplete?.(accuracy);
+            
+            const session: TraceSession = {
+              exerciseId: exercise.id,
+              startTime: startTime || Date.now(),
+              endTime: Date.now(),
+              accuracy: currentAccuracy,
+              completed: true,
+              paths: allPaths.map(p => ({ points: p, completed: true })),
+            };
+            
+            onComplete?.(session);
           }
+        }
+        
+        if (loopCompleted) {
+          setAllPaths(prev => [...prev, currentPath]);
         }
         
         setCurrentPath([]);
@@ -221,7 +236,8 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
     setCompletedLoops(0);
     setAccuracy(100);
     setCurrentPath([]);
-    setStartTime(null);
+    setAllPaths([]);
+    setStartTime(Date.now());
     triggerHaptic();
 
     Animated.loop(
@@ -261,6 +277,7 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
     setCompletedLoops(0);
     setAccuracy(100);
     setCurrentPath([]);
+    setAllPaths([]);
     setStartTime(null);
     pulseAnim.setValue(1);
     glowAnim.setValue(0);
