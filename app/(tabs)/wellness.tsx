@@ -6,8 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-
-import { Wind, ArrowLeft } from 'lucide-react-native';
+import { router } from 'expo-router';
+import { Wind, ArrowLeft, Hand, Sparkles } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { breathingPatterns } from '@/constants/mentalHealthResources';
 import { BreathingPattern } from '@/types/mentalHealth';
@@ -135,6 +135,40 @@ export default function WellnessScreen() {
       height: 16,
       borderRadius: 8,
     },
+    featureCard: {
+      backgroundColor: colors.surface,
+      borderRadius: 20,
+      padding: 24,
+      marginBottom: 24,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderLeftWidth: 5,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 16,
+    },
+    featureCardIcon: {
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: '#9B59B620',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    featureCardContent: {
+      flex: 1,
+    },
+    featureCardTitle: {
+      fontSize: 18,
+      fontWeight: '700' as const,
+      color: colors.text,
+      marginBottom: 6,
+    },
+    featureCardDescription: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      lineHeight: 20,
+    },
   });
 
   if (selectedPattern) {
@@ -177,6 +211,23 @@ export default function WellnessScreen() {
             Guided breathing exercises to reduce stress, calm anxiety, and improve focus. 
             Choose an exercise below to begin.
           </Text>
+          
+          <TouchableOpacity
+            style={[styles.featureCard, { borderLeftColor: '#9B59B6' }]}
+            onPress={() => router.push('/finger-trace')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.featureCardIcon}>
+              <Sparkles size={32} color="#9B59B6" />
+            </View>
+            <View style={styles.featureCardContent}>
+              <Text style={styles.featureCardTitle}>Finger Tracing Exercises</Text>
+              <Text style={styles.featureCardDescription}>
+                Interactive tracing exercises for mindfulness and focus. Trace shapes, letters, and patterns.
+              </Text>
+            </View>
+            <Hand size={24} color={colors.textLight} />
+          </TouchableOpacity>
           {breathingPatterns.map((pattern) => (
             <TouchableOpacity
               key={pattern.id}
