@@ -21,10 +21,11 @@ import {
   getRemainingTime,
   formatRemainingTime,
 } from '@/utils/inviteCodeGenerator';
-import colors from '@/constants/colors';
 import * as Clipboard from 'expo-clipboard';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function InviteGenerateScreen() {
+  const { colors } = useTheme();
   const { generateInvite, activeInvite } = useCaregivers();
   const [loading, setLoading] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState<number>(0);
@@ -114,6 +115,192 @@ export default function InviteGenerateScreen() {
       console.error('[InviteGenerate] Error sharing:', error);
     }
   };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    content: {
+      padding: 20,
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.background,
+    },
+    loadingText: {
+      marginTop: 16,
+      fontSize: 16,
+      color: colors.textSecondary,
+    },
+    header: {
+      marginBottom: 24,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: '700' as const,
+      color: colors.text,
+      marginBottom: 8,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: colors.textSecondary,
+      lineHeight: 22,
+    },
+    timerContainer: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      padding: 20,
+      alignItems: 'center',
+      marginBottom: 24,
+      borderWidth: 2,
+      borderColor: colors.border,
+    },
+    timerLabel: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginBottom: 8,
+    },
+    timerValue: {
+      fontSize: 36,
+      fontWeight: '700' as const,
+      color: colors.primary,
+    },
+    timerWarning: {
+      color: colors.error,
+    },
+    qrContainer: {
+      alignItems: 'center',
+      marginBottom: 24,
+      padding: 20,
+      backgroundColor: 'white',
+      borderRadius: 12,
+    },
+    qrPlaceholder: {
+      width: 200,
+      height: 200,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderRadius: 8,
+    },
+    qrPlaceholderText: {
+      fontSize: 18,
+      fontWeight: '600' as const,
+      color: colors.textSecondary,
+    },
+    qrPlaceholderSubtext: {
+      fontSize: 12,
+      color: colors.textSecondary,
+      marginTop: 4,
+    },
+    codeContainer: {
+      marginBottom: 20,
+    },
+    codeLabel: {
+      fontSize: 14,
+      fontWeight: '600' as const,
+      color: colors.textSecondary,
+      marginBottom: 8,
+    },
+    codeBox: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      padding: 16,
+      borderWidth: 2,
+      borderColor: colors.primary,
+    },
+    codeText: {
+      flex: 1,
+      fontSize: 24,
+      fontWeight: '700' as const,
+      color: colors.text,
+      letterSpacing: 2,
+    },
+    copyButton: {
+      padding: 8,
+    },
+    linkContainer: {
+      marginBottom: 24,
+    },
+    linkLabel: {
+      fontSize: 14,
+      fontWeight: '600' as const,
+      color: colors.textSecondary,
+      marginBottom: 8,
+    },
+    linkBox: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      padding: 16,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    linkText: {
+      flex: 1,
+      fontSize: 12,
+      color: colors.textSecondary,
+    },
+    actions: {
+      gap: 12,
+      marginBottom: 24,
+    },
+    shareButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.primary,
+      borderRadius: 12,
+      padding: 16,
+      gap: 8,
+    },
+    shareButtonText: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: 'white',
+    },
+    regenerateButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      padding: 16,
+      gap: 8,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    regenerateButtonText: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: colors.primary,
+    },
+    infoBox: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      padding: 16,
+      borderLeftWidth: 4,
+      borderLeftColor: colors.primary,
+    },
+    infoTitle: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: colors.text,
+      marginBottom: 12,
+    },
+    infoText: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      lineHeight: 20,
+      marginBottom: 8,
+    },
+  });
 
   if (loading) {
     return (
@@ -242,189 +429,3 @@ export default function InviteGenerateScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    padding: 20,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.background,
-  },
-  loadingText: {
-    marginTop: 16,
-    fontSize: 16,
-    color: colors.textSecondary,
-  },
-  header: {
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700' as const,
-    color: colors.text,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    lineHeight: 22,
-  },
-  timerContainer: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 20,
-    alignItems: 'center',
-    marginBottom: 24,
-    borderWidth: 2,
-    borderColor: colors.border,
-  },
-  timerLabel: {
-    fontSize: 14,
-    color: colors.textSecondary,
-    marginBottom: 8,
-  },
-  timerValue: {
-    fontSize: 36,
-    fontWeight: '700' as const,
-    color: colors.primary,
-  },
-  timerWarning: {
-    color: colors.error,
-  },
-  qrContainer: {
-    alignItems: 'center',
-    marginBottom: 24,
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 12,
-  },
-  qrPlaceholder: {
-    width: 200,
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 8,
-  },
-  qrPlaceholderText: {
-    fontSize: 18,
-    fontWeight: '600' as const,
-    color: colors.textSecondary,
-  },
-  qrPlaceholderSubtext: {
-    fontSize: 12,
-    color: colors.textSecondary,
-    marginTop: 4,
-  },
-  codeContainer: {
-    marginBottom: 20,
-  },
-  codeLabel: {
-    fontSize: 14,
-    fontWeight: '600' as const,
-    color: colors.textSecondary,
-    marginBottom: 8,
-  },
-  codeBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 2,
-    borderColor: colors.primary,
-  },
-  codeText: {
-    flex: 1,
-    fontSize: 24,
-    fontWeight: '700' as const,
-    color: colors.text,
-    letterSpacing: 2,
-  },
-  copyButton: {
-    padding: 8,
-  },
-  linkContainer: {
-    marginBottom: 24,
-  },
-  linkLabel: {
-    fontSize: 14,
-    fontWeight: '600' as const,
-    color: colors.textSecondary,
-    marginBottom: 8,
-  },
-  linkBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  linkText: {
-    flex: 1,
-    fontSize: 12,
-    color: colors.textSecondary,
-  },
-  actions: {
-    gap: 12,
-    marginBottom: 24,
-  },
-  shareButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.primary,
-    borderRadius: 12,
-    padding: 16,
-    gap: 8,
-  },
-  shareButtonText: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: 'white',
-  },
-  regenerateButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 16,
-    gap: 8,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  regenerateButtonText: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: colors.primary,
-  },
-  infoBox: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 16,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.primary,
-  },
-  infoTitle: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: colors.text,
-    marginBottom: 12,
-  },
-  infoText: {
-    fontSize: 14,
-    color: colors.textSecondary,
-    lineHeight: 20,
-    marginBottom: 8,
-  },
-});

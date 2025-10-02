@@ -18,9 +18,10 @@ import {
   formatInviteCode,
   validateInviteCodeFormat,
 } from '@/utils/inviteCodeGenerator';
-import colors from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function InviteRedeemScreen() {
+  const { colors } = useTheme();
   const { redeemInvite } = useCaregivers();
   const [code, setCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -83,6 +84,105 @@ export default function InviteRedeemScreen() {
   };
 
   const isValidFormat = validateInviteCodeFormat(code);
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    content: {
+      flex: 1,
+      padding: 20,
+    },
+    header: {
+      marginBottom: 32,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: '700' as const,
+      color: colors.text,
+      marginBottom: 8,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: colors.textSecondary,
+      lineHeight: 22,
+    },
+    inputContainer: {
+      marginBottom: 24,
+    },
+    inputLabel: {
+      fontSize: 14,
+      fontWeight: '600' as const,
+      color: colors.textSecondary,
+      marginBottom: 8,
+    },
+    inputWrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      borderWidth: 2,
+      borderColor: colors.border,
+    },
+    inputWrapperError: {
+      borderColor: colors.error,
+    },
+    inputWrapperValid: {
+      borderColor: colors.success,
+    },
+    input: {
+      flex: 1,
+      fontSize: 24,
+      fontWeight: '700' as const,
+      color: colors.text,
+      padding: 16,
+      letterSpacing: 2,
+    },
+    validationIcon: {
+      paddingRight: 16,
+    },
+    errorText: {
+      fontSize: 14,
+      color: colors.error,
+      marginTop: 8,
+    },
+    redeemButton: {
+      backgroundColor: colors.primary,
+      borderRadius: 12,
+      padding: 16,
+      alignItems: 'center',
+      marginBottom: 24,
+    },
+    redeemButtonDisabled: {
+      backgroundColor: colors.textLight,
+      opacity: 0.5,
+    },
+    redeemButtonText: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: 'white',
+    },
+    infoBox: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      padding: 16,
+      borderLeftWidth: 4,
+      borderLeftColor: colors.secondary,
+    },
+    infoTitle: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: colors.text,
+      marginBottom: 12,
+    },
+    infoText: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      lineHeight: 20,
+      marginBottom: 8,
+    },
+  });
 
   return (
     <KeyboardAvoidingView
@@ -179,102 +279,3 @@ export default function InviteRedeemScreen() {
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  header: {
-    marginBottom: 32,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700' as const,
-    color: colors.text,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    lineHeight: 22,
-  },
-  inputContainer: {
-    marginBottom: 24,
-  },
-  inputLabel: {
-    fontSize: 14,
-    fontWeight: '600' as const,
-    color: colors.textSecondary,
-    marginBottom: 8,
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: colors.border,
-  },
-  inputWrapperError: {
-    borderColor: colors.error,
-  },
-  inputWrapperValid: {
-    borderColor: colors.success,
-  },
-  input: {
-    flex: 1,
-    fontSize: 24,
-    fontWeight: '700' as const,
-    color: colors.text,
-    padding: 16,
-    letterSpacing: 2,
-  },
-  validationIcon: {
-    paddingRight: 16,
-  },
-  errorText: {
-    fontSize: 14,
-    color: colors.error,
-    marginTop: 8,
-  },
-  redeemButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  redeemButtonDisabled: {
-    backgroundColor: colors.textLight,
-    opacity: 0.5,
-  },
-  redeemButtonText: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: 'white',
-  },
-  infoBox: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    padding: 16,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.secondary,
-  },
-  infoTitle: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: colors.text,
-    marginBottom: 12,
-  },
-  infoText: {
-    fontSize: 14,
-    color: colors.textSecondary,
-    lineHeight: 20,
-    marginBottom: 8,
-  },
-});
