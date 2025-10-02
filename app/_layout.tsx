@@ -4,6 +4,7 @@ import { Stack, useRouter, useSegments } from "expo-router";
 import { trpc, trpcClient } from "@/lib/trpc";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
+import { View, ActivityIndicator } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TaskProvider } from "@/contexts/TaskContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
@@ -12,7 +13,7 @@ import { RetentionProvider } from "@/contexts/RetentionContext";
 import { CaregiverProvider } from "@/contexts/CaregiverContext";
 import { FunnelProvider } from "@/contexts/FunnelContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
-import { ThemeProvider } from "@/contexts/ThemeContext";
+import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -21,6 +22,7 @@ const queryClient = new QueryClient();
 
 function RootLayoutNav() {
   const { onboardingCompleted, isLoading } = useSubscription();
+  const { colors, isLoading: themeLoading } = useTheme();
   const segments = useSegments();
   const router = useRouter();
 
@@ -35,6 +37,14 @@ function RootLayoutNav() {
       router.replace('/(tabs)');
     }
   }, [onboardingCompleted, segments, isLoading, router]);
+
+  if (themeLoading || isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <Stack screenOptions={{ headerBackTitle: "Back" }}>
