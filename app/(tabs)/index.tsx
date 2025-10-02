@@ -37,14 +37,16 @@ export default function TasksScreen() {
       const task = await addTask(newTaskTitle, newTaskDescription || undefined, newTaskPriority);
       if (task) {
         incrementTaskUsage();
+        console.log('[TaskCreation] Starting AI breakdown for task:', task.id);
         await breakdownTask(task.id);
+        console.log('[TaskCreation] AI breakdown completed for task:', task.id);
       }
       setNewTaskTitle('');
       setNewTaskDescription('');
       setNewTaskPriority('medium');
       setShowAddWidget(false);
     } catch (error) {
-      console.error('Error creating task:', error);
+      console.error('[TaskCreation] Error creating task:', error);
     } finally {
       setIsCreating(false);
     }

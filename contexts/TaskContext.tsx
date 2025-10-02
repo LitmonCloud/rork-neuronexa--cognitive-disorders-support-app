@@ -181,7 +181,12 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
 
   const breakdownTask = useCallback(async (taskId: string, cognitiveLevel: 'simple' | 'moderate' | 'complex' = 'moderate') => {
     const task = tasks.find(t => t.id === taskId);
-    if (!task) return;
+    if (!task) {
+      console.error('[TaskContext] Task not found for breakdown:', taskId);
+      return;
+    }
+
+    console.log('[TaskContext] Starting breakdown for task:', taskId, task.title);
 
     try {
       const complexityGuide = {
@@ -206,9 +211,12 @@ SIMPLE: [simplified version]
 CONTEXT: [why this matters]
 ---`;
 
+      console.log('[TaskContext] Calling AI with prompt length:', prompt.length);
       const response = await generateText(prompt);
+      console.log('[TaskContext] AI response received, length:', response.length);
       
       const stepBlocks = response.split('---').filter(block => block.trim());
+      console.log('[TaskContext] Parsed step blocks:', stepBlocks.length);
       
       const steps = stepBlocks.map((block, index) => {
         const lines = block.split('\n').filter(l => l.trim());
@@ -226,9 +234,18 @@ CONTEXT: [why this matters]
         };
       }).filter(step => step.description);
 
+      console.log('[TaskContext] Generated steps:', steps.length);
+
+      if (steps.length === 0) {
+        console.error('[TaskContext] No steps generated from AI response');
+        throw new Error('Failed to generate steps from AI response');
+      }
+
       updateTask(taskId, { steps, status: 'in-progress', cognitiveLevel });
+      console.log('[TaskContext] Task updated with steps');
     } catch (error) {
-      console.error('Error breaking down task:', error);
+      console.error('[TaskContext] Error breaking down task:', error);
+      throw error;
     }
   }, [tasks, updateTask]);
 
