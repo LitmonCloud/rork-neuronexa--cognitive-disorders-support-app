@@ -22,7 +22,7 @@ const queryClient = new QueryClient();
 
 function RootLayoutNav() {
   const { onboardingCompleted, isLoading } = useSubscription();
-  const { colors, isLoading: themeLoading } = useTheme();
+  const { isLoading: themeLoading } = useTheme();
   const segments = useSegments();
   const router = useRouter();
 
@@ -40,8 +40,8 @@ function RootLayoutNav() {
 
   if (themeLoading || isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
-        <ActivityIndicator size="large" color={colors.primary} />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F8F7FF' }}>
+        <ActivityIndicator size="large" color="#6B7FD7" />
       </View>
     );
   }
