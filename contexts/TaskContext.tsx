@@ -190,6 +190,42 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
 
     console.log('[TaskContext] Starting breakdown for task:', taskId, task.title);
 
+    if (!process.env.EXPO_PUBLIC_TOOLKIT_URL) {
+      console.error('[TaskContext] EXPO_PUBLIC_TOOLKIT_URL is not set. AI features require this environment variable.');
+      console.error('[TaskContext] Using fallback steps instead.');
+      const fallbackSteps = [
+        {
+          id: `${taskId}-step-0`,
+          description: 'Start by gathering what you need',
+          simplifiedText: 'Get your things ready',
+          contextualPrompt: 'Having everything ready makes the task easier',
+          completed: false,
+          order: 0,
+        },
+        {
+          id: `${taskId}-step-1`,
+          description: 'Take the first small action',
+          simplifiedText: 'Do the first step',
+          contextualPrompt: 'Starting is often the hardest part - you\'ve got this!',
+          completed: false,
+          order: 1,
+        },
+        {
+          id: `${taskId}-step-2`,
+          description: 'Continue at your own pace',
+          simplifiedText: 'Keep going slowly',
+          contextualPrompt: 'There\'s no rush - take breaks when you need them',
+          completed: false,
+          order: 2,
+        },
+      ];
+      const updatedTasks = currentTasks.map(t =>
+        t.id === taskId ? { ...t, steps: fallbackSteps, status: 'in-progress' as TaskStatus, cognitiveLevel } : t
+      );
+      await mutateTasksAsync(updatedTasks);
+      return;
+    }
+
     try {
       const complexityGuide = {
         simple: 'Use very simple language (5th grade level). Break into 3-4 tiny steps. Each step should be one clear action.',
@@ -251,7 +287,48 @@ CONTEXT: [why this matters]
       console.log('[TaskContext] Task updated with steps');
     } catch (error) {
       console.error('[TaskContext] Error breaking down task:', error);
-      throw error;
+      console.log('[TaskContext] Using fallback steps due to error');
+      
+      const fallbackSteps = [
+        {
+          id: `${taskId}-step-0`,
+          description: 'Start by gathering what you need',
+          simplifiedText: 'Get your things ready',
+          contextualPrompt: 'Having everything ready makes the task easier',
+          completed: false,
+          order: 0,
+        },
+        {
+          id: `${taskId}-step-1`,
+          description: 'Take the first small action',
+          simplifiedText: 'Do the first step',
+          contextualPrompt: 'Starting is often the hardest part - you\'ve got this!',
+          completed: false,
+          order: 1,
+        },
+        {
+          id: `${taskId}-step-2`,
+          description: 'Continue at your own pace',
+          simplifiedText: 'Keep going slowly',
+          contextualPrompt: 'There\'s no rush - take breaks when you need them',
+          completed: false,
+          order: 2,
+        },
+        {
+          id: `${taskId}-step-3`,
+          description: 'Finish and celebrate your success',
+          simplifiedText: 'Complete and feel proud',
+          contextualPrompt: 'You did it! Every accomplishment matters.',
+          completed: false,
+          order: 3,
+        },
+      ];
+      
+      const currentTasks = queryClient.getQueryData<Task[]>(['tasks']) || [];
+      const updatedTasks = currentTasks.map(t =>
+        t.id === taskId ? { ...t, steps: fallbackSteps, status: 'in-progress' as TaskStatus, cognitiveLevel } : t
+      );
+      await mutateTasksAsync(updatedTasks);
     }
   }, [queryClient, mutateTasksAsync]);
 
