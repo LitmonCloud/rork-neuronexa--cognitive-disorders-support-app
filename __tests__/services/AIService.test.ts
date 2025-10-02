@@ -45,13 +45,16 @@ ADAPT: Ask for help if stuck`;
         name: 'Alex',
         communicationStyle: 'encouraging',
         preferences: [
-          { preference: 'Likes visual cues', category: 'learning', strength: 8, lastUpdated: new Date().toISOString() },
+          { id: '1', preference: 'Likes visual cues', category: 'general', strength: 8, learnedAt: new Date().toISOString() },
         ],
         habits: [],
         favoriteEncouragements: ['You got this!'],
         avoidTopics: ['time pressure'],
         motivationTriggers: ['progress tracking'],
-        interactionHistory: [],
+        userId: 'test-user-id',
+        interactions: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       (generateText as jest.Mock).mockResolvedValue('STEP: Test\nSIMPLE: Test\nCONTEXT: Test\n---\nSUPPORT: Great job!');
