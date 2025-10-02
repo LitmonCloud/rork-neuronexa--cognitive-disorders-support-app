@@ -106,13 +106,33 @@ export default function InviteGenerateScreen() {
     try {
       const message = `Join me on NeuroNexa as my caregiver!\n\nInvite Code: ${code}\n\nOr tap this link: ${deepLink}\n\nThis code expires in ${formatRemainingTime(remainingTime)}.`;
 
-      await Share.share({
-        message,
-        title: 'NeuroNexa Caregiver Invite',
-      });
-      console.log('[InviteGenerate] Share sheet opened');
-    } catch (error) {
+      if (Platform.OS === 'web') {
+        if (navigator.share && navigator.canShare && navigator.canShare({ text: message })) {
+          await navigator.share({
+            title: 'NeuroNexa Caregiver Invite',
+            text: message,
+          });
+          console.log('[InviteGenerate] Share sheet opened (web)');
+        } else {
+          await Clipboard.setStringAsync(message);
+          Alert.alert('Copied', 'Invite details copied to clipboard. Share API is not available in this browser.');
+          console.log('[InviteGenerate] Fallback: copied to clipboard (web)');
+        }
+      } else {
+        await Share.share({
+          message,
+          title: 'NeuroNexa Caregiver Invite',
+        });
+        console.log('[InviteGenerate] Share sheet opened');
+      }
+    } catch (error: any) {
+      if (error?.name === 'AbortError') {
+        console.log('[InviteGenerate] Share cancelled by user');
+        return;
+      }
       console.error('[InviteGenerate] Error sharing:', error);
+      await Clipboard.setStringAsync(`Join me on NeuroNexa as my caregiver!\n\nInvite Code: ${code}\n\nOr tap this link: ${deepLink}\n\nThis code expires in ${formatRemainingTime(remainingTime)}.`);
+      Alert.alert('Copied', 'Could not open share dialog. Invite details copied to clipboard instead.');
     }
   };
 
