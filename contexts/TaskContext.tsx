@@ -319,23 +319,22 @@ CONTEXT: [why this matters]
       let response: string;
       try {
         const rawResponse = await generateText(prompt);
-        console.log('[TaskContext] AI response received, length:', rawResponse.length);
-        console.log('[TaskContext] AI response preview:', rawResponse.substring(0, 200));
+        console.log('[TaskContext] AI response received, type:', typeof rawResponse);
+        console.log('[TaskContext] AI response length:', String(rawResponse).length);
+        console.log('[TaskContext] AI response preview:', String(rawResponse).substring(0, 300));
         
-        response = rawResponse.trim();
+        response = String(rawResponse).trim();
         
-        if (response.startsWith('```')) {
-          const lines = response.split('\n');
-          lines.shift();
-          if (lines[lines.length - 1].trim() === '```') {
-            lines.pop();
-          }
-          response = lines.join('\n').trim();
+        if (response.startsWith('```json')) {
+          response = response.replace(/^```json\s*/, '').replace(/```\s*$/, '').trim();
+        } else if (response.startsWith('```')) {
+          response = response.replace(/^```[a-z]*\s*/, '').replace(/```\s*$/, '').trim();
         }
         
-        console.log('[TaskContext] Cleaned response preview:', response.substring(0, 200));
+        console.log('[TaskContext] Cleaned response preview:', response.substring(0, 300));
       } catch (aiError) {
         console.error('[TaskContext] AI call failed:', aiError);
+        console.error('[TaskContext] Error details:', aiError instanceof Error ? aiError.message : String(aiError));
         throw new Error('AI service unavailable');
       }
       
