@@ -187,7 +187,6 @@ export default function WellnessScreen() {
             <Text style={styles.backButtonTextLarge}>Back</Text>
           </TouchableOpacity>
           <Text style={styles.exerciseHeaderTitle}>{selectedPattern.name}</Text>
-          <View style={styles.backButtonLarge} />
         </View>
         <BreathingExercise
           pattern={selectedPattern}
