@@ -5,7 +5,7 @@ import { useTasks } from '@/contexts/TaskContext';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Plus, Sparkles, Circle, CheckCircle2, Clock, Heart, Smile, Crown, Calendar as CalendarIcon } from 'lucide-react-native';
+import { Plus, Sparkles, Circle, CheckCircle2, Clock, Heart, Smile, Crown } from 'lucide-react-native';
 import { Task, TaskPriority } from '@/types/task';
 import { router } from 'expo-router';
 import CalendarView from '@/components/CalendarView';
@@ -22,7 +22,6 @@ export default function TasksScreen() {
   const [newTaskDescription, setNewTaskDescription] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState<TaskPriority>('medium');
   const [isCreating, setIsCreating] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(true);
 
   const handleAddTask = async () => {
     if (!newTaskTitle.trim()) return;
@@ -606,23 +605,11 @@ export default function TasksScreen() {
               </Text>
             </TouchableOpacity>
           ))}
-          <TouchableOpacity
-            style={[
-              styles.filterChip,
-              showCalendar && styles.filterChipActive,
-            ]}
-            onPress={() => setShowCalendar(!showCalendar)}
-            activeOpacity={0.7}
-          >
-            <CalendarIcon size={16} color={showCalendar ? colors.surface : colors.text} />
-          </TouchableOpacity>
         </View>
 
-        {showCalendar && (
-          <View style={{ marginBottom: 24 }}>
-            <CalendarView tasks={tasks} />
-          </View>
-        )}
+        <View style={{ marginBottom: 24 }}>
+          <CalendarView tasks={tasks} />
+        </View>
 
         {tasks.length === 0 ? (
           <View style={styles.emptyState}>
