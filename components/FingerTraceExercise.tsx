@@ -162,9 +162,9 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
 
   const panResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponder: () => isActive,
       onStartShouldSetPanResponderCapture: () => false,
-      onMoveShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => isActive,
       onMoveShouldSetPanResponderCapture: () => false,
       
       onPanResponderGrant: (evt, gestureState) => {
@@ -184,17 +184,26 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
         if (!isActive) return;
         
         const { locationX, locationY } = evt.nativeEvent;
+        console.log('[Trace] Touch move at:', locationX, locationY);
         setCurrentPath(prev => {
           const newPath = [...prev, { x: locationX, y: locationY }];
+          console.log('[Trace] Path length:', newPath.length);
           return newPath;
         });
       },
       
       onPanResponderRelease: (evt, gestureState) => {
-        if (!isActive || currentPath.length === 0) return;
+        if (!isActive) return;
         
         console.log('[Trace] Touch ended, path length:', currentPath.length);
+        
+        if (currentPath.length === 0) {
+          console.log('[Trace] No path captured');
+          return;
+        }
+        
         const loopCompleted = checkLoopCompletion(currentPath);
+        console.log('[Trace] Loop completed:', loopCompleted);
         
         if (loopCompleted) {
           const newCompletedLoops = completedLoops + 1;
@@ -228,7 +237,7 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
               endTime: Date.now(),
               accuracy: currentAccuracy,
               completed: true,
-              paths: allPaths.map(p => ({ points: p, completed: true })),
+              paths: [...allPaths, currentPath].map(p => ({ points: p, completed: true })),
             };
             
             const duration = Math.floor((Date.now() - (startTime || Date.now())) / 1000);
@@ -245,9 +254,7 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
             
             onComplete?.(session);
           }
-        }
-        
-        if (loopCompleted) {
+          
           setAllPaths(prev => [...prev, currentPath]);
         }
         
@@ -327,9 +334,8 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
         <View
           style={styles.canvas}
           {...panResponder.panHandlers}
-          pointerEvents={isActive ? 'auto' : 'box-only'}
         >
-          <Svg width={canvasSize} height={canvasSize} pointerEvents="none">
+          <Svg width={canvasSize} height={canvasSize} style={{ position: 'absolute' as const }}>
             <Path
               d={shapePath}
               stroke={exercise.color}
