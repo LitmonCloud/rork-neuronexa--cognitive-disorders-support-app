@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert, Platform } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Alert, Platform, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, router, Stack } from 'expo-router';
 import { useTasks } from '@/contexts/TaskContext';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
@@ -606,7 +606,8 @@ export default function TaskDetailScreen() {
 
         {task.steps.length === 0 && (
           <View style={styles.noStepsContainer}>
-            <Text style={[styles.noStepsText, { fontSize: 16 * textSize }]}>
+            <ActivityIndicator size="large" color={colors.primary} />
+            <Text style={[styles.noStepsText, { fontSize: 16 * textSize, marginTop: 16 }]}>
               AI is breaking down this task into simple steps...
             </Text>
           </View>
