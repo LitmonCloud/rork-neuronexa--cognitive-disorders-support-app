@@ -46,45 +46,69 @@ function RootLayoutNav() {
   const [termsAccepted, setTermsAccepted] = useState<boolean | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
+  const checkTermsAcceptance = React.useCallback(async () => {
+    try {
+      const stored = await AsyncStorage.getItem(TERMS_ACCEPTED_KEY);
+      if (stored) {
+        const data = JSON.parse(stored);
+        const accepted = data.accepted === true;
+        console.log('[RootLayout] Terms acceptance status:', accepted);
+        setTermsAccepted(accepted);
+        return accepted;
+      } else {
+        console.log('[RootLayout] No terms acceptance found');
+        setTermsAccepted(false);
+        return false;
+      }
+    } catch (error) {
+      console.error('[RootLayout] Error checking terms acceptance:', error);
+      setTermsAccepted(false);
+      return false;
+    }
+  }, []);
+
   useEffect(() => {
-    async function checkTermsAcceptance() {
+    async function initialize() {
       const timeout = setTimeout(() => {
         console.warn('[RootLayout] Terms check timeout, using default');
         setTermsAccepted(false);
         setIsInitialized(true);
       }, 3000);
 
-      try {
-        const stored = await AsyncStorage.getItem(TERMS_ACCEPTED_KEY);
-        clearTimeout(timeout);
-        if (stored) {
-          const data = JSON.parse(stored);
-          setTermsAccepted(data.accepted === true);
-        } else {
-          setTermsAccepted(false);
-        }
-      } catch (error) {
-        clearTimeout(timeout);
-        console.error('[RootLayout] Error checking terms acceptance:', error);
-        setTermsAccepted(false);
-      } finally {
-        setIsInitialized(true);
-      }
+      await checkTermsAcceptance();
+      clearTimeout(timeout);
+      setIsInitialized(true);
     }
-    checkTermsAcceptance();
-  }, []);
+    initialize();
+  }, [checkTermsAcceptance]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (segments[0] === 'terms-agreement') {
+        checkTermsAcceptance();
+      }
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, [segments, checkTermsAcceptance]);
 
   useEffect(() => {
     if (!isInitialized || isLoading || termsAccepted === null) return;
 
     const inTermsAgreement = segments[0] === 'terms-agreement';
     const inOnboarding = segments[0] === 'onboarding';
+    const inTabs = segments[0] === '(tabs)';
+
+    console.log('[RootLayout] Navigation check:', { termsAccepted, onboardingCompleted, inTermsAgreement, inOnboarding, inTabs });
 
     if (!termsAccepted && !inTermsAgreement) {
+      console.log('[RootLayout] Redirecting to terms-agreement');
       router.replace('/terms-agreement');
-    } else if (termsAccepted && !onboardingCompleted && !inOnboarding && !inTermsAgreement) {
+    } else if (termsAccepted && !onboardingCompleted && !inOnboarding) {
+      console.log('[RootLayout] Redirecting to onboarding');
       router.replace('/onboarding');
-    } else if (termsAccepted && onboardingCompleted && (inOnboarding || inTermsAgreement)) {
+    } else if (termsAccepted && onboardingCompleted && !inTabs) {
+      console.log('[RootLayout] Redirecting to tabs');
       router.replace('/(tabs)');
     }
   }, [isInitialized, termsAccepted, onboardingCompleted, segments, isLoading, router]);
