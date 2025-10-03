@@ -414,6 +414,7 @@ export default function TasksScreen() {
       bottom: 0,
       backgroundColor: colors.overlay,
       zIndex: 1000,
+      pointerEvents: 'box-none' as const,
     },
     floatingWidget: {
       position: 'absolute' as const,
@@ -654,7 +655,7 @@ export default function TasksScreen() {
                   style={[
                     styles.taskCard,
                     settings.highContrast && styles.taskCardHighContrast,
-                    { zIndex: 10 },
+                    { position: 'relative' as const, zIndex: 10, elevation: 10 },
                   ]}
                   onPress={handleTaskPress}
                   activeOpacity={0.7}
@@ -696,7 +697,6 @@ export default function TasksScreen() {
       {showAddWidget && (
         <View 
           style={styles.widgetOverlay}
-          pointerEvents="box-none"
         >
           <TouchableOpacity 
             style={{ position: 'absolute' as const, top: 0, left: 0, right: 0, bottom: 0 }}
@@ -712,6 +712,7 @@ export default function TasksScreen() {
                 opacity: widgetOpacity,
               }
             ]}
+            pointerEvents="box-none"
             onStartShouldSetResponder={() => true}
           >
             <TouchableOpacity activeOpacity={1}>
