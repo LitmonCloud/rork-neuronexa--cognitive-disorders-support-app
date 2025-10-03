@@ -78,7 +78,7 @@ export default function WellnessScreen() {
     },
     backButtonTextLarge: {
       fontSize: 18,
-      color: colors.primary,
+      color: '#000000',
       fontWeight: '700' as const,
     },
 
