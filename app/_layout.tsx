@@ -98,8 +98,14 @@ function RootLayoutNav() {
     const inTermsAgreement = segments[0] === 'terms-agreement';
     const inOnboarding = segments[0] === 'onboarding';
     const inTabs = segments[0] === '(tabs)';
+    const inTask = segments[0] === 'task';
+    const inPaywall = segments[0] === 'paywall';
+    const inCaregiver = segments[0] === 'caregiver-dashboard' || segments[0] === 'invite-generate' || segments[0] === 'invite-redeem';
+    const inNotifications = segments[0] === 'notifications' || segments[0] === 'notification-settings';
+    const inFingerTrace = segments[0] === 'finger-trace';
+    const inAllowedScreen = inTabs || inTask || inPaywall || inCaregiver || inNotifications || inFingerTrace;
 
-    console.log('[RootLayout] Navigation check:', { termsAccepted, onboardingCompleted, inTermsAgreement, inOnboarding, inTabs });
+    console.log('[RootLayout] Navigation check:', { termsAccepted, onboardingCompleted, inTermsAgreement, inOnboarding, inTabs, inTask, inAllowedScreen });
 
     if (!termsAccepted && !inTermsAgreement) {
       console.log('[RootLayout] Redirecting to terms-agreement');
@@ -107,7 +113,7 @@ function RootLayoutNav() {
     } else if (termsAccepted && !onboardingCompleted && !inOnboarding) {
       console.log('[RootLayout] Redirecting to onboarding');
       router.replace('/onboarding');
-    } else if (termsAccepted && onboardingCompleted && !inTabs) {
+    } else if (termsAccepted && onboardingCompleted && !inAllowedScreen) {
       console.log('[RootLayout] Redirecting to tabs');
       router.replace('/(tabs)');
     }
