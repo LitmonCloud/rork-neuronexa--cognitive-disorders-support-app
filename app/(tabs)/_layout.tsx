@@ -3,19 +3,9 @@ import { Tabs } from "expo-router";
 import { CheckSquare, Settings, TrendingUp, Users, Heart, Sparkles } from "lucide-react-native";
 import React from "react";
 import { useTheme } from "@/contexts/ThemeContext";
-import { View, ActivityIndicator } from "react-native";
 
 export default function TabLayout() {
   const theme = useTheme();
-  
-  if (!theme || !theme.colors) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F8F7FF' }}>
-        <ActivityIndicator size="large" color="#6B7FD7" />
-      </View>
-    );
-  }
-  
   const { colors } = theme;
   
   return (

@@ -100,7 +100,6 @@ const THEME_STORAGE_KEY = '@neuronexa_theme_mode';
 export const [ThemeProvider, useTheme] = createContextHook(() => {
   const systemColorScheme = useColorScheme();
   const [themeMode, setThemeModeState] = useState<ThemeMode>('system');
-  const [isLoading, setIsLoading] = useState(true);
 
   const isDark = themeMode === 'dark' || (themeMode === 'system' && systemColorScheme === 'dark');
   const colors = isDark ? darkColors : lightColors;
@@ -117,8 +116,6 @@ export const [ThemeProvider, useTheme] = createContextHook(() => {
       }
     } catch (error) {
       console.error('Failed to load theme mode:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -136,6 +133,5 @@ export const [ThemeProvider, useTheme] = createContextHook(() => {
     setThemeMode,
     isDark,
     colors,
-    isLoading,
-  }), [themeMode, setThemeMode, isDark, colors, isLoading]);
+  }), [themeMode, setThemeMode, isDark, colors]);
 });

@@ -14,7 +14,7 @@ import { RetentionProvider } from "@/contexts/RetentionContext";
 import { CaregiverProvider } from "@/contexts/CaregiverContext";
 import { FunnelProvider } from "@/contexts/FunnelContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
-import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import { UserProfileProvider } from "@/contexts/UserProfileContext";
 import { posthog } from "@/services/analytics/PostHogService";
 import { sentry } from "@/services/analytics/SentryService";
@@ -30,10 +30,10 @@ const TERMS_ACCEPTED_KEY = '@neuronexa_terms_accepted';
 
 function RootLayoutNav() {
   const { onboardingCompleted, isLoading } = useSubscription();
-  const { isLoading: themeLoading } = useTheme();
   const segments = useSegments();
   const router = useRouter();
   const [termsAccepted, setTermsAccepted] = useState<boolean | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     async function checkTermsAcceptance() {
@@ -48,13 +48,15 @@ function RootLayoutNav() {
       } catch (error) {
         console.error('[RootLayout] Error checking terms acceptance:', error);
         setTermsAccepted(false);
+      } finally {
+        setIsInitialized(true);
       }
     }
     checkTermsAcceptance();
-  }, [segments]);
+  }, []);
 
   useEffect(() => {
-    if (isLoading || termsAccepted === null) return;
+    if (!isInitialized || isLoading || termsAccepted === null) return;
 
     const inTermsAgreement = segments[0] === 'terms-agreement';
     const inOnboarding = segments[0] === 'onboarding';
@@ -66,9 +68,9 @@ function RootLayoutNav() {
     } else if (termsAccepted && onboardingCompleted && (inOnboarding || inTermsAgreement)) {
       router.replace('/(tabs)');
     }
-  }, [termsAccepted, onboardingCompleted, segments, isLoading, router]);
+  }, [isInitialized, termsAccepted, onboardingCompleted, segments, isLoading, router]);
 
-  if (themeLoading || isLoading || termsAccepted === null) {
+  if (!isInitialized || isLoading || termsAccepted === null) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F8F7FF' }}>
         <ActivityIndicator size="large" color="#6B7FD7" />
