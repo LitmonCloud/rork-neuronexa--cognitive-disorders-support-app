@@ -162,12 +162,12 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
 
   const panResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: () => isActive,
-      onStartShouldSetPanResponderCapture: () => isActive,
-      onMoveShouldSetPanResponder: () => isActive,
-      onMoveShouldSetPanResponderCapture: () => isActive,
+      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponderCapture: () => false,
+      onMoveShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponderCapture: () => false,
       
-      onPanResponderGrant: (evt) => {
+      onPanResponderGrant: (evt, gestureState) => {
         if (!isActive) return;
         
         if (!startTime) {
@@ -175,20 +175,25 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
         }
         
         const { locationX, locationY } = evt.nativeEvent;
+        console.log('[Trace] Touch started at:', locationX, locationY);
         setCurrentPath([{ x: locationX, y: locationY }]);
         triggerHaptic();
       },
       
-      onPanResponderMove: (evt) => {
+      onPanResponderMove: (evt, gestureState) => {
         if (!isActive) return;
         
         const { locationX, locationY } = evt.nativeEvent;
-        setCurrentPath(prev => [...prev, { x: locationX, y: locationY }]);
+        setCurrentPath(prev => {
+          const newPath = [...prev, { x: locationX, y: locationY }];
+          return newPath;
+        });
       },
       
-      onPanResponderRelease: () => {
+      onPanResponderRelease: (evt, gestureState) => {
         if (!isActive || currentPath.length === 0) return;
         
+        console.log('[Trace] Touch ended, path length:', currentPath.length);
         const loopCompleted = checkLoopCompletion(currentPath);
         
         if (loopCompleted) {
@@ -246,6 +251,11 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
           setAllPaths(prev => [...prev, currentPath]);
         }
         
+        setCurrentPath([]);
+      },
+      
+      onPanResponderTerminate: () => {
+        console.log('[Trace] Touch terminated');
         setCurrentPath([]);
       },
     })
@@ -317,8 +327,9 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
         <View
           style={styles.canvas}
           {...panResponder.panHandlers}
+          pointerEvents={isActive ? 'auto' : 'box-only'}
         >
-          <Svg width={canvasSize} height={canvasSize}>
+          <Svg width={canvasSize} height={canvasSize} pointerEvents="none">
             <Path
               d={shapePath}
               stroke={exercise.color}
