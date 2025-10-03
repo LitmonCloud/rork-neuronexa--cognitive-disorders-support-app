@@ -641,12 +641,14 @@ export default function TasksScreen() {
                   settings.highContrast && styles.taskCardHighContrast,
                 ]}
                 onPress={() => {
-                  console.log('[TaskCard] Navigating to task:', task.id);
-                  router.push(`/task/${task.id}` as any);
+                  console.log('[TaskCard] Task pressed:', task.id);
+                  console.log('[TaskCard] Navigating to:', `/task/${task.id}`);
+                  router.push(`/task/${task.id}`);
                 }}
                 activeOpacity={0.7}
+                testID={`task-card-${task.id}`}
               >
-                <View style={styles.taskLeft}>
+                <View style={styles.taskLeft} pointerEvents="none">
                   {getStatusIcon(task)}
                   <View style={styles.taskContent}>
                     <Text 
@@ -670,7 +672,8 @@ export default function TasksScreen() {
                   style={[
                     styles.priorityIndicator,
                     { backgroundColor: getPriorityColor(task.priority) },
-                  ]} 
+                  ]}
+                  pointerEvents="none"
                 />
               </TouchableOpacity>
             ))}
