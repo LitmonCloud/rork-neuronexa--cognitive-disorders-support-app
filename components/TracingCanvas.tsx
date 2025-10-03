@@ -35,13 +35,14 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
   const [currentStroke, setCurrentStroke] = useState<{ x: number; y: number }[]>([]);
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
+  const [loopCount, setLoopCount] = useState(0);
   const statsRef = useRef<TraceStats>({ loops: 0, accuracy: 100 });
   const strokeIdRef = useRef(0);
   const gateRef = useRef<{
     a: { x: number; y: number };
     b: { x: number; y: number };
-    count: number;
-  }>({ a: { x: 0, y: 0 }, b: { x: 0, y: 0 }, count: 0 });
+    lastCrossIndex: number;
+  }>({ a: { x: 0, y: 0 }, b: { x: 0, y: 0 }, lastCrossIndex: -1 });
 
   const corePaint = useMemo(() => {
     const p = Skia.Paint();
@@ -83,7 +84,7 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
     gateRef.current = {
       a: { x: cx - 10, y: topY + 2 },
       b: { x: cx + 10, y: topY + 2 },
-      count: 0,
+      lastCrossIndex: -1,
     };
   }, [canvasWidth, canvasHeight]);
 
@@ -107,15 +108,20 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
     return acc;
   };
 
-  const updateLoopsWithGate = (strokePts: { x: number; y: number }[]) => {
-    if (!gateRef.current || strokePts.length < 2) return 0;
+  const updateLoopsWithGate = (strokePts: { x: number; y: number }[], currentLoops: number) => {
+    if (!gateRef.current || strokePts.length < 2) return currentLoops;
     const gate = gateRef.current;
-    let hits = 0;
+    let newLoops = currentLoops;
+    
     for (let i = 1; i < strokePts.length; i++) {
-      if (segmentsCross(strokePts[i - 1], strokePts[i], gate.a, gate.b)) hits++;
+      if (i > gate.lastCrossIndex + 5 && segmentsCross(strokePts[i - 1], strokePts[i], gate.a, gate.b)) {
+        newLoops++;
+        gate.lastCrossIndex = i;
+        console.log('[Trace] Loop detected! Total loops:', newLoops);
+      }
     }
-    gate.count += hits;
-    return gate.count;
+    
+    return newLoops;
   };
 
   const panGesture = Gesture.Pan()
@@ -143,9 +149,11 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
           points: currentStroke,
         };
 
-        const loops = updateLoopsWithGate(currentStroke);
+        const newLoopCount = updateLoopsWithGate(currentStroke, loopCount);
+        setLoopCount(newLoopCount);
+        
         const accuracy = updateAccuracy(currentStroke);
-        const s = { loops, accuracy };
+        const s = { loops: newLoopCount, accuracy };
         statsRef.current = s;
         onStats?.(s);
         onStrokeEnd?.(newStroke, s);
@@ -154,6 +162,7 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
       }
 
       setCurrentStroke([]);
+      gateRef.current.lastCrossIndex = -1;
       onTracingEnd?.();
     });
 
