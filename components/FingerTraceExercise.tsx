@@ -88,8 +88,17 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
       }
       
       case 'heart': {
-        const scale = radius / 100;
-        return `M ${centerX},${centerY + 30 * scale} C ${centerX - 50 * scale},${centerY - 30 * scale} ${centerX - 90 * scale},${centerY - 10 * scale} ${centerX},${centerY - 50 * scale} C ${centerX + 90 * scale},${centerY - 10 * scale} ${centerX + 50 * scale},${centerY - 30 * scale} ${centerX},${centerY + 30 * scale}`;
+        const scale = radius / 80;
+        const topY = centerY - 40 * scale;
+        const bottomY = centerY + 50 * scale;
+        const leftX = centerX - 50 * scale;
+        const rightX = centerX + 50 * scale;
+        
+        return `M ${centerX},${bottomY} 
+                C ${centerX},${centerY + 20 * scale} ${leftX - 20 * scale},${centerY} ${leftX},${centerY - 10 * scale} 
+                C ${leftX},${topY} ${leftX + 20 * scale},${topY - 10 * scale} ${centerX},${topY + 10 * scale} 
+                C ${rightX - 20 * scale},${topY - 10 * scale} ${rightX},${topY} ${rightX},${centerY - 10 * scale} 
+                C ${rightX + 20 * scale},${centerY} ${centerX},${centerY + 20 * scale} ${centerX},${bottomY} Z`;
       }
       
       case 'infinity': {
