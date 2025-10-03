@@ -271,7 +271,7 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
     upgradeToPremium,
     completeOnboarding,
     getRemainingTasks,
-    isLoading: subscriptionQuery.isLoading || usageQuery.isLoading,
+    isLoading: subscriptionQuery.isLoading || usageQuery.isLoading || onboardingQuery.isLoading,
   }), [
     subscription,
     usage,
@@ -288,5 +288,6 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
     getRemainingTasks,
     subscriptionQuery.isLoading,
     usageQuery.isLoading,
+    onboardingQuery.isLoading,
   ]);
 });
