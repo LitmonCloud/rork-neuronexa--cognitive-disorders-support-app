@@ -186,14 +186,12 @@ export default function WellnessScreen() {
           <Text style={styles.exerciseHeaderTitle}>{selectedPattern.name}</Text>
           <View style={styles.backButtonLarge} />
         </View>
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <BreathingExercise
-            pattern={selectedPattern}
-            onComplete={() => {
-              console.log('Breathing exercise completed');
-            }}
-          />
-        </ScrollView>
+        <BreathingExercise
+          pattern={selectedPattern}
+          onComplete={() => {
+            console.log('Breathing exercise completed');
+          }}
+        />
       </View>
     );
   }
