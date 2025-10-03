@@ -349,10 +349,12 @@ const createStyles = (colors: ReturnType<typeof useTheme>['colors'], canvasSize:
       alignItems: 'center',
       marginVertical: spacing.xl,
       paddingHorizontal: spacing.md,
+      width: '100%',
     },
     placeholderCanvas: {
       width: canvasSize,
-      height: 320,
+      aspectRatio: 1,
+      maxHeight: 400,
       backgroundColor: 'rgba(20,20,28,0.9)',
       borderRadius: 22,
       justifyContent: 'center',

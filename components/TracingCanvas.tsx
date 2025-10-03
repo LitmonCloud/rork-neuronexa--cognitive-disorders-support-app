@@ -243,6 +243,15 @@ function segmentsCross(
 }
 
 const styles = StyleSheet.create({
-  wrap: { borderRadius: 22, overflow: 'hidden' },
-  canvas: { width: '100%', height: 320, backgroundColor: 'rgba(20,20,28,0.9)' },
+  wrap: { 
+    borderRadius: 22, 
+    overflow: 'hidden',
+    width: '100%',
+    aspectRatio: 1,
+    maxHeight: 400,
+  },
+  canvas: { 
+    flex: 1,
+    backgroundColor: 'rgba(20,20,28,0.9)' 
+  },
 });
