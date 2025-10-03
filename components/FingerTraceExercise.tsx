@@ -30,6 +30,7 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
   const [accuracy, setAccuracy] = useState(100);
   const [startTime, setStartTime] = useState<number | null>(null);
   const [key, setKey] = useState(0);
+  const [isTracing, setIsTracing] = useState(false);
 
   const { width } = Dimensions.get('window');
   const canvasSize = Math.min(width * 0.85, 400);
@@ -118,6 +119,16 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
     [triggerHaptic]
   );
 
+  const handleTracingStart = useCallback(() => {
+    console.log('[Trace] Tracing started - disabling scroll');
+    setIsTracing(true);
+  }, []);
+
+  const handleTracingEnd = useCallback(() => {
+    console.log('[Trace] Tracing ended - enabling scroll');
+    setIsTracing(false);
+  }, []);
+
   const handleStart = useCallback(() => {
     setIsActive(true);
     setIsCompleted(false);
@@ -146,7 +157,10 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 140 }}>
+      <ScrollView 
+        contentContainerStyle={{ paddingBottom: 140 }}
+        scrollEnabled={!isTracing}
+      >
         <View style={styles.header}>
           <View style={[styles.badge, { backgroundColor: exercise.color + '20' }]}>
             <Text style={[styles.badgeText, { color: exercise.color }]}>
@@ -181,6 +195,8 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
               tolerancePx={18}
               onStats={handleStats}
               onStrokeEnd={handleStrokeEnd}
+              onTracingStart={handleTracingStart}
+              onTracingEnd={handleTracingEnd}
             />
           )}
           {!isActive && (

@@ -16,6 +16,8 @@ interface TracingCanvasProps {
   tolerancePx?: number;
   onStats?: (s: TraceStats) => void;
   onStrokeEnd?: (stroke: Stroke, s: TraceStats) => void;
+  onTracingStart?: () => void;
+  onTracingEnd?: () => void;
 }
 
 export const TracingCanvas: React.FC<TracingCanvasProps> = ({
@@ -26,6 +28,8 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
   tolerancePx = 18,
   onStats,
   onStrokeEnd,
+  onTracingStart,
+  onTracingEnd,
 }) => {
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [currentStroke, setCurrentStroke] = useState<{ x: number; y: number }[]>([]);
@@ -118,6 +122,7 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
     .runOnJS(true)
     .onStart((e) => {
       console.log('[Trace] Gesture started at:', e.x, e.y);
+      onTracingStart?.();
       setCurrentStroke([{ x: e.x, y: e.y }]);
     })
     .onUpdate((e) => {
@@ -149,6 +154,7 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
       }
 
       setCurrentStroke([]);
+      onTracingEnd?.();
     });
 
   return (
