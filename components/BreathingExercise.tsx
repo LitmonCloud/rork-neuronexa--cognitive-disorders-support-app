@@ -198,9 +198,7 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
 
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
       alignItems: 'center',
-      justifyContent: 'center',
       paddingVertical: 40,
       paddingHorizontal: 20,
     },
