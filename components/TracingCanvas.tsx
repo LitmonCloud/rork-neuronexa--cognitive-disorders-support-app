@@ -161,42 +161,45 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
     <View
       style={styles.wrap}
       onLayout={(e) => {
-        setCanvasWidth(e.nativeEvent.layout.width);
-        setCanvasHeight(320);
+        const width = e.nativeEvent.layout.width;
+        const height = e.nativeEvent.layout.height;
+        console.log('[Canvas] Layout:', width, height);
+        setCanvasWidth(width);
+        setCanvasHeight(height);
       }}
     >
       <GestureDetector gesture={panGesture}>
-        <View style={styles.canvas}>
-          <Canvas style={{ width: canvasWidth, height: canvasHeight }}>
+        <Canvas style={styles.canvas}>
+          {canvasWidth > 0 && canvasHeight > 0 && (
             <Path
               path={guideSkiaPath}
-              color="rgba(255,255,255,0.12)"
+              color="rgba(255,255,255,0.3)"
               style="stroke"
-              strokeWidth={8}
+              strokeWidth={4}
             />
+          )}
 
-            {strokes.map((s) => {
-              const p = pathFrom(s.points);
-              return (
-                <React.Fragment key={`s-${s.id}`}>
-                  <Path path={p} paint={glowPaint}>
-                    <BlurMask blur={10} style="outer" />
-                  </Path>
-                  <Path path={p} paint={corePaint} />
-                </React.Fragment>
-              );
-            })}
-
-            {currentStroke.length > 0 && (
-              <React.Fragment>
-                <Path path={pathFrom(currentStroke)} paint={glowPaint}>
-                  <BlurMask blur={12} style="outer" />
+          {strokes.map((s) => {
+            const p = pathFrom(s.points);
+            return (
+              <React.Fragment key={`s-${s.id}`}>
+                <Path path={p} paint={glowPaint}>
+                  <BlurMask blur={10} style="outer" />
                 </Path>
-                <Path path={pathFrom(currentStroke)} paint={corePaint} />
+                <Path path={p} paint={corePaint} />
               </React.Fragment>
-            )}
-          </Canvas>
-        </View>
+            );
+          })}
+
+          {currentStroke.length > 0 && (
+            <React.Fragment>
+              <Path path={pathFrom(currentStroke)} paint={glowPaint}>
+                <BlurMask blur={12} style="outer" />
+              </Path>
+              <Path path={pathFrom(currentStroke)} paint={corePaint} />
+            </React.Fragment>
+          )}
+        </Canvas>
       </GestureDetector>
     </View>
   );
