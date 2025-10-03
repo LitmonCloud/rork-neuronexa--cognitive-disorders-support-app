@@ -318,9 +318,22 @@ CONTEXT: [why this matters]
       console.log('[TaskContext] Calling AI with prompt length:', prompt.length);
       let response: string;
       try {
-        response = await generateText(prompt);
-        console.log('[TaskContext] AI response received, length:', response.length);
-        console.log('[TaskContext] AI response preview:', response.substring(0, 200));
+        const rawResponse = await generateText(prompt);
+        console.log('[TaskContext] AI response received, length:', rawResponse.length);
+        console.log('[TaskContext] AI response preview:', rawResponse.substring(0, 200));
+        
+        response = rawResponse.trim();
+        
+        if (response.startsWith('```')) {
+          const lines = response.split('\n');
+          lines.shift();
+          if (lines[lines.length - 1].trim() === '```') {
+            lines.pop();
+          }
+          response = lines.join('\n').trim();
+        }
+        
+        console.log('[TaskContext] Cleaned response preview:', response.substring(0, 200));
       } catch (aiError) {
         console.error('[TaskContext] AI call failed:', aiError);
         throw new Error('AI service unavailable');
