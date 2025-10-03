@@ -1,12 +1,11 @@
-import React, { useState, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  Animated,
-  PanResponder,
+  ScrollView,
   Platform,
 } from 'react-native';
 import { Play, RotateCcw, CheckCircle, Award } from 'lucide-react-native';
@@ -14,8 +13,9 @@ import * as Haptics from 'expo-haptics';
 import { useTheme } from '@/contexts/ThemeContext';
 import { spacing, borderRadius } from '@/theme/spacing';
 import { fontSizes, fontWeights } from '@/theme/typography';
-import { TraceExercise, TracePoint, TraceSession } from '@/types/fingerTrace';
-import Svg, { Path } from 'react-native-svg';
+import { TraceExercise, TraceSession } from '@/types/fingerTrace';
+import { TracingCanvas, TraceStats, Stroke } from './TracingCanvas';
+import { GuideKind } from '../logic/shapes';
 
 interface FingerTraceExerciseProps {
   exercise: TraceExercise;
@@ -26,18 +26,13 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
   const { colors } = useTheme();
   const [isActive, setIsActive] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [currentPath, setCurrentPath] = useState<TracePoint[]>([]);
   const [completedLoops, setCompletedLoops] = useState(0);
   const [accuracy, setAccuracy] = useState(100);
   const [startTime, setStartTime] = useState<number | null>(null);
-  const [allPaths, setAllPaths] = useState<TracePoint[][]>([]);
-  
-  const successAnim = useRef(new Animated.Value(0)).current;
+  const [key, setKey] = useState(0);
 
   const { width } = Dimensions.get('window');
   const canvasSize = Math.min(width * 0.85, 400);
-  const centerX = canvasSize / 2;
-  const centerY = canvasSize / 2;
 
   const styles = useMemo(() => createStyles(colors, canvasSize), [colors, canvasSize]);
 
@@ -55,227 +50,81 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
     }
   }, []);
 
-  const getShapePath = useCallback((): string => {
-    const radius = canvasSize * 0.35;
-
-    switch (exercise.shape) {
+  const mapShapeToGuide = (shape?: string): GuideKind => {
+    switch (shape) {
       case 'circle':
-        return `M ${centerX},${centerY - radius} A ${radius},${radius} 0 1,1 ${centerX},${centerY + radius} A ${radius},${radius} 0 1,1 ${centerX},${centerY - radius}`;
-      
-      case 'square': {
-        const half = radius;
-        return `M ${centerX - half},${centerY - half} L ${centerX + half},${centerY - half} L ${centerX + half},${centerY + half} L ${centerX - half},${centerY + half} Z`;
-      }
-      
-      case 'triangle': {
-        const height = radius * 1.5;
-        return `M ${centerX},${centerY - height * 0.6} L ${centerX - radius},${centerY + height * 0.4} L ${centerX + radius},${centerY + height * 0.4} Z`;
-      }
-      
-      case 'star': {
-        const points = 5;
-        const outerRadius = radius;
-        const innerRadius = radius * 0.4;
-        let path = '';
-        for (let i = 0; i < points * 2; i++) {
-          const r = i % 2 === 0 ? outerRadius : innerRadius;
-          const angle = (Math.PI * i) / points - Math.PI / 2;
-          const x = centerX + r * Math.cos(angle);
-          const y = centerY + r * Math.sin(angle);
-          path += `${i === 0 ? 'M' : 'L'} ${x},${y} `;
-        }
-        return path + 'Z';
-      }
-      
-      case 'heart': {
-        const scale = radius / 80;
-        const topY = centerY - 40 * scale;
-        const bottomY = centerY + 50 * scale;
-        const leftX = centerX - 50 * scale;
-        const rightX = centerX + 50 * scale;
-        
-        return `M ${centerX},${bottomY} 
-                C ${centerX},${centerY + 20 * scale} ${leftX - 20 * scale},${centerY} ${leftX},${centerY - 10 * scale} 
-                C ${leftX},${topY} ${leftX + 20 * scale},${topY - 10 * scale} ${centerX},${topY + 10 * scale} 
-                C ${rightX - 20 * scale},${topY - 10 * scale} ${rightX},${topY} ${rightX},${centerY - 10 * scale} 
-                C ${rightX + 20 * scale},${centerY} ${centerX},${centerY + 20 * scale} ${centerX},${bottomY} Z`;
-      }
-      
-      case 'infinity': {
-        const w = radius * 1.2;
-        const h = radius * 0.6;
-        return `M ${centerX - w},${centerY} C ${centerX - w},${centerY - h} ${centerX - w / 3},${centerY - h} ${centerX},${centerY} C ${centerX + w / 3},${centerY + h} ${centerX + w},${centerY + h} ${centerX + w},${centerY} C ${centerX + w},${centerY - h} ${centerX + w / 3},${centerY - h} ${centerX},${centerY} C ${centerX - w / 3},${centerY + h} ${centerX - w},${centerY + h} ${centerX - w},${centerY}`;
-      }
-      
-      case 'spiral': {
-        let path = `M ${centerX},${centerY}`;
-        const turns = 3;
-        const maxRadius = radius;
-        for (let i = 0; i <= 360 * turns; i += 5) {
-          const angle = (i * Math.PI) / 180;
-          const r = (maxRadius * i) / (360 * turns);
-          const x = centerX + r * Math.cos(angle);
-          const y = centerY + r * Math.sin(angle);
-          path += ` L ${x},${y}`;
-        }
-        return path;
-      }
-      
+        return 'circle';
+      case 'square':
+        return 'square';
+      case 'triangle':
+        return 'triangle';
+      case 'star':
+        return 'star';
+      case 'heart':
+        return 'heart';
+      case 'infinity':
+        return 'infinity';
+      case 'spiral':
+        return 'spiral';
       default:
-        return '';
+        return 'circle';
     }
-  }, [exercise.shape, canvasSize, centerX, centerY]);
+  };
 
-  const getLetterPath = useCallback((): string => {
-    const scale = canvasSize / 300;
-    const offsetX = centerX - 50 * scale;
-    const offsetY = centerY - 60 * scale;
+  const handleStats = useCallback(
+    (stats: TraceStats) => {
+      setCompletedLoops(stats.loops);
+      setAccuracy(stats.accuracy);
 
-    switch (exercise.character) {
-      case 'A':
-        return `M ${offsetX + 50 * scale},${offsetY} L ${offsetX},${offsetY + 120 * scale} M ${offsetX + 50 * scale},${offsetY} L ${offsetX + 100 * scale},${offsetY + 120 * scale} M ${offsetX + 25 * scale},${offsetY + 60 * scale} L ${offsetX + 75 * scale},${offsetY + 60 * scale}`;
-      case '8':
-        return `M ${offsetX + 50 * scale},${offsetY + 30 * scale} A ${30 * scale},${30 * scale} 0 1,1 ${offsetX + 50 * scale},${offsetY + 30 * scale} M ${offsetX + 50 * scale},${offsetY + 90 * scale} A ${30 * scale},${30 * scale} 0 1,1 ${offsetX + 50 * scale},${offsetY + 90 * scale}`;
-      default:
-        return '';
-    }
-  }, [exercise.character, canvasSize, centerX, centerY]);
+      console.log('[Trace] Stats updated:', stats);
 
-  const shapePath = exercise.type === 'shape' ? getShapePath() : getLetterPath();
+      if (stats.loops >= requiredLoops && !isCompleted) {
+        setIsActive(false);
+        setIsCompleted(true);
+        triggerSuccessHaptic();
 
-  const calculateAccuracy = useCallback((path: TracePoint[]): number => {
-    if (path.length < 10) return 100;
-    return Math.max(60, 100 - Math.floor(Math.random() * 15));
-  }, []);
+        const session: TraceSession = {
+          exerciseId: exercise.id,
+          startTime: startTime || Date.now(),
+          endTime: Date.now(),
+          accuracy: stats.accuracy,
+          completed: true,
+          paths: [],
+        };
 
-  const checkLoopCompletion = useCallback((path: TracePoint[]): boolean => {
-    if (path.length < 20) return false;
-    
-    const firstPoint = path[0];
-    const lastPoint = path[path.length - 1];
-    const distance = Math.sqrt(
-      Math.pow(lastPoint.x - firstPoint.x, 2) + Math.pow(lastPoint.y - firstPoint.y, 2)
-    );
-    
-    return distance < 30;
-  }, []);
+        const duration = Math.floor((Date.now() - (startTime || Date.now())) / 1000);
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => isActive,
-      onStartShouldSetPanResponderCapture: () => false,
-      onMoveShouldSetPanResponder: () => isActive,
-      onMoveShouldSetPanResponderCapture: () => false,
-      
-      onPanResponderGrant: (evt, gestureState) => {
-        if (!isActive) return;
-        
-        if (!startTime) {
-          setStartTime(Date.now());
-        }
-        
-        const { locationX, locationY } = evt.nativeEvent;
-        console.log('[Trace] Touch started at:', locationX, locationY);
-        setCurrentPath([{ x: locationX, y: locationY }]);
-        triggerHaptic();
-      },
-      
-      onPanResponderMove: (evt, gestureState) => {
-        if (!isActive) return;
-        
-        const { locationX, locationY } = evt.nativeEvent;
-        console.log('[Trace] Touch move at:', locationX, locationY);
-        setCurrentPath(prev => {
-          const newPath = [...prev, { x: locationX, y: locationY }];
-          console.log('[Trace] Path length:', newPath.length);
-          return newPath;
+        console.log('[Analytics] Finger trace completed:', {
+          exerciseId: exercise.id,
+          exerciseName: exercise.name,
+          difficulty: exercise.difficulty,
+          type: exercise.type,
+          accuracy: stats.accuracy,
+          duration,
+          loops: stats.loops,
         });
-      },
-      
-      onPanResponderRelease: (evt, gestureState) => {
-        if (!isActive) return;
-        
-        console.log('[Trace] Touch ended, path length:', currentPath.length);
-        
-        if (currentPath.length === 0) {
-          console.log('[Trace] No path captured');
-          return;
-        }
-        
-        const loopCompleted = checkLoopCompletion(currentPath);
-        console.log('[Trace] Loop completed:', loopCompleted);
-        
-        if (loopCompleted) {
-          const newCompletedLoops = completedLoops + 1;
-          setCompletedLoops(newCompletedLoops);
-          
-          const currentAccuracy = calculateAccuracy(currentPath);
-          setAccuracy(prev => Math.floor((prev + currentAccuracy) / 2));
-          
-          triggerSuccessHaptic();
-          
-          Animated.sequence([
-            Animated.timing(successAnim, {
-              toValue: 1,
-              duration: 200,
-              useNativeDriver: true,
-            }),
-            Animated.timing(successAnim, {
-              toValue: 0,
-              duration: 200,
-              useNativeDriver: true,
-            }),
-          ]).start();
-          
-          if (newCompletedLoops >= requiredLoops) {
-            setIsActive(false);
-            setIsCompleted(true);
-            
-            const session: TraceSession = {
-              exerciseId: exercise.id,
-              startTime: startTime || Date.now(),
-              endTime: Date.now(),
-              accuracy: currentAccuracy,
-              completed: true,
-              paths: [...allPaths, currentPath].map(p => ({ points: p, completed: true })),
-            };
-            
-            const duration = Math.floor((Date.now() - (startTime || Date.now())) / 1000);
-            
-            console.log('[Analytics] Finger trace completed:', {
-              exerciseId: exercise.id,
-              exerciseName: exercise.name,
-              difficulty: exercise.difficulty,
-              type: exercise.type,
-              accuracy: currentAccuracy,
-              duration,
-              loops: newCompletedLoops,
-            });
-            
-            onComplete?.(session);
-          }
-          
-          setAllPaths(prev => [...prev, currentPath]);
-        }
-        
-        setCurrentPath([]);
-      },
-      
-      onPanResponderTerminate: () => {
-        console.log('[Trace] Touch terminated');
-        setCurrentPath([]);
-      },
-    })
-  ).current;
+
+        onComplete?.(session);
+      }
+    },
+    [requiredLoops, isCompleted, exercise, startTime, onComplete, triggerSuccessHaptic]
+  );
+
+  const handleStrokeEnd = useCallback(
+    (stroke: Stroke, stats: TraceStats) => {
+      console.log('[Trace] Stroke ended:', stroke.points.length, 'points');
+      triggerHaptic();
+    },
+    [triggerHaptic]
+  );
 
   const handleStart = useCallback(() => {
     setIsActive(true);
     setIsCompleted(false);
     setCompletedLoops(0);
     setAccuracy(100);
-    setCurrentPath([]);
-    setAllPaths([]);
     setStartTime(Date.now());
+    setKey((prev) => prev + 1);
     triggerHaptic();
 
     console.log('[Analytics] Finger trace started:', {
@@ -284,134 +133,104 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
       difficulty: exercise.difficulty,
       type: exercise.type,
     });
-  }, [triggerHaptic, exercise.id, exercise.name, exercise.difficulty, exercise.type]);
+  }, [triggerHaptic, exercise]);
 
   const handleReset = useCallback(() => {
     setIsActive(false);
     setIsCompleted(false);
     setCompletedLoops(0);
     setAccuracy(100);
-    setCurrentPath([]);
-    setAllPaths([]);
     setStartTime(null);
-    successAnim.setValue(0);
-  }, [successAnim]);
-
-  const userPathString = currentPath.length > 0
-    ? `M ${currentPath.map(p => `${p.x},${p.y}`).join(' L ')}`
-    : '';
-
-  const successScale = successAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 1.2],
-  });
+    setKey((prev) => prev + 1);
+  }, []);
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={[styles.badge, { backgroundColor: exercise.color + '20' }]}>
-          <Text style={[styles.badgeText, { color: exercise.color }]}>
-            {exercise.difficulty.toUpperCase()}
-          </Text>
+      <ScrollView contentContainerStyle={{ paddingBottom: 140 }}>
+        <View style={styles.header}>
+          <View style={[styles.badge, { backgroundColor: exercise.color + '20' }]}>
+            <Text style={[styles.badgeText, { color: exercise.color }]}>
+              {exercise.difficulty.toUpperCase()}
+            </Text>
+          </View>
+          <Text style={styles.title}>{exercise.name}</Text>
         </View>
-        <Text style={styles.title}>{exercise.name}</Text>
-      </View>
 
-      <Text style={styles.description}>{exercise.description}</Text>
+        <Text style={styles.description}>{exercise.description}</Text>
 
-      <View style={styles.statsContainer}>
-        <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Loops</Text>
-          <Text style={styles.statValue}>{completedLoops}/{requiredLoops}</Text>
+        <View style={styles.statsContainer}>
+          <View style={styles.statBox}>
+            <Text style={styles.statLabel}>Loops</Text>
+            <Text style={styles.statValue}>
+              {completedLoops}/{requiredLoops}
+            </Text>
+          </View>
+          <View style={styles.statBox}>
+            <Text style={styles.statLabel}>Accuracy</Text>
+            <Text style={[styles.statValue, { color: exercise.color }]}>{accuracy}%</Text>
+          </View>
         </View>
-        <View style={styles.statBox}>
-          <Text style={styles.statLabel}>Accuracy</Text>
-          <Text style={[styles.statValue, { color: exercise.color }]}>{accuracy}%</Text>
-        </View>
-      </View>
 
-      <View style={styles.canvasContainer}>
-        <View
-          style={styles.canvas}
-          {...panResponder.panHandlers}
-        >
-          <Svg width={canvasSize} height={canvasSize} style={{ position: 'absolute' as const }}>
-            <Path
-              d={shapePath}
-              stroke={exercise.color}
-              strokeWidth={4}
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              opacity={0.3}
+        <View style={styles.canvasContainer}>
+          {isActive && (
+            <TracingCanvas
+              key={key}
+              guide={mapShapeToGuide(exercise.shape)}
+              targetLoops={requiredLoops}
+              strokeColor={exercise.color}
+              tolerancePx={18}
+              onStats={handleStats}
+              onStrokeEnd={handleStrokeEnd}
             />
-            
-            {isActive && (
-              <Path
-                d={shapePath}
-                stroke={exercise.color}
-                strokeWidth={6}
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                opacity={0.6}
-              />
-            )}
-            
-            {userPathString && (
-              <Path
-                d={userPathString}
-                stroke={colors.primary}
-                strokeWidth={3}
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            )}
-          </Svg>
-
-          {isCompleted && (
-            <Animated.View
-              style={[
-                styles.completionOverlay,
-                {
-                  transform: [{ scale: successScale }],
-                },
-              ]}
-            >
-              <CheckCircle size={80} color={exercise.color} fill={exercise.color} />
-              <Text style={[styles.completionText, { color: exercise.color }]}>
-                Complete!
+          )}
+          {!isActive && (
+            <View style={styles.placeholderCanvas}>
+              <Text style={styles.placeholderText}>
+                {isCompleted ? '✓ Complete!' : 'Press Start to Begin'}
               </Text>
-            </Animated.View>
+            </View>
           )}
         </View>
-      </View>
 
-      <View style={styles.instructionContainer}>
-        <Text style={styles.instructionTitle}>
-          {isCompleted ? 'Great job!' : isActive ? 'Trace the shape' : 'Instructions:'}
-        </Text>
+        <View style={styles.instructionContainer}>
+          <Text style={styles.instructionTitle}>
+            {isCompleted ? 'Great job!' : isActive ? 'Trace the shape' : 'Instructions:'}
+          </Text>
+          {!isActive && !isCompleted && (
+            <View style={styles.instructionList}>
+              {exercise.instructions.map((instruction, index) => (
+                <Text key={index} style={styles.instructionText}>
+                  {index + 1}. {instruction}
+                </Text>
+              ))}
+            </View>
+          )}
+          {isActive && (
+            <Text style={styles.activeInstruction}>
+              Follow the outline with your finger. Complete {requiredLoops} loops.
+            </Text>
+          )}
+          {isCompleted && (
+            <Text style={styles.completionMessage}>
+              You completed {requiredLoops} loops with {accuracy}% accuracy!
+            </Text>
+          )}
+        </View>
+
         {!isActive && !isCompleted && (
-          <View style={styles.instructionList}>
-            {exercise.instructions.map((instruction, index) => (
-              <Text key={index} style={styles.instructionText}>
-                {index + 1}. {instruction}
+          <View style={styles.benefitsContainer}>
+            <View style={styles.benefitsHeader}>
+              <Award size={20} color={colors.primary} />
+              <Text style={styles.benefitsTitle}>Benefits:</Text>
+            </View>
+            {exercise.benefits.map((benefit, index) => (
+              <Text key={index} style={styles.benefitText}>
+                • {benefit}
               </Text>
             ))}
           </View>
         )}
-        {isActive && (
-          <Text style={styles.activeInstruction}>
-            Follow the outline with your finger. Complete {requiredLoops} loops.
-          </Text>
-        )}
-        {isCompleted && (
-          <Text style={styles.completionMessage}>
-            You completed {requiredLoops} loops with {accuracy}% accuracy!
-          </Text>
-        )}
-      </View>
+      </ScrollView>
 
       <View style={styles.controls}>
         {!isActive && !isCompleted && (
@@ -439,17 +258,10 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
         )}
       </View>
 
-      {!isActive && !isCompleted && (
-        <View style={styles.benefitsContainer}>
-          <View style={styles.benefitsHeader}>
-            <Award size={20} color={colors.primary} />
-            <Text style={styles.benefitsTitle}>Benefits:</Text>
-          </View>
-          {exercise.benefits.map((benefit, index) => (
-            <Text key={index} style={styles.benefitText}>
-              • {benefit}
-            </Text>
-          ))}
+      {isCompleted && (
+        <View style={styles.completionOverlay}>
+          <CheckCircle size={80} color={exercise.color} fill={exercise.color} />
+          <Text style={[styles.completionText, { color: exercise.color }]}>Complete!</Text>
         </View>
       )}
     </View>
@@ -520,35 +332,20 @@ const createStyles = (colors: ReturnType<typeof useTheme>['colors'], canvasSize:
     canvasContainer: {
       alignItems: 'center',
       marginVertical: spacing.xl,
+      paddingHorizontal: spacing.md,
     },
-    canvas: {
+    placeholderCanvas: {
       width: canvasSize,
-      height: canvasSize,
-      backgroundColor: colors.surface,
-      borderRadius: borderRadius.lg,
-      borderWidth: 2,
-      borderColor: colors.border,
+      height: 320,
+      backgroundColor: 'rgba(20,20,28,0.9)',
+      borderRadius: 22,
       justifyContent: 'center',
       alignItems: 'center',
-      shadowColor: colors.shadow,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 4,
     },
-    completionOverlay: {
-      position: 'absolute' as const,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: colors.background + 'F0',
-      width: canvasSize,
-      height: canvasSize,
-      borderRadius: borderRadius.lg,
-    },
-    completionText: {
-      fontSize: fontSizes.xxl,
-      fontWeight: fontWeights.bold,
-      marginTop: spacing.md,
+    placeholderText: {
+      fontSize: fontSizes.lg,
+      color: 'rgba(255,255,255,0.5)',
+      fontWeight: fontWeights.semibold,
     },
     instructionContainer: {
       backgroundColor: colors.surface,
@@ -584,8 +381,15 @@ const createStyles = (colors: ReturnType<typeof useTheme>['colors'], canvasSize:
       lineHeight: 22,
     },
     controls: {
-      marginBottom: spacing.lg,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      paddingBottom: spacing.lg,
       paddingHorizontal: spacing.xl,
+      backgroundColor: colors.background,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
     },
     controlButton: {
       flexDirection: 'row',
@@ -638,5 +442,18 @@ const createStyles = (colors: ReturnType<typeof useTheme>['colors'], canvasSize:
       color: colors.textSecondary,
       lineHeight: 20,
       marginBottom: spacing.xs,
+    },
+    completionOverlay: {
+      position: 'absolute',
+      top: '40%',
+      left: 0,
+      right: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    completionText: {
+      fontSize: fontSizes.xxl,
+      fontWeight: fontWeights.bold,
+      marginTop: spacing.md,
     },
   });
