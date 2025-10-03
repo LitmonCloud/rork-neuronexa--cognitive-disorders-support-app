@@ -200,12 +200,12 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
     container: {
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'flex-end',
       paddingHorizontal: 20,
-      paddingVertical: 20,
+      paddingBottom: 80,
     },
     cycleContainer: {
-      marginBottom: 24,
+      marginBottom: 16,
       alignItems: 'center',
     },
     cycleText: {
@@ -216,7 +216,7 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
     circleContainer: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginVertical: 24,
+      marginVertical: 16,
       position: 'relative' as const,
     },
     circle: {
@@ -263,8 +263,8 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
     },
     instructionContainer: {
       paddingHorizontal: 32,
-      marginTop: 24,
-      marginBottom: 24,
+      marginTop: 16,
+      marginBottom: 20,
       alignItems: 'center',
     },
     instructionText: {
@@ -276,7 +276,7 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
     controls: {
       flexDirection: 'row',
       gap: 16,
-      marginBottom: 24,
+      marginBottom: 20,
     },
     controlButton: {
       flexDirection: 'row',
