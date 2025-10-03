@@ -640,7 +640,10 @@ export default function TasksScreen() {
                   styles.taskCard,
                   settings.highContrast && styles.taskCardHighContrast,
                 ]}
-                onPress={() => router.push(`/task/${task.id}` as any)}
+                onPress={() => {
+                  console.log('[TaskCard] Navigating to task:', task.id);
+                  router.push(`/task/${task.id}` as any);
+                }}
                 activeOpacity={0.7}
               >
                 <View style={styles.taskLeft}>
