@@ -316,8 +316,20 @@ CONTEXT: [why this matters]
 ---`;
 
       console.log('[TaskContext] Calling AI with prompt length:', prompt.length);
-      const response = await generateText(prompt);
-      console.log('[TaskContext] AI response received, length:', response.length);
+      let response: string;
+      try {
+        response = await generateText(prompt);
+        console.log('[TaskContext] AI response received, length:', response.length);
+        console.log('[TaskContext] AI response preview:', response.substring(0, 200));
+      } catch (aiError) {
+        console.error('[TaskContext] AI call failed:', aiError);
+        throw new Error('AI service unavailable');
+      }
+      
+      if (!response || typeof response !== 'string') {
+        console.error('[TaskContext] Invalid AI response type:', typeof response);
+        throw new Error('Invalid AI response');
+      }
       
       const stepBlocks = response.split('---').filter(block => block.trim());
       console.log('[TaskContext] Parsed step blocks:', stepBlocks.length);
@@ -342,6 +354,7 @@ CONTEXT: [why this matters]
 
       if (steps.length === 0) {
         console.error('[TaskContext] No steps generated from AI response');
+        console.error('[TaskContext] Raw response:', response);
         throw new Error('Failed to generate steps from AI response');
       }
 
@@ -352,7 +365,8 @@ CONTEXT: [why this matters]
       await mutateTasksAsync(updatedTasks);
       console.log('[TaskContext] Task updated with steps');
     } catch (error) {
-      console.error('[TaskContext] Error breaking down task:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('[TaskContext] Error breaking down task:', errorMessage);
       console.log('[TaskContext] Using fallback steps due to error');
       
       const fallbackSteps = [
