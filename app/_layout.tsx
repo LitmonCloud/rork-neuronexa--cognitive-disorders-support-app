@@ -128,6 +128,7 @@ function RootLayoutNav() {
       <Stack.Screen name="paywall" options={{ headerShown: false, presentation: 'modal' }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="task/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="task/test-dummy" options={{ headerShown: false }} />
       <Stack.Screen name="caregiver-dashboard" options={{ headerShown: true, title: 'Caregiver Dashboard' }} />
       <Stack.Screen name="invite-generate" options={{ headerShown: true, title: 'Invite Caregiver' }} />
       <Stack.Screen name="invite-redeem" options={{ headerShown: true, title: 'Join as Caregiver' }} />
