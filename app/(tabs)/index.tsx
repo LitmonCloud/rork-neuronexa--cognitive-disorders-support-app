@@ -633,9 +633,9 @@ export default function TasksScreen() {
           </View>
         ) : (
           <View style={styles.taskList}>
-            {tasks.map((task) => (
+            {tasks.map((task, taskIndex) => (
               <TouchableOpacity
-                key={task.id}
+                key={`task-${task.id}-${taskIndex}`}
                 style={[
                   styles.taskCard,
                   settings.highContrast && styles.taskCardHighContrast,
