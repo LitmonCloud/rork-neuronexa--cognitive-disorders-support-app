@@ -633,49 +633,59 @@ export default function TasksScreen() {
           </View>
         ) : (
           <View style={styles.taskList}>
-            {tasks.map((task, taskIndex) => (
-              <TouchableOpacity
-                key={`task-${task.id}-${taskIndex}`}
-                style={[
-                  styles.taskCard,
-                  settings.highContrast && styles.taskCardHighContrast,
-                ]}
-                onPress={() => {
-                  console.log('[TaskCard] Task pressed:', task.id);
-                  console.log('[TaskCard] Navigating to:', `/task/${task.id}`);
+            {tasks.map((task) => {
+              const handleTaskPress = () => {
+                console.log('[TaskCard] Task pressed:', task.id);
+                console.log('[TaskCard] Task title:', task.title);
+                console.log('[TaskCard] Navigating to:', `/task/${task.id}`);
+                try {
                   router.push(`/task/${task.id}`);
-                }}
-                activeOpacity={0.7}
-                testID={`task-card-${task.id}`}
-              >
-                <View style={styles.taskLeft}>
-                  {getStatusIcon(task)}
-                  <View style={styles.taskContent}>
-                    <Text 
-                      style={[
-                        styles.taskTitle, 
-                        { fontSize: 16 * textSize },
-                        task.status === 'completed' && styles.taskTitleCompleted,
-                      ]}
-                      numberOfLines={2}
-                    >
-                      {task.title}
-                    </Text>
-                    {task.steps.length > 0 && (
-                      <Text style={[styles.taskSteps, { fontSize: 13 * textSize }]}>
-                        {task.steps.filter(s => s.completed).length}/{task.steps.length} steps
-                      </Text>
-                    )}
-                  </View>
-                </View>
-                <View 
+                  console.log('[TaskCard] Navigation initiated successfully');
+                } catch (error) {
+                  console.error('[TaskCard] Navigation error:', error);
+                }
+              };
+
+              return (
+                <TouchableOpacity
+                  key={task.id}
                   style={[
-                    styles.priorityIndicator,
-                    { backgroundColor: getPriorityColor(task.priority) },
+                    styles.taskCard,
+                    settings.highContrast && styles.taskCardHighContrast,
                   ]}
-                />
-              </TouchableOpacity>
-            ))}
+                  onPress={handleTaskPress}
+                  activeOpacity={0.7}
+                  testID={`task-card-${task.id}`}
+                >
+                  <View style={styles.taskLeft}>
+                    {getStatusIcon(task)}
+                    <View style={styles.taskContent}>
+                      <Text 
+                        style={[
+                          styles.taskTitle, 
+                          { fontSize: 16 * textSize },
+                          task.status === 'completed' && styles.taskTitleCompleted,
+                        ]}
+                        numberOfLines={2}
+                      >
+                        {task.title}
+                      </Text>
+                      {task.steps.length > 0 && (
+                        <Text style={[styles.taskSteps, { fontSize: 13 * textSize }]}>
+                          {task.steps.filter(s => s.completed).length}/{task.steps.length} steps
+                        </Text>
+                      )}
+                    </View>
+                  </View>
+                  <View 
+                    style={[
+                      styles.priorityIndicator,
+                      { backgroundColor: getPriorityColor(task.priority) },
+                    ]}
+                  />
+                </TouchableOpacity>
+              );
+            })}
           </View>
         )}
       </ScrollView>
