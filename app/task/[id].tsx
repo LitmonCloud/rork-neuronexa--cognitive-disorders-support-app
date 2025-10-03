@@ -618,7 +618,16 @@ export default function TaskDetailScreen() {
           </View>
         )}
 
-        {task.status !== 'completed' && task.steps.length > 0 && completedSteps === task.steps.length && (
+        {task.steps.length > 0 && completedSteps === task.steps.length && task.status === 'completed' && (
+          <View style={styles.completedBanner}>
+            <CheckCircle2 size={24} color={colors.success} />
+            <Text style={[styles.completedText, { fontSize: 16 * textSize }]}>
+              Great job! You completed this task!
+            </Text>
+          </View>
+        )}
+
+        {task.steps.length > 0 && completedSteps === task.steps.length && task.status !== 'completed' && (
           <TouchableOpacity
             style={styles.completeButton}
             onPress={handleCompleteTask}
@@ -629,15 +638,6 @@ export default function TaskDetailScreen() {
               Mark Task Complete
             </Text>
           </TouchableOpacity>
-        )}
-
-        {task.status === 'completed' && (
-          <View style={styles.completedBanner}>
-            <CheckCircle2 size={24} color={colors.success} />
-            <Text style={[styles.completedText, { fontSize: 16 * textSize }]}>
-              Great job! You completed this task!
-            </Text>
-          </View>
         )}
 
         {task.status !== 'completed' && !useCoachMode && (

@@ -149,7 +149,9 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
         return {
           ...task,
           steps: updatedSteps,
-          status: allStepsCompleted && updatedSteps.length > 0 ? 'completed' as TaskStatus : task.status,
+          status: allStepsCompleted && updatedSteps.length > 0 
+            ? 'completed' as TaskStatus 
+            : (task.status === 'completed' ? 'in-progress' as TaskStatus : task.status),
           completedAt: allStepsCompleted && updatedSteps.length > 0 ? new Date().toISOString() : task.completedAt,
         };
       }
