@@ -276,7 +276,7 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
     controls: {
       flexDirection: 'row',
       gap: 16,
-      marginBottom: 20,
+      marginBottom: 32,
     },
     controlButton: {
       flexDirection: 'row',
@@ -311,6 +311,7 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
       gap: 24,
       paddingHorizontal: 32,
       justifyContent: 'center',
+      marginBottom: 40,
     },
     patternInfoRow: {
       alignItems: 'center',
