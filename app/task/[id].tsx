@@ -618,14 +618,10 @@ export default function TaskDetailScreen() {
           </View>
         )}
 
-        {task.status !== 'completed' && task.steps.length > 0 && (
+        {task.status !== 'completed' && task.steps.length > 0 && completedSteps === task.steps.length && (
           <TouchableOpacity
-            style={[
-              styles.completeButton,
-              completedSteps !== task.steps.length && styles.completeButtonDisabled,
-            ]}
+            style={styles.completeButton}
             onPress={handleCompleteTask}
-            disabled={completedSteps !== task.steps.length}
             activeOpacity={0.7}
           >
             <CheckCircle2 size={20} color={colors.surface} />
