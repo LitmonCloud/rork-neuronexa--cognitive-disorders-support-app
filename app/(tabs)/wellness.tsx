@@ -183,7 +183,7 @@ export default function WellnessScreen() {
             onPress={() => setSelectedPattern(null)}
             activeOpacity={0.7}
           >
-            <ArrowLeft size={24} color={colors.primary} />
+            <ArrowLeft size={24} color="#000000" />
             <Text style={styles.backButtonTextLarge}>Back</Text>
           </TouchableOpacity>
           <Text style={styles.exerciseHeaderTitle}>{selectedPattern.name}</Text>
