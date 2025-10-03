@@ -51,20 +51,12 @@ export default function WellnessScreen() {
     exerciseHeader: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
       paddingHorizontal: 20,
       paddingTop: insets.top + 16,
       paddingBottom: 16,
       backgroundColor: colors.surface,
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
-    },
-    exerciseHeaderTitle: {
-      fontSize: 22,
-      fontWeight: '700' as const,
-      color: colors.text,
-      flex: 1,
-      textAlign: 'center' as const,
     },
     backButtonLarge: {
       flexDirection: 'row',
@@ -186,7 +178,6 @@ export default function WellnessScreen() {
             <ArrowLeft size={24} color="#000000" />
             <Text style={styles.backButtonTextLarge}>Back</Text>
           </TouchableOpacity>
-          <Text style={styles.exerciseHeaderTitle}>{selectedPattern.name}</Text>
         </View>
         <BreathingExercise
           pattern={selectedPattern}
