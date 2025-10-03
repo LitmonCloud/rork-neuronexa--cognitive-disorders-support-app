@@ -375,7 +375,9 @@ export default function TaskDetailScreen() {
   const handleCompleteTask = () => {
     completeTask(task.id);
     updateStreak();
-    router.back();
+    setTimeout(() => {
+      router.back();
+    }, 1500);
   };
 
   const handleStepCompleteFromCoach = (stepId: string) => {
