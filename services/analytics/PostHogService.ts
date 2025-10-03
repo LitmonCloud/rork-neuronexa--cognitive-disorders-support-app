@@ -91,6 +91,58 @@ class PostHogService {
       console.error('[PostHog] Flush failed:', error);
     }
   }
+
+  trackOnboardingStarted() {
+    this.capture('onboarding_started');
+  }
+
+  trackOnboardingStepCompleted(step: number) {
+    this.capture('onboarding_step_completed', { step });
+  }
+
+  trackOnboardingCompleted(duration: number) {
+    this.capture('onboarding_completed', { duration });
+  }
+
+  trackTaskCreated(hasAI: boolean, priority?: string) {
+    this.capture('task_created', { hasAI, priority });
+  }
+
+  trackTaskCompleted(taskId: string, duration: number, stepsCount: number) {
+    this.capture('task_completed', { taskId, duration, stepsCount });
+  }
+
+  trackAIBreakdownUsed(taskComplexity: string) {
+    this.capture('ai_breakdown_used', { taskComplexity });
+  }
+
+  trackBreathingExerciseCompleted(type: string, duration: number) {
+    this.capture('breathing_exercise_completed', { type, duration });
+  }
+
+  trackPaywallViewed(trigger: string) {
+    this.capture('paywall_viewed', { trigger });
+  }
+
+  trackSubscriptionStarted(plan: string) {
+    this.capture('subscription_started', { plan });
+  }
+
+  trackSubscriptionCompleted(plan: string, price: number) {
+    this.capture('subscription_completed', { plan, price });
+  }
+
+  trackFeatureUsed(feature: string, metadata?: Record<string, any>) {
+    this.capture('feature_used', { feature, ...metadata });
+  }
+
+  trackError(error: string, context?: string) {
+    this.capture('error_occurred', { error, context });
+  }
+
+  trackPerformance(metric: string, value: number, unit: string) {
+    this.capture('performance_metric', { metric, value, unit });
+  }
 }
 
 export const posthog = new PostHogService();

@@ -143,3 +143,92 @@ export function logAndContinue(error: unknown, context: string): void {
     message: appError.message,
   });
 }
+
+export async function withRetry<T>(
+  fn: () => Promise<T>,
+  options: {
+    maxAttempts?: number;
+    delayMs?: number;
+    backoffMultiplier?: number;
+    context?: string;
+  } = {}
+): Promise<T> {
+  const {
+    maxAttempts = 3,
+    delayMs = 1000,
+    backoffMultiplier = 2,
+    context = 'operation',
+  } = options;
+
+  let lastError: unknown;
+  let currentDelay = delayMs;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
+      
+      if (attempt === maxAttempts) {
+        logger.error(`All ${maxAttempts} attempts failed for ${context}`, error instanceof Error ? error : new Error(String(error)));
+        break;
+      }
+
+      const appError = error instanceof AppError ? error : null;
+      if (appError && !appError.recoverable) {
+        logger.error(`Non-recoverable error in ${context}, not retrying`, error instanceof Error ? error : new Error(String(error)));
+        break;
+      }
+
+      logger.warn(`Attempt ${attempt}/${maxAttempts} failed for ${context}, retrying in ${currentDelay}ms`, {
+        error: error instanceof Error ? error.message : String(error),
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, currentDelay));
+      currentDelay *= backoffMultiplier;
+    }
+  }
+
+  throw handleError(lastError, context);
+}
+
+export async function withTimeout<T>(
+  fn: () => Promise<T>,
+  timeoutMs: number,
+  context: string
+): Promise<T> {
+  return Promise.race([
+    fn(),
+    new Promise<T>((_, reject) =>
+      setTimeout(
+        () => reject(new AppError(
+          `Operation timed out after ${timeoutMs}ms`,
+          'TIMEOUT_ERROR',
+          'This is taking longer than expected. Please try again.',
+          true,
+          { context, timeoutMs }
+        )),
+        timeoutMs
+      )
+    ),
+  ]);
+}
+
+export async function withRetryAndTimeout<T>(
+  fn: () => Promise<T>,
+  options: {
+    maxAttempts?: number;
+    delayMs?: number;
+    backoffMultiplier?: number;
+    timeoutMs?: number;
+    context?: string;
+  } = {}
+): Promise<T> {
+  const { timeoutMs = 30000, context = 'operation', ...retryOptions } = options;
+
+  return withTimeout(
+    () => withRetry(fn, { ...retryOptions, context }),
+    timeoutMs,
+    context
+  );
+}
