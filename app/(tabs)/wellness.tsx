@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Wind, ArrowLeft, Hand, Sparkles } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -15,6 +16,7 @@ import BreathingExercise from '@/components/BreathingExercise';
 
 export default function WellnessScreen() {
   const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
   const [selectedPattern, setSelectedPattern] = useState<BreathingPattern | null>(null);
 
   const styles = StyleSheet.create({
@@ -51,7 +53,8 @@ export default function WellnessScreen() {
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingHorizontal: 20,
-      paddingVertical: 16,
+      paddingTop: insets.top + 16,
+      paddingBottom: 16,
       backgroundColor: colors.surface,
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
