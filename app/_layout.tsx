@@ -16,6 +16,10 @@ import { FunnelProvider } from "@/contexts/FunnelContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import { UserProfileProvider } from "@/contexts/UserProfileContext";
+import { posthog } from "@/services/analytics/PostHogService";
+import { sentry } from "@/services/analytics/SentryService";
+import { supabase } from "@/services/backend/SupabaseService";
+import { pushNotifications } from "@/services/notifications/PushNotificationService";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -91,7 +95,19 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   useEffect(() => {
-    SplashScreen.hideAsync();
+    async function initializeServices() {
+      console.log('[RootLayout] Initializing services...');
+      
+      sentry.initialize();
+      await posthog.initialize();
+      await supabase.initialize();
+      await pushNotifications.initialize();
+      
+      console.log('[RootLayout] Services initialized');
+      SplashScreen.hideAsync();
+    }
+    
+    initializeServices();
   }, []);
 
   return (
