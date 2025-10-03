@@ -277,7 +277,7 @@ export default function CalendarView({ tasks, onDateSelect }: CalendarViewProps)
 
         <View style={styles.daysGrid}>
           {calendarDays.map((day, index) => (
-            <View key={index} style={styles.dayCell}>
+            <View key={`day-${index}-${day ?? 'empty'}`} style={styles.dayCell}>
               {day !== null && (
                 <TouchableOpacity
                   style={[
