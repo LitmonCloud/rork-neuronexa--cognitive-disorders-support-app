@@ -648,7 +648,7 @@ export default function TasksScreen() {
                 activeOpacity={0.7}
                 testID={`task-card-${task.id}`}
               >
-                <View style={styles.taskLeft} pointerEvents="none">
+                <View style={styles.taskLeft}>
                   {getStatusIcon(task)}
                   <View style={styles.taskContent}>
                     <Text 
@@ -673,7 +673,6 @@ export default function TasksScreen() {
                     styles.priorityIndicator,
                     { backgroundColor: getPriorityColor(task.priority) },
                   ]}
-                  pointerEvents="none"
                 />
               </TouchableOpacity>
             ))}
