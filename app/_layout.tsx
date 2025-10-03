@@ -20,11 +20,22 @@ import { posthog } from "@/services/analytics/PostHogService";
 import { sentry } from "@/services/analytics/SentryService";
 import { supabase } from "@/services/backend/SupabaseService";
 import { pushNotifications } from "@/services/notifications/PushNotificationService";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 10,
+      retry: 1,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    },
+  },
+});
 
 const TERMS_ACCEPTED_KEY = '@neuronexa_terms_accepted';
 
@@ -37,8 +48,15 @@ function RootLayoutNav() {
 
   useEffect(() => {
     async function checkTermsAcceptance() {
+      const timeout = setTimeout(() => {
+        console.warn('[RootLayout] Terms check timeout, using default');
+        setTermsAccepted(false);
+        setIsInitialized(true);
+      }, 3000);
+
       try {
         const stored = await AsyncStorage.getItem(TERMS_ACCEPTED_KEY);
+        clearTimeout(timeout);
         if (stored) {
           const data = JSON.parse(stored);
           setTermsAccepted(data.accepted === true);
@@ -46,6 +64,7 @@ function RootLayoutNav() {
           setTermsAccepted(false);
         }
       } catch (error) {
+        clearTimeout(timeout);
         console.error('[RootLayout] Error checking terms acceptance:', error);
         setTermsAccepted(false);
       } finally {
@@ -100,43 +119,62 @@ export default function RootLayout() {
     async function initializeServices() {
       console.log('[RootLayout] Initializing services...');
       
-      sentry.initialize();
-      await posthog.initialize();
-      await supabase.initialize();
-      await pushNotifications.initialize();
-      
-      console.log('[RootLayout] Services initialized');
-      SplashScreen.hideAsync();
+      const timeout = setTimeout(() => {
+        console.log('[RootLayout] Service initialization timeout, hiding splash');
+        SplashScreen.hideAsync();
+      }, 5000);
+
+      try {
+        sentry.initialize();
+        await Promise.race([
+          Promise.all([
+            posthog.initialize(),
+            supabase.initialize(),
+            pushNotifications.initialize(),
+          ]),
+          new Promise(resolve => setTimeout(resolve, 3000)),
+        ]);
+        
+        clearTimeout(timeout);
+        console.log('[RootLayout] Services initialized');
+      } catch (error) {
+        clearTimeout(timeout);
+        console.error('[RootLayout] Service initialization error:', error);
+      } finally {
+        SplashScreen.hideAsync();
+      }
     }
     
     initializeServices();
   }, []);
 
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-        <FunnelProvider>
-          <SubscriptionProvider>
-            <RetentionProvider>
-              <AccessibilityProvider>
-                <NotificationProvider>
-                  <UserProfileProvider>
-                    <CaregiverProvider>
-                      <TaskProvider>
-                        <GestureHandlerRootView>
-                          <RootLayoutNav />
-                        </GestureHandlerRootView>
-                      </TaskProvider>
-                    </CaregiverProvider>
-                  </UserProfileProvider>
-                </NotificationProvider>
-              </AccessibilityProvider>
-            </RetentionProvider>
-          </SubscriptionProvider>
-        </FunnelProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </trpc.Provider>
+    <ErrorBoundary>
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider>
+          <FunnelProvider>
+            <SubscriptionProvider>
+              <RetentionProvider>
+                <AccessibilityProvider>
+                  <NotificationProvider>
+                    <UserProfileProvider>
+                      <CaregiverProvider>
+                        <TaskProvider>
+                          <GestureHandlerRootView style={{ flex: 1 }}>
+                            <RootLayoutNav />
+                          </GestureHandlerRootView>
+                        </TaskProvider>
+                      </CaregiverProvider>
+                    </UserProfileProvider>
+                  </NotificationProvider>
+                </AccessibilityProvider>
+              </RetentionProvider>
+            </SubscriptionProvider>
+          </FunnelProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </trpc.Provider>
+    </ErrorBoundary>
   );
 }
