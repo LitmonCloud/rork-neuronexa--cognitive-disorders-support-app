@@ -712,7 +712,6 @@ export default function TasksScreen() {
                 opacity: widgetOpacity,
               }
             ]}
-            pointerEvents="box-none"
             onStartShouldSetResponder={() => true}
           >
             <TouchableOpacity activeOpacity={1}>
