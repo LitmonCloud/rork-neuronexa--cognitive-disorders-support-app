@@ -109,14 +109,19 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
   }, [tasks, mutateTasks]);
 
   const completeTask = useCallback((taskId: string) => {
+    console.log('[TaskContext] completeTask called for:', taskId);
     const task = tasks.find(t => t.id === taskId);
+    console.log('[TaskContext] Found task:', task ? task.title : 'NOT FOUND');
+    console.log('[TaskContext] Task status:', task?.status);
     if (task && task.status !== 'completed') {
+      console.log('[TaskContext] Updating task to completed');
       const updatedTasks = tasks.map(t =>
         t.id === taskId
           ? { ...t, status: 'completed' as TaskStatus, completedAt: new Date().toISOString() }
           : t
       );
       mutateTasks(updatedTasks);
+      console.log('[TaskContext] Task updated, mutation called');
 
       addNotification({
         type: 'task_completed',
@@ -128,6 +133,8 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
         category: 'task',
         metadata: { priority: task.priority },
       });
+    } else {
+      console.log('[TaskContext] Task not updated - either not found or already completed');
     }
   }, [tasks, mutateTasks, addNotification]);
 

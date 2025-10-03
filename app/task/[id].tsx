@@ -373,6 +373,9 @@ export default function TaskDetailScreen() {
   };
 
   const handleCompleteTask = () => {
+    console.log('[TaskDetail] handleCompleteTask called for task:', task.id);
+    console.log('[TaskDetail] Current task status:', task.status);
+    console.log('[TaskDetail] Completed steps:', completedSteps, '/', task.steps.length);
     completeTask(task.id);
     updateStreak();
     setTimeout(() => {
