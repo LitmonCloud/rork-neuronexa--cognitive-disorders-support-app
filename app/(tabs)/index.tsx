@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Animated, Keyboard, Button } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Animated, Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState, useEffect, useRef } from 'react';
 import { useTasks } from '@/contexts/TaskContext';
@@ -535,38 +535,6 @@ export default function TasksScreen() {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          position: 'absolute' as const,
-          top: 12,
-          right: 12,
-          zIndex: 99999,
-          gap: 8,
-          backgroundColor: '#000000aa',
-          padding: 8,
-          borderRadius: 10,
-        }}
-        pointerEvents="box-none"
-      >
-        <Button
-          title="Test Nav"
-          onPress={() => {
-            console.log('[DebugBar] Testing navigation to /task/test-dummy');
-            router.push('/task/test-dummy');
-          }}
-        />
-        <Button
-          title="Test Task"
-          onPress={() => {
-            console.log('[DebugBar] Testing navigation to first task');
-            if (tasks.length > 0) {
-              router.push(`/task/${tasks[0].id}`);
-            } else {
-              console.log('[DebugBar] No tasks available');
-            }
-          }}
-        />
-      </View>
       <View style={styles.decorativeBackground}>
         <Animated.View style={[styles.decorativeCircle, styles.decorativeCircle1, { transform: [{ translateY: floatTranslate }] }]} />
         <Animated.View style={[styles.decorativeCircle, styles.decorativeCircle2, { transform: [{ translateY: floatTranslate }] }]} />
