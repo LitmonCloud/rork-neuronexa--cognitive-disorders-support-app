@@ -158,6 +158,7 @@ export default function TasksScreen() {
       right: 0,
       height: 400,
       overflow: 'hidden' as const,
+      pointerEvents: 'none' as const,
     },
     decorativeCircle: {
       position: 'absolute' as const,
@@ -412,6 +413,7 @@ export default function TasksScreen() {
       right: 0,
       bottom: 0,
       backgroundColor: colors.overlay,
+      zIndex: 1000,
     },
     floatingWidget: {
       position: 'absolute' as const,
@@ -652,6 +654,7 @@ export default function TasksScreen() {
                   style={[
                     styles.taskCard,
                     settings.highContrast && styles.taskCardHighContrast,
+                    { zIndex: 10 },
                   ]}
                   onPress={handleTaskPress}
                   activeOpacity={0.7}
@@ -691,11 +694,15 @@ export default function TasksScreen() {
       </ScrollView>
 
       {showAddWidget && (
-        <TouchableOpacity 
+        <View 
           style={styles.widgetOverlay}
-          activeOpacity={1}
-          onPress={handleCloseWidget}
+          pointerEvents="box-none"
         >
+          <TouchableOpacity 
+            style={{ position: 'absolute' as const, top: 0, left: 0, right: 0, bottom: 0 }}
+            activeOpacity={1}
+            onPress={handleCloseWidget}
+          />
           <Animated.View 
             style={[
               styles.floatingWidget,
@@ -788,7 +795,7 @@ export default function TasksScreen() {
               </TouchableOpacity>
             </TouchableOpacity>
           </Animated.View>
-        </TouchableOpacity>
+        </View>
       )}
     </View>
   );
