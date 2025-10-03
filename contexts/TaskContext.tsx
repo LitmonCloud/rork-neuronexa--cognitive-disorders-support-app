@@ -51,7 +51,8 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
   const addTask = useCallback(async (
     title: string,
     description?: string,
-    priority: TaskPriority = 'medium'
+    priority: TaskPriority = 'medium',
+    scheduledDate?: Date
   ) => {
     const newTask: Task = {
       id: Date.now().toString(),
@@ -61,17 +62,23 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
       status: 'pending',
       steps: [],
       createdAt: new Date().toISOString(),
+      dueDate: scheduledDate ? scheduledDate.toISOString() : undefined,
       reminderEnabled: false,
     };
 
     const updatedTasks = [...tasks, newTask];
     await mutateTasksAsync(updatedTasks);
     console.log('[TaskContext] Task saved to storage:', newTask.id);
+    if (scheduledDate) {
+      console.log('[TaskContext] Task scheduled for:', scheduledDate.toISOString());
+    }
 
     addNotification({
       type: 'task_created',
       title: 'New Task Created',
-      message: `"${title}" has been added`,
+      message: scheduledDate 
+        ? `"${title}" scheduled for ${scheduledDate.toLocaleDateString()}`
+        : `"${title}" has been added`,
       taskId: newTask.id,
       taskTitle: title,
       priority: priority === 'high' ? 'high' : 'low',

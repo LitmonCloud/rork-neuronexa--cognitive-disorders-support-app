@@ -5,13 +5,14 @@ import { useTasks } from '@/contexts/TaskContext';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Plus, Sparkles, Circle, CheckCircle2, Clock, Heart, Smile, Crown } from 'lucide-react-native';
+import { Plus, Sparkles, Circle, CheckCircle2, Clock, Heart, Smile, Crown, Calendar as CalendarIcon, X } from 'lucide-react-native';
 import { Task, TaskPriority } from '@/types/task';
 import { router } from 'expo-router';
 import CalendarView from '@/components/CalendarView';
 
 export default function TasksScreen() {
-  const { tasks, filter, setFilter, addTask, breakdownTask } = useTasks();
+  const { tasks, filter, setFilter, breakdownTask } = useTasks();
+  const { addTask } = useTasks();
   const { settings } = useAccessibility();
   const { canCreateTask, incrementTaskUsage, getRemainingTasks, isPremium, isInTrial } = useSubscription();
   const { colors } = useTheme();
@@ -22,6 +23,7 @@ export default function TasksScreen() {
   const [newTaskDescription, setNewTaskDescription] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState<TaskPriority>('medium');
   const [isCreating, setIsCreating] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const handleAddTask = async () => {
     if (!newTaskTitle.trim()) return;
@@ -35,12 +37,18 @@ export default function TasksScreen() {
     setIsCreating(true);
     Keyboard.dismiss();
     try {
-      const task = await addTask(newTaskTitle, newTaskDescription || undefined, newTaskPriority);
+      const task = await addTask(
+        newTaskTitle, 
+        newTaskDescription || undefined, 
+        newTaskPriority,
+        selectedDate || undefined
+      );
       if (task) {
         incrementTaskUsage();
         setNewTaskTitle('');
         setNewTaskDescription('');
         setNewTaskPriority('medium');
+        setSelectedDate(null);
         setShowAddWidget(false);
         setIsCreating(false);
         
@@ -68,7 +76,14 @@ export default function TasksScreen() {
     setNewTaskTitle('');
     setNewTaskDescription('');
     setNewTaskPriority('medium');
+    setSelectedDate(null);
     Keyboard.dismiss();
+  };
+
+  const handleDateSelect = (date: Date) => {
+    console.log('[Calendar] Date selected:', date.toISOString());
+    setSelectedDate(date);
+    setShowAddWidget(true);
   };
 
   const getStatusIcon = (task: Task) => {
@@ -531,6 +546,42 @@ export default function TasksScreen() {
       fontWeight: '600' as const,
       color: colors.surface,
     },
+    datePickerContainer: {
+      marginBottom: 16,
+    },
+    datePickerLabel: {
+      fontSize: 12,
+      fontWeight: '600' as const,
+      color: colors.textSecondary,
+      marginBottom: 8,
+      textTransform: 'uppercase' as const,
+      letterSpacing: 0.5,
+    },
+    datePickerButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: colors.surfaceTint,
+      borderRadius: 14,
+      padding: 14,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+    },
+    datePickerButtonActive: {
+      borderColor: colors.primary,
+      backgroundColor: colors.primaryLight + '20',
+    },
+    datePickerText: {
+      fontSize: 15,
+      color: colors.text,
+      fontWeight: '500' as const,
+    },
+    datePickerTextPlaceholder: {
+      color: colors.textLight,
+    },
+    clearDateButton: {
+      padding: 4,
+    },
   });
 
   return (
@@ -611,7 +662,7 @@ export default function TasksScreen() {
         </View>
 
         <View style={{ marginBottom: 24 }}>
-          <CalendarView tasks={tasks} />
+          <CalendarView tasks={tasks} onDateSelect={handleDateSelect} />
         </View>
 
         {tasks.length === 0 ? (
@@ -742,6 +793,41 @@ export default function TasksScreen() {
                 onChangeText={setNewTaskTitle}
                 autoFocus
               />
+
+              <View style={styles.datePickerContainer}>
+                <Text style={[styles.datePickerLabel, { fontSize: 12 * textSize }]}>Schedule For</Text>
+                <View style={[
+                  styles.datePickerButton,
+                  selectedDate && styles.datePickerButtonActive,
+                ]}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1 }}>
+                    <CalendarIcon size={18} color={selectedDate ? colors.primary : colors.textLight} />
+                    <Text style={[
+                      styles.datePickerText,
+                      { fontSize: 15 * textSize },
+                      !selectedDate && styles.datePickerTextPlaceholder,
+                    ]}>
+                      {selectedDate 
+                        ? selectedDate.toLocaleDateString('en-US', { 
+                            weekday: 'short', 
+                            month: 'short', 
+                            day: 'numeric',
+                            year: selectedDate.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+                          })
+                        : 'Today (tap calendar to change)'}
+                    </Text>
+                  </View>
+                  {selectedDate && (
+                    <TouchableOpacity 
+                      style={styles.clearDateButton}
+                      onPress={() => setSelectedDate(null)}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    >
+                      <X size={18} color={colors.textSecondary} />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
 
               <TextInput
                 style={[styles.widgetInput, styles.widgetInputMultiline, { fontSize: 15 * textSize }]}

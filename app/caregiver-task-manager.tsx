@@ -19,6 +19,7 @@ import {
   X,
   GripVertical,
   CheckCircle2,
+  Calendar as CalendarIcon,
 } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { spacing, borderRadius } from '@/theme/spacing';
@@ -43,6 +44,7 @@ export default function CaregiverTaskManagerScreen() {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [taskPriority, setTaskPriority] = useState<TaskPriority>('medium');
+  const [taskScheduledDate, setTaskScheduledDate] = useState<Date | null>(null);
 
   const [stepDescription, setStepDescription] = useState('');
   const [stepSimplified, setStepSimplified] = useState('');
@@ -305,6 +307,34 @@ export default function CaregiverTaskManagerScreen() {
       textAlign: 'center' as const,
       paddingVertical: spacing.md,
     },
+    datePickerContainer: {
+      marginBottom: spacing.md,
+    },
+    datePickerButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: colors.background,
+      borderRadius: borderRadius.md,
+      padding: spacing.md,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    datePickerButtonActive: {
+      borderColor: colors.primary,
+      backgroundColor: colors.primary + '10',
+    },
+    datePickerText: {
+      fontSize: fontSizes.sm,
+      color: colors.text,
+      fontWeight: fontWeights.medium,
+    },
+    datePickerTextPlaceholder: {
+      color: colors.textLight,
+    },
+    clearDateButton: {
+      padding: spacing.xs,
+    },
   });
 
   const getPriorityColor = (priority: TaskPriority) => {
@@ -324,10 +354,16 @@ export default function CaregiverTaskManagerScreen() {
       return;
     }
 
-    await addTask(taskTitle, taskDescription || undefined, taskPriority);
+    await addTask(
+      taskTitle, 
+      taskDescription || undefined, 
+      taskPriority,
+      taskScheduledDate || undefined
+    );
     setTaskTitle('');
     setTaskDescription('');
     setTaskPriority('medium');
+    setTaskScheduledDate(null);
     setShowTaskModal(false);
   };
 
@@ -583,6 +619,40 @@ export default function CaregiverTaskManagerScreen() {
                   placeholderTextColor={colors.textLight}
                   multiline
                 />
+              </View>
+
+              <View style={styles.datePickerContainer}>
+                <Text style={styles.inputLabel}>Schedule For (Optional)</Text>
+                <View style={[
+                  styles.datePickerButton,
+                  taskScheduledDate && styles.datePickerButtonActive,
+                ]}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, flex: 1 }}>
+                    <CalendarIcon size={18} color={taskScheduledDate ? colors.primary : colors.textLight} />
+                    <Text style={[
+                      styles.datePickerText,
+                      !taskScheduledDate && styles.datePickerTextPlaceholder,
+                    ]}>
+                      {taskScheduledDate 
+                        ? taskScheduledDate.toLocaleDateString('en-US', { 
+                            weekday: 'short', 
+                            month: 'short', 
+                            day: 'numeric',
+                            year: taskScheduledDate.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+                          })
+                        : 'Today (tap to change)'}
+                    </Text>
+                  </View>
+                  {taskScheduledDate && (
+                    <TouchableOpacity 
+                      style={styles.clearDateButton}
+                      onPress={() => setTaskScheduledDate(null)}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    >
+                      <X size={18} color={colors.textSecondary} />
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
 
               <View>
