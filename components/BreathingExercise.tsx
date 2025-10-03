@@ -20,7 +20,6 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
   
   const scaleAnim = useRef(new Animated.Value(0.5)).current;
   const opacityAnim = useRef(new Animated.Value(0.3)).current;
-  const rotateAnim = useRef(new Animated.Value(0)).current;
 
   const { width } = Dimensions.get('window');
   const circleSize = Math.min(width * 0.6, 280);
@@ -107,11 +106,6 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
             duration,
             useNativeDriver: true,
           }),
-          Animated.timing(rotateAnim, {
-            toValue: 1,
-            duration,
-            useNativeDriver: true,
-          }),
         ]).start();
         break;
       case 'hold':
@@ -140,11 +134,6 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
             duration,
             useNativeDriver: true,
           }),
-          Animated.timing(rotateAnim, {
-            toValue: 2,
-            duration,
-            useNativeDriver: true,
-          }),
         ]).start();
         break;
       case 'holdAfterExhale':
@@ -162,7 +151,7 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
         ]).start();
         break;
     }
-  }, [timeLeft, phase, scaleAnim, opacityAnim, rotateAnim]);
+  }, [timeLeft, phase, scaleAnim, opacityAnim]);
 
   useEffect(() => {
     if (!isActive) return;
@@ -188,7 +177,6 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
     setTimeLeft(pattern.inhale);
     scaleAnim.setValue(0.5);
     opacityAnim.setValue(0.3);
-    rotateAnim.setValue(0);
   };
 
   const getPhaseText = (): string => {
@@ -206,10 +194,7 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
     }
   };
 
-  const rotate = rotateAnim.interpolate({
-    inputRange: [0, 1, 2],
-    outputRange: ['0deg', '180deg', '360deg'],
-  });
+
 
   const styles = StyleSheet.create({
     container: {
@@ -355,7 +340,7 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
               height: circleSize,
               borderRadius: circleSize / 2,
               backgroundColor: pattern.color,
-              transform: [{ scale: scaleAnim }, { rotate }],
+              transform: [{ scale: scaleAnim }],
               opacity: opacityAnim,
             },
           ]}
