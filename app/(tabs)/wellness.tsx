@@ -60,7 +60,7 @@ export default function WellnessScreen() {
       borderBottomColor: colors.border,
     },
     exerciseHeaderTitle: {
-      fontSize: 20,
+      fontSize: 22,
       fontWeight: '700' as const,
       color: colors.text,
       flex: 1,
@@ -70,16 +70,16 @@ export default function WellnessScreen() {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 6,
-      paddingVertical: 8,
-      paddingHorizontal: 12,
+      paddingVertical: 10,
+      paddingHorizontal: 14,
       borderRadius: 12,
       backgroundColor: colors.primaryLight,
       minWidth: 80,
     },
     backButtonTextLarge: {
-      fontSize: 16,
+      fontSize: 18,
       color: colors.primary,
-      fontWeight: '600' as const,
+      fontWeight: '700' as const,
     },
 
     content: {

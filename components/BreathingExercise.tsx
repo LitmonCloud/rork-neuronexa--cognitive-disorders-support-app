@@ -22,7 +22,7 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
   const opacityAnim = useRef(new Animated.Value(0.3)).current;
 
   const { width } = Dimensions.get('window');
-  const circleSize = Math.min(width * 0.6, 280);
+  const circleSize = Math.min(width * 0.7, 340);
 
   const getNextPhaseDuration = useCallback((): number => {
     switch (phase) {
@@ -200,23 +200,23 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
     container: {
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'flex-end',
+      justifyContent: 'center',
       paddingHorizontal: 20,
-      paddingBottom: 40,
+      paddingBottom: 20,
     },
     cycleContainer: {
-      marginBottom: 16,
+      marginBottom: 24,
       alignItems: 'center',
     },
     cycleText: {
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: '600' as const,
       color: colors.textSecondary,
     },
     circleContainer: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginVertical: 16,
+      marginVertical: 24,
       position: 'relative' as const,
     },
     circle: {
@@ -251,41 +251,41 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
       opacity: 0.1,
     },
     phaseText: {
-      fontSize: 24,
+      fontSize: 28,
       fontWeight: '700' as const,
       color: colors.surface,
-      marginBottom: 8,
+      marginBottom: 12,
     },
     timerText: {
-      fontSize: 48,
+      fontSize: 56,
       fontWeight: '800' as const,
       color: colors.surface,
     },
     instructionContainer: {
       paddingHorizontal: 32,
-      marginTop: 16,
+      marginTop: 24,
       marginBottom: 32,
       alignItems: 'center',
     },
     instructionText: {
-      fontSize: 16,
+      fontSize: 17,
       color: colors.textSecondary,
       textAlign: 'center' as const,
-      lineHeight: 24,
+      lineHeight: 26,
     },
     controls: {
       flexDirection: 'row',
       gap: 16,
-      marginBottom: 24,
+      marginBottom: 28,
     },
     controlButton: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
-      paddingHorizontal: 24,
-      paddingVertical: 14,
-      borderRadius: 12,
-      minWidth: 120,
+      paddingHorizontal: 28,
+      paddingVertical: 16,
+      borderRadius: 14,
+      minWidth: 130,
       justifyContent: 'center',
     },
     primaryButton: {
@@ -297,13 +297,13 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
       borderColor: colors.primary,
     },
     primaryButtonText: {
-      fontSize: 16,
-      fontWeight: '600' as const,
+      fontSize: 17,
+      fontWeight: '700' as const,
       color: colors.surface,
     },
     secondaryButtonText: {
-      fontSize: 16,
-      fontWeight: '600' as const,
+      fontSize: 17,
+      fontWeight: '700' as const,
       color: colors.primary,
     },
     patternInfo: {
@@ -311,19 +311,18 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
       gap: 24,
       paddingHorizontal: 32,
       justifyContent: 'center',
-      marginBottom: 20,
     },
     patternInfoRow: {
       alignItems: 'center',
     },
     patternInfoLabel: {
-      fontSize: 12,
+      fontSize: 13,
       color: colors.textLight,
       marginBottom: 4,
     },
     patternInfoValue: {
-      fontSize: 16,
-      fontWeight: '600' as const,
+      fontSize: 17,
+      fontWeight: '700' as const,
       color: colors.text,
     },
   });
