@@ -276,9 +276,13 @@ export default function CalendarView({ tasks, onDateSelect }: CalendarViewProps)
         </View>
 
         <View style={styles.daysGrid}>
-          {calendarDays.map((day, index) => (
-            <View key={`calendar-day-${year}-${month}-${index}`} style={styles.dayCell}>
-              {day !== null && (
+          {calendarDays.map((day, index) => {
+            if (day === null) {
+              return <View key={`empty-${year}-${month}-${index}`} style={styles.dayCell} />;
+            }
+            
+            return (
+              <View key={`day-${year}-${month}-${day}`} style={styles.dayCell}>
                 <TouchableOpacity
                   style={[
                     styles.dayButton,
@@ -306,9 +310,9 @@ export default function CalendarView({ tasks, onDateSelect }: CalendarViewProps)
                     ]} />
                   )}
                 </TouchableOpacity>
-              )}
-            </View>
-          ))}
+              </View>
+            );
+          })}
         </View>
       </View>
     </View>
