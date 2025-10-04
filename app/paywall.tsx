@@ -95,7 +95,7 @@ export default function PaywallScreen() {
     popularBadge: {
       position: 'absolute' as const,
       top: -12,
-      left: 20,
+      alignSelf: 'center',
       flexDirection: 'row',
       alignItems: 'center',
       gap: 4,
