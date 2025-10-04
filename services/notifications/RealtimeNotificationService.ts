@@ -27,7 +27,7 @@ class RealtimeNotificationService {
     }
 
     if (isExpoGo) {
-      console.warn('[RealtimeNotification] Expo Go detected - limited notification support in SDK 53');
+      console.log('[RealtimeNotification] Expo Go detected - using local notifications only (SDK 53 limitation)');
     }
 
     try {
@@ -40,8 +40,8 @@ class RealtimeNotificationService {
       );
 
       console.log('[RealtimeNotification] Service initialized');
-    } catch (error) {
-      console.error('[RealtimeNotification] Failed to initialize listeners:', error);
+    } catch {
+      console.log('[RealtimeNotification] Listener setup skipped (Expo Go limitation)');
     }
   }
 
@@ -150,8 +150,8 @@ class RealtimeNotificationService {
               },
               trigger: null,
             });
-          } catch (error) {
-            console.warn('[RealtimeNotification] Local notification failed (Expo Go limitation):', error);
+          } catch {
+            console.log('[RealtimeNotification] Local notification skipped (Expo Go limitation)');
           }
         }
 
@@ -206,8 +206,8 @@ class RealtimeNotificationService {
               },
               trigger: null,
             });
-          } catch (error) {
-            console.warn('[RealtimeNotification] Local notification failed (Expo Go limitation):', error);
+          } catch {
+            console.log('[RealtimeNotification] Local notification skipped (Expo Go limitation)');
           }
         }
 

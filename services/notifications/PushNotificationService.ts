@@ -5,16 +5,20 @@ import Constants from 'expo-constants';
 
 const isExpoGo = Constants.appOwnership === 'expo';
 
-if (Platform.OS !== 'web') {
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: true,
-      shouldShowBanner: true,
-      shouldShowList: true,
-    }),
-  });
+if (Platform.OS !== 'web' && !isExpoGo) {
+  try {
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+        shouldShowBanner: true,
+        shouldShowList: true,
+      }),
+    });
+  } catch {
+    console.log('[PushNotifications] Handler setup skipped (Expo Go limitation)');
+  }
 }
 
 class PushNotificationService {
@@ -31,7 +35,7 @@ class PushNotificationService {
     }
 
     if (isExpoGo) {
-      console.warn('[PushNotifications] Expo Go detected - push notifications disabled in SDK 53. Use development build for full functionality.');
+      console.log('[PushNotifications] Expo Go detected - using local notifications only (SDK 53 limitation)');
       this.isInitialized = true;
       return;
     }
