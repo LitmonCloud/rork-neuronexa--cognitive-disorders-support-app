@@ -455,7 +455,13 @@ export default function CaregiverTaskManagerScreen() {
         <View style={[styles.header, { paddingTop: insets.top + spacing.md }]}>
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => router.back()}
+            onPress={() => {
+              if (router.canGoBack()) {
+                router.back();
+              } else {
+                router.replace('/(tabs)');
+              }
+            }}
             activeOpacity={0.7}
           >
             <ArrowLeft size={24} color={colors.text} />

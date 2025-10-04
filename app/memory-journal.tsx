@@ -130,6 +130,14 @@ Provide 3-4 gentle prompting questions that could help them remember more detail
     }
   };
 
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)');
+    }
+  };
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -424,7 +432,7 @@ Provide 3-4 gentle prompting questions that could help them remember more detail
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.back()}
+          onPress={handleBack}
           activeOpacity={0.7}
         >
           <ArrowLeft size={24} color="#000000" />

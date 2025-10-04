@@ -410,7 +410,11 @@ export default function TaskDetailScreen() {
           style: 'destructive',
           onPress: () => {
             deleteTask(task.id);
-            router.back();
+            if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.replace('/(tabs)');
+            }
           },
         },
       ]
@@ -424,7 +428,11 @@ export default function TaskDetailScreen() {
     completeTask(task.id);
     updateStreak();
     setTimeout(() => {
-      router.back();
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/(tabs)');
+      }
     }, 1500);
   };
 
@@ -462,7 +470,13 @@ export default function TaskDetailScreen() {
           headerShown: true,
           headerTitle: '',
           headerLeft: () => (
-            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <TouchableOpacity onPress={() => {
+              if (router.canGoBack()) {
+                router.back();
+              } else {
+                router.replace('/(tabs)');
+              }
+            }} style={styles.backButton}>
               <ArrowLeft size={24} color={colors.text} />
             </TouchableOpacity>
           ),
