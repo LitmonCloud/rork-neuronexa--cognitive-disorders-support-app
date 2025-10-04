@@ -304,8 +304,8 @@ export default function PaywallScreen() {
                 key={plan.id}
                 style={[
                   styles.planCard,
-                  isSelected && styles.planCardSelected,
                   plan.popular && styles.planCardPopular,
+                  isSelected && styles.planCardSelected,
                 ]}
                 onPress={() => setSelectedPlan(plan)}
                 activeOpacity={0.7}
