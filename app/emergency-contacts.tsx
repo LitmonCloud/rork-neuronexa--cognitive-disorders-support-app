@@ -5,9 +5,10 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useDementia } from '@/contexts/DementiaContext';
 import { usePatients } from '@/contexts/PatientContext';
 import { useUserProfile } from '@/contexts/UserProfileContext';
-import { ArrowLeft, User, Plus, Trash2, Edit2, Star } from 'lucide-react-native';
+import { ArrowLeft, User, Plus, Trash2, Edit2, Star, Camera } from 'lucide-react-native';
 import { useState } from 'react';
 import { EmergencyContact } from '@/types/dementia';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function EmergencyContactsScreen() {
   const { colors } = useTheme();
@@ -26,6 +27,7 @@ export default function EmergencyContactsScreen() {
     name: '',
     relationship: '',
     phoneNumber: '',
+    photoUri: '',
   });
 
   const handleSave = () => {
@@ -51,7 +53,7 @@ export default function EmergencyContactsScreen() {
       setIsAdding(false);
     }
     
-    setFormData({ name: '', relationship: '', phoneNumber: '' });
+    setFormData({ name: '', relationship: '', phoneNumber: '', photoUri: '' });
   };
 
   const handleEdit = (contact: EmergencyContact) => {
@@ -64,6 +66,7 @@ export default function EmergencyContactsScreen() {
       name: contact.name,
       relationship: contact.relationship,
       phoneNumber: contact.phoneNumber,
+      photoUri: contact.photoUri || '',
     });
     setIsAdding(true);
   };
@@ -354,6 +357,63 @@ export default function EmergencyContactsScreen() {
               </Text>
               
               <View style={styles.inputGroup}>
+                <Text style={styles.label}>Photo</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                  <TouchableOpacity
+                    style={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: 40,
+                      backgroundColor: formData.photoUri ? 'transparent' : colors.primaryLight,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderWidth: 2,
+                      borderColor: colors.border,
+                      overflow: 'hidden',
+                    }}
+                    onPress={async () => {
+                      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                      if (status !== 'granted') {
+                        Alert.alert('Permission Required', 'Please allow access to your photo library.');
+                        return;
+                      }
+                      const result = await ImagePicker.launchImageLibraryAsync({
+                        mediaTypes: ['images'],
+                        allowsEditing: true,
+                        aspect: [1, 1],
+                        quality: 0.8,
+                      });
+                      if (!result.canceled && result.assets[0]) {
+                        setFormData({ ...formData, photoUri: result.assets[0].uri });
+                      }
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    {formData.photoUri ? (
+                      <Image source={{ uri: formData.photoUri }} style={{ width: 80, height: 80 }} />
+                    ) : (
+                      <Camera size={32} color={colors.primary} />
+                    )}
+                  </TouchableOpacity>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 14, color: colors.textSecondary, lineHeight: 20 }}>
+                      Tap to {formData.photoUri ? 'change' : 'add'} photo
+                    </Text>
+                    {formData.photoUri && (
+                      <TouchableOpacity
+                        onPress={() => setFormData({ ...formData, photoUri: '' })}
+                        style={{ marginTop: 6 }}
+                      >
+                        <Text style={{ fontSize: 14, color: colors.error, fontWeight: '600' as const }}>
+                          Remove photo
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                </View>
+              </View>
+              
+              <View style={styles.inputGroup}>
                 <Text style={styles.label}>Name *</Text>
                 <TextInput
                   style={styles.input}
@@ -393,7 +453,7 @@ export default function EmergencyContactsScreen() {
                   onPress={() => {
                     setIsAdding(false);
                     setEditingId(null);
-                    setFormData({ name: '', relationship: '', phoneNumber: '' });
+                    setFormData({ name: '', relationship: '', phoneNumber: '', photoUri: '' });
                   }}
                   activeOpacity={0.7}
                 >
