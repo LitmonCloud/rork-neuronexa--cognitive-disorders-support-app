@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "NeuroNexa: Cognitive Disorders Support App",
-    "slug": "neuronexa-cognitive-disorders-support-ykokwhv",
+    "name": "Nexa: Cognitive Disorders Support App",
+    "slug": "nexa-cognitive-disorders-support-ykokwhv",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.rork.neuronexa-cognitive-disorders-support-ykokwhv"
+      "bundleIdentifier": "app.rork.nexa-cognitive-disorders-support-ykokwhv"
     },
     "android": {
       "adaptiveIcon": {
