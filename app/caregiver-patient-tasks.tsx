@@ -36,7 +36,7 @@ export default function CaregiverPatientTasksScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { colors } = useTheme();
-  const { selectedPatient, selectedDate, setSelectedDate, linkTaskToPatient, unlinkTaskFromPatient, updateTaskLink, getPatientTasks } = usePatients();
+  const { patients, selectedPatient, selectedDate, setSelectedDate, linkTaskToPatient, unlinkTaskFromPatient, updateTaskLink, getPatientTasks, patientTasks } = usePatients();
   const { allTasks, addTask, updateTask, deleteTask, addStep, editStep, deleteStep } = useTasks();
   const { addNotification } = useNotifications();
 
@@ -56,24 +56,32 @@ export default function CaregiverPatientTasksScreen() {
   const [stepContext, setStepContext] = useState('');
   const [tempSteps, setTempSteps] = useState<{id: string; description: string; simplifiedText?: string; contextualPrompt?: string}[]>([]);
 
-  const patientTaskLinks = useMemo(() => {
-    if (!selectedPatient) return [];
-    return getPatientTasks(selectedPatient.id);
-  }, [selectedPatient, getPatientTasks]);
+  const allPatientTaskLinks = useMemo(() => {
+    return patientTasks;
+  }, [patientTasks]);
 
-  const patientTasks = useMemo(() => {
-    const taskIds = patientTaskLinks.map(pt => pt.taskId);
-    return allTasks.filter(task => taskIds.includes(task.id));
-  }, [allTasks, patientTaskLinks]);
+  const allPatientTasks = useMemo(() => {
+    const taskIds = allPatientTaskLinks.map(pt => pt.taskId);
+    return allTasks.filter(task => taskIds.includes(task.id)).map(task => {
+      const link = allPatientTaskLinks.find(pt => pt.taskId === task.id);
+      const patient = patients.find(p => p.id === link?.patientId);
+      return {
+        ...task,
+        patientId: link?.patientId,
+        patientName: patient ? `${patient.firstName} ${patient.lastNameInitial}.` : 'Unknown',
+        patientColor: patient?.profileColor || colors.primary,
+      };
+    });
+  }, [allTasks, allPatientTaskLinks, patients, colors.primary]);
 
   const tasksForSelectedDate = useMemo(() => {
     const dateStr = selectedDate.toISOString().split('T')[0];
-    return patientTasks.filter(task => {
+    return allPatientTasks.filter(task => {
       if (!task.dueDate) return false;
       const taskDateStr = new Date(task.dueDate).toISOString().split('T')[0];
       return taskDateStr === dateStr;
     });
-  }, [patientTasks, selectedDate]);
+  }, [allPatientTasks, selectedDate]);
 
   const styles = StyleSheet.create({
     container: {
@@ -153,6 +161,7 @@ export default function CaregiverPatientTasksScreen() {
     },
     taskCard: {
       padding: spacing.lg,
+      borderLeftWidth: 4,
     },
     taskHeader: {
       flexDirection: 'row',
@@ -166,6 +175,21 @@ export default function CaregiverPatientTasksScreen() {
       fontWeight: fontWeights.bold,
       color: colors.text,
       marginRight: spacing.sm,
+    },
+    patientBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: 4,
+      borderRadius: borderRadius.sm,
+      marginBottom: spacing.sm,
+      alignSelf: 'flex-start',
+    },
+    patientBadgeText: {
+      fontSize: fontSizes.xs,
+      fontWeight: fontWeights.semibold,
+      color: colors.surface,
     },
     taskActions: {
       flexDirection: 'row',
@@ -700,27 +724,7 @@ export default function CaregiverPatientTasksScreen() {
     );
   };
 
-  if (!selectedPatient) {
-    return (
-      <View style={styles.container}>
-        <Stack.Screen options={{ headerShown: false }} />
-        <View style={[styles.header, { paddingTop: insets.top + spacing.md }]}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
-            activeOpacity={0.7}
-          >
-            <ArrowLeft size={24} color={colors.text} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>No Patient Selected</Text>
-          <View style={{ width: 40 }} />
-        </View>
-        <View style={styles.emptyState}>
-          <Text style={styles.emptyText}>Please select a patient from the dashboard</Text>
-        </View>
-      </View>
-    );
-  }
+
 
   return (
     <View style={styles.container}>
@@ -735,10 +739,10 @@ export default function CaregiverPatientTasksScreen() {
           <ArrowLeft size={24} color={colors.text} />
         </TouchableOpacity>
         <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerTitle}>
-            {selectedPatient.firstName} {selectedPatient.lastNameInitial}.
+          <Text style={styles.headerTitle}>All Patient Tasks</Text>
+          <Text style={styles.headerSubtitle}>
+            {patients.length} {patients.length === 1 ? 'patient' : 'patients'}
           </Text>
-          <Text style={styles.headerSubtitle}>Task Management</Text>
         </View>
         <View style={{ width: 40 }} />
       </View>
@@ -748,7 +752,7 @@ export default function CaregiverPatientTasksScreen() {
           <CalendarView
             selectedDate={selectedDate}
             onDateSelect={setSelectedDate}
-            tasks={patientTasks}
+            tasks={allPatientTasks}
           />
         </Card>
 
@@ -761,26 +765,32 @@ export default function CaregiverPatientTasksScreen() {
               {tasksForSelectedDate.length} {tasksForSelectedDate.length === 1 ? 'task' : 'tasks'}
             </Text>
           </View>
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => handleOpenTaskModal()}
-            activeOpacity={0.7}
-          >
-            <Plus size={16} color={colors.surface} />
-            <Text style={styles.addButtonText}>Add Task</Text>
-          </TouchableOpacity>
+          {selectedPatient && (
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => handleOpenTaskModal()}
+              activeOpacity={0.7}
+            >
+              <Plus size={16} color={colors.surface} />
+              <Text style={styles.addButtonText}>Add Task</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {tasksForSelectedDate.length === 0 ? (
           <Card style={styles.emptyState}>
             <CalendarIcon size={48} color={colors.textLight} />
             <Text style={styles.emptyText}>
-              No tasks for this date. Add a task to get started.
+              No tasks for this date.
             </Text>
           </Card>
         ) : (
           tasksForSelectedDate.map((task) => (
-            <Card key={task.id} style={styles.taskCard}>
+            <Card key={task.id} style={[styles.taskCard, { borderLeftColor: task.patientColor }]}>
+              <View style={[styles.patientBadge, { backgroundColor: task.patientColor }]}>
+                <Text style={styles.patientBadgeText}>{task.patientName}</Text>
+              </View>
+              
               <View style={styles.taskHeader}>
                 <Text style={styles.taskTitle}>{task.title}</Text>
                 <View style={styles.taskActions}>
