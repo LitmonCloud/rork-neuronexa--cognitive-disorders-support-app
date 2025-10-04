@@ -90,9 +90,8 @@ export default function CaregiverDashboardScreen() {
       gap: spacing.lg,
     },
     sectionHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: 'column',
+      gap: spacing.md,
       marginBottom: spacing.md,
     },
     sectionTitle: {
@@ -495,7 +494,7 @@ export default function CaregiverDashboardScreen() {
                 activeOpacity={0.7}
                 testID="enter-code-button"
               >
-                <Key size={16} color={colors.surface} />
+                <Key size={18} color={colors.surface} />
                 <Text style={styles.codeButtonText}>Enter Code</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -508,7 +507,7 @@ export default function CaregiverDashboardScreen() {
                 activeOpacity={0.7}
                 testID="add-patient-button"
               >
-                <Plus size={16} color={colors.surface} />
+                <Plus size={18} color={colors.surface} />
                 <Text style={styles.addButtonText}>Add Patient</Text>
               </TouchableOpacity>
             </View>
