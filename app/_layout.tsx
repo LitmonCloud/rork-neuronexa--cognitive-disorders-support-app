@@ -12,6 +12,7 @@ import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { SubscriptionProvider, useSubscription } from "@/contexts/SubscriptionContext";
 import { RetentionProvider } from "@/contexts/RetentionContext";
 import { CaregiverProvider } from "@/contexts/CaregiverContext";
+import { PatientProvider } from "@/contexts/PatientContext";
 import { FunnelProvider } from "@/contexts/FunnelContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
@@ -100,7 +101,7 @@ function RootLayoutNav() {
     const inTabs = segments[0] === '(tabs)';
     const inTask = segments[0] === 'task';
     const inPaywall = segments[0] === 'paywall';
-    const inCaregiver = segments[0] === 'caregiver-dashboard' || segments[0] === 'invite-generate' || segments[0] === 'invite-redeem';
+    const inCaregiver = segments[0] === 'caregiver-dashboard' || segments[0] === 'caregiver-task-manager' || segments[0] === 'caregiver-patient-tasks' || segments[0] === 'invite-generate' || segments[0] === 'invite-redeem';
     const inNotifications = segments[0] === 'notifications' || segments[0] === 'notification-settings';
     const inFingerTrace = segments[0] === 'finger-trace';
     const inAllowedScreen = inTabs || inTask || inPaywall || inCaregiver || inNotifications || inFingerTrace;
@@ -135,7 +136,9 @@ function RootLayoutNav() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="task/[id]" options={{ headerShown: false }} />
       <Stack.Screen name="task/test-dummy" options={{ headerShown: false }} />
-      <Stack.Screen name="caregiver-dashboard" options={{ headerShown: true, title: 'Caregiver Dashboard' }} />
+      <Stack.Screen name="caregiver-dashboard" options={{ headerShown: false }} />
+      <Stack.Screen name="caregiver-task-manager" options={{ headerShown: false }} />
+      <Stack.Screen name="caregiver-patient-tasks" options={{ headerShown: false }} />
       <Stack.Screen name="invite-generate" options={{ headerShown: true, title: 'Invite Caregiver' }} />
       <Stack.Screen name="invite-redeem" options={{ headerShown: true, title: 'Join as Caregiver' }} />
       <Stack.Screen name="notifications" options={{ headerShown: false }} />
@@ -191,11 +194,13 @@ export default function RootLayout() {
                   <NotificationProvider>
                     <UserProfileProvider>
                       <CaregiverProvider>
-                        <TaskProvider>
-                          <GestureHandlerRootView style={{ flex: 1 }}>
-                            <RootLayoutNav />
-                          </GestureHandlerRootView>
-                        </TaskProvider>
+                        <PatientProvider>
+                          <TaskProvider>
+                            <GestureHandlerRootView style={{ flex: 1 }}>
+                              <RootLayoutNav />
+                            </GestureHandlerRootView>
+                          </TaskProvider>
+                        </PatientProvider>
                       </CaregiverProvider>
                     </UserProfileProvider>
                   </NotificationProvider>

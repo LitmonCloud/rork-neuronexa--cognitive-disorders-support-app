@@ -5,89 +5,40 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Dimensions,
+  TextInput,
+  Modal,
+  Alert,
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  Activity,
-  CheckCircle2,
-  Clock,
-  Heart,
-  TrendingUp,
-  AlertCircle,
-  MessageSquare,
   ArrowLeft,
-  Brain,
-  Target,
+  Plus,
+  Users,
+  Edit2,
+  Trash2,
+  X,
+  ChevronRight,
 } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { spacing, borderRadius } from '@/theme/spacing';
 import { fontSizes, fontWeights } from '@/theme/typography';
-import { useTasks } from '@/contexts/TaskContext';
-import { useCaregivers } from '@/contexts/CaregiverContext';
+import { usePatients } from '@/contexts/PatientContext';
 import Card from '@/components/Card';
+import Button from '@/components/Button';
 import PremiumGate from '@/components/PremiumGate';
-
-const { width } = Dimensions.get('window');
 
 export default function CaregiverDashboardScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { colors } = useTheme();
-  const { allTasks } = useTasks();
-  const { notifications, unreadCount, markNotificationRead, markAllNotificationsRead } = useCaregivers();
-  const [selectedTab, setSelectedTab] = useState<'overview' | 'tasks' | 'wellness' | 'alerts'>('overview');
+  const { patients, addPatient, updatePatient, deletePatient, selectPatient } = usePatients();
 
-  const completedTasks = allTasks.filter(t => t.status === 'completed').length;
-  const pendingTasks = allTasks.filter(t => t.status === 'pending').length;
-  const inProgressTasks = allTasks.filter(t => t.status === 'in-progress').length;
-
-  const recentTasks = allTasks.slice(0, 5);
-
-  const formatTimeAgo = (timestamp: string) => {
-    const now = new Date();
-    const then = new Date(timestamp);
-    const diffMs = now.getTime() - then.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
-    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-  };
-
-  const mockWellnessData = {
-    breathingSessions: 12,
-    avgHeartRate: 72,
-    stressLevel: 'Moderate',
-    sleepQuality: 'Good',
-    weeklyProgress: 85,
-  };
-
-  const getStatusStyle = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return { backgroundColor: colors.success + '20' };
-      case 'in-progress':
-        return { backgroundColor: colors.warning + '20' };
-      default:
-        return { backgroundColor: colors.textLight + '20' };
-    }
-  };
-
-  const getStatusTextStyle = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return { color: colors.success };
-      case 'in-progress':
-        return { color: colors.warning };
-      default:
-        return { color: colors.textSecondary };
-    }
-  };
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingPatient, setEditingPatient] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState('');
+  const [lastNameInitial, setLastNameInitial] = useState('');
 
   const styles = StyleSheet.create({
     container: {
@@ -115,153 +66,18 @@ export default function CaregiverDashboardScreen() {
       fontWeight: fontWeights.bold,
       color: colors.text,
     },
-    tabBar: {
-      flexDirection: 'row',
-      backgroundColor: colors.surface,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    tab: {
-      flex: 1,
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: spacing.md,
-      gap: 4,
-    },
-    tabActive: {
-      borderBottomWidth: 2,
-      borderBottomColor: colors.primary,
-    },
-    tabText: {
-      fontSize: fontSizes.xs,
-      color: colors.textLight,
-      fontWeight: fontWeights.medium,
-    },
-    tabTextActive: {
-      color: colors.primary,
-      fontWeight: fontWeights.bold,
-    },
     content: {
       flex: 1,
     },
     contentContainer: {
       padding: spacing.lg,
-    },
-    tabContent: {
       gap: spacing.lg,
     },
-    statusCard: {
-      padding: spacing.lg,
-    },
-    statusHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.sm,
-      marginBottom: spacing.md,
-    },
-    statusTitle: {
-      fontSize: fontSizes.lg,
-      fontWeight: fontWeights.bold,
-      color: colors.text,
-    },
-    statusBadge: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.sm,
-      marginBottom: spacing.xs,
-    },
-    statusDot: {
-      width: 8,
-      height: 8,
-      borderRadius: 4,
-    },
-    statusText: {
-      fontSize: fontSizes.md,
-      fontWeight: fontWeights.semibold,
-      color: colors.text,
-    },
-    statusSubtext: {
-      fontSize: fontSizes.sm,
-      color: colors.textSecondary,
-    },
-    statsGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap' as const,
-      gap: spacing.md,
-    },
-    statCard: {
-      width: (width - spacing.lg * 2 - spacing.md) / 2,
-      padding: spacing.lg,
-      alignItems: 'center',
-      gap: spacing.sm,
-    },
-    statValue: {
-      fontSize: fontSizes.xxxl,
-      fontWeight: fontWeights.bold,
-      color: colors.text,
-    },
-    statLabel: {
-      fontSize: fontSizes.sm,
-      color: colors.textSecondary,
-      fontWeight: fontWeights.medium,
-    },
-    insightCard: {
-      padding: spacing.lg,
-      backgroundColor: colors.primaryLight + '15',
-      borderColor: colors.primaryLight,
-    },
-    insightHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.sm,
-      marginBottom: spacing.md,
-    },
-    insightTitle: {
-      fontSize: fontSizes.md,
-      fontWeight: fontWeights.bold,
-      color: colors.text,
-    },
-    insightText: {
-      fontSize: fontSizes.sm,
-      color: colors.textSecondary,
-      lineHeight: 20,
-      marginBottom: spacing.md,
-    },
-    insightButton: {
-      alignSelf: 'flex-start',
-      paddingVertical: spacing.sm,
-    },
-    insightButtonText: {
-      fontSize: fontSizes.sm,
-      fontWeight: fontWeights.semibold,
-      color: colors.primary,
-    },
-    summaryCard: {
-      padding: spacing.lg,
-    },
-    summaryTitle: {
-      fontSize: fontSizes.lg,
-      fontWeight: fontWeights.bold,
-      color: colors.text,
-      marginBottom: spacing.md,
-    },
-    summaryRow: {
+    sectionHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingVertical: spacing.sm,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    summaryLabel: {
-      fontSize: fontSizes.sm,
-      color: colors.textSecondary,
-    },
-    summaryValue: {
-      fontSize: fontSizes.sm,
-      fontWeight: fontWeights.semibold,
-      color: colors.text,
+      marginBottom: spacing.md,
     },
     sectionTitle: {
       fontSize: fontSizes.xl,
@@ -271,9 +87,66 @@ export default function CaregiverDashboardScreen() {
     sectionSubtitle: {
       fontSize: fontSizes.sm,
       color: colors.textSecondary,
-      marginTop: -spacing.sm,
+      marginTop: spacing.xs,
     },
-    emptyCard: {
+    addButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+      backgroundColor: colors.primary,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      borderRadius: borderRadius.md,
+    },
+    addButtonText: {
+      fontSize: fontSizes.sm,
+      fontWeight: fontWeights.semibold,
+      color: colors.surface,
+    },
+    patientCard: {
+      padding: spacing.lg,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.md,
+    },
+    patientAvatar: {
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    patientInitials: {
+      fontSize: fontSizes.xl,
+      fontWeight: fontWeights.bold,
+      color: colors.surface,
+    },
+    patientInfo: {
+      flex: 1,
+    },
+    patientName: {
+      fontSize: fontSizes.lg,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
+      marginBottom: spacing.xs,
+    },
+    patientMeta: {
+      fontSize: fontSizes.sm,
+      color: colors.textSecondary,
+    },
+    patientActions: {
+      flexDirection: 'row',
+      gap: spacing.sm,
+    },
+    iconButton: {
+      width: 36,
+      height: 36,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: borderRadius.sm,
+      backgroundColor: colors.border,
+    },
+    emptyState: {
       alignItems: 'center',
       padding: spacing.xxxl,
     },
@@ -281,563 +154,358 @@ export default function CaregiverDashboardScreen() {
       fontSize: fontSizes.md,
       color: colors.textLight,
       marginTop: spacing.md,
+      textAlign: 'center' as const,
     },
-    taskCard: {
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      justifyContent: 'center',
+      alignItems: 'center',
       padding: spacing.lg,
     },
-    taskHeader: {
-      marginBottom: spacing.md,
+    modalContent: {
+      width: '100%',
+      maxWidth: 500,
+      backgroundColor: colors.surface,
+      borderRadius: borderRadius.lg,
+      padding: spacing.xl,
+      gap: spacing.lg,
     },
-    taskTitleRow: {
+    modalHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'flex-start',
-      marginBottom: spacing.xs,
+      alignItems: 'center',
     },
-    taskTitle: {
-      flex: 1,
-      fontSize: fontSizes.md,
+    modalTitle: {
+      fontSize: fontSizes.xl,
       fontWeight: fontWeights.bold,
       color: colors.text,
-      marginRight: spacing.sm,
     },
-    statusBadgeSmall: {
-      paddingHorizontal: spacing.sm,
-      paddingVertical: 4,
-      borderRadius: borderRadius.sm,
+    closeButton: {
+      width: 32,
+      height: 32,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
-    statusBadgeText: {
-      fontSize: fontSizes.xs,
-      fontWeight: fontWeights.semibold,
-      textTransform: 'capitalize' as const,
-    },
-    taskDescription: {
-      fontSize: fontSizes.sm,
-      color: colors.textSecondary,
-      lineHeight: 18,
-    },
-    taskSteps: {
-      gap: spacing.sm,
-    },
-    taskStepsTitle: {
+    inputLabel: {
       fontSize: fontSizes.sm,
       fontWeight: fontWeights.medium,
-      color: colors.textSecondary,
-    },
-    progressBar: {
-      height: 6,
-      backgroundColor: colors.border,
-      borderRadius: 3,
-      overflow: 'hidden',
-    },
-    progressFill: {
-      height: '100%',
-      backgroundColor: colors.primary,
-      borderRadius: 3,
-    },
-    wellnessCard: {
-      padding: spacing.lg,
-    },
-    wellnessHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.sm,
-      marginBottom: spacing.md,
-    },
-    wellnessTitle: {
-      fontSize: fontSizes.md,
-      fontWeight: fontWeights.bold,
-      color: colors.text,
-    },
-    wellnessValue: {
-      fontSize: fontSizes.xxxl,
-      fontWeight: fontWeights.bold,
       color: colors.text,
       marginBottom: spacing.xs,
     },
-    wellnessSubtext: {
-      fontSize: fontSizes.sm,
-      color: colors.textSecondary,
-    },
-    alertCard: {
-      padding: spacing.lg,
-    },
-    alertHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: spacing.sm,
-    },
-    alertTime: {
-      fontSize: fontSizes.xs,
-      color: colors.textLight,
-    },
-    alertMessage: {
-      fontSize: fontSizes.sm,
+    input: {
+      backgroundColor: colors.background,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: borderRadius.md,
+      padding: spacing.md,
+      fontSize: fontSizes.md,
       color: colors.text,
-      marginBottom: spacing.sm,
     },
-    severityBadge: {
-      alignSelf: 'flex-start',
-      paddingHorizontal: spacing.sm,
-      paddingVertical: 4,
-      borderRadius: borderRadius.sm,
-    },
-    severityText: {
-      fontSize: fontSizes.xs,
-      fontWeight: fontWeights.semibold,
-      textTransform: 'capitalize' as const,
+    modalActions: {
+      flexDirection: 'row',
+      gap: spacing.md,
     },
     infoCard: {
       padding: spacing.lg,
-      alignItems: 'center',
-      gap: spacing.sm,
-    },
-    infoTitle: {
-      fontSize: fontSizes.md,
-      fontWeight: fontWeights.bold,
-      color: colors.text,
+      backgroundColor: colors.primaryLight + '15',
+      borderColor: colors.primaryLight,
     },
     infoText: {
       fontSize: fontSizes.sm,
       color: colors.textSecondary,
-      textAlign: 'center' as const,
       lineHeight: 20,
-    },
-    messageButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.sm,
-      backgroundColor: colors.primary,
-      paddingHorizontal: spacing.lg,
-      paddingVertical: spacing.md,
-      borderRadius: borderRadius.md,
-      marginTop: spacing.sm,
-    },
-    messageButtonText: {
-      fontSize: fontSizes.sm,
-      fontWeight: fontWeights.semibold,
-      color: colors.surface,
-    },
-    alertsHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    markAllButton: {
-      paddingHorizontal: spacing.md,
-      paddingVertical: spacing.sm,
-    },
-    markAllText: {
-      fontSize: fontSizes.sm,
-      fontWeight: fontWeights.semibold,
-      color: colors.primary,
-    },
-    emptySubtext: {
-      fontSize: fontSizes.sm,
-      color: colors.textLight,
-      marginTop: spacing.xs,
-    },
-    manageButton: {
-      backgroundColor: colors.primary,
-      paddingHorizontal: spacing.md,
-      paddingVertical: spacing.sm,
-      borderRadius: borderRadius.md,
-    },
-    manageButtonText: {
-      fontSize: fontSizes.sm,
-      fontWeight: fontWeights.semibold,
-      color: colors.surface,
-    },
-    sectionHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'flex-start',
-      marginBottom: spacing.md,
-    },
-    unreadCard: {
-      borderLeftWidth: 3,
-      borderLeftColor: colors.primary,
-    },
-    alertIconRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.sm,
-    },
-    unreadDot: {
-      width: 8,
-      height: 8,
-      borderRadius: 4,
-      backgroundColor: colors.primary,
-    },
-    alertTitle: {
-      fontSize: fontSizes.md,
-      fontWeight: fontWeights.bold,
-      color: colors.text,
-      marginBottom: spacing.xs,
-    },
-    taskBadge: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.xs,
-      marginTop: spacing.sm,
-      paddingHorizontal: spacing.sm,
-      paddingVertical: 4,
-      backgroundColor: colors.primaryLight + '20',
-      borderRadius: borderRadius.sm,
-      alignSelf: 'flex-start',
-    },
-    taskBadgeText: {
-      fontSize: fontSizes.xs,
-      fontWeight: fontWeights.medium,
-      color: colors.primary,
-    },
-    tabIconContainer: {
-      position: 'relative',
-    },
-    badge: {
-      position: 'absolute',
-      top: -4,
-      right: -8,
-      backgroundColor: colors.error,
-      borderRadius: 10,
-      minWidth: 16,
-      height: 16,
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingHorizontal: 4,
-    },
-    badgeText: {
-      fontSize: 10,
-      fontWeight: fontWeights.bold,
-      color: colors.surface,
     },
   });
 
-  const renderOverview = () => (
-    <View style={styles.tabContent}>
-      <Card style={styles.statusCard}>
-        <View style={styles.statusHeader}>
-          <Activity size={24} color={colors.success} />
-          <Text style={styles.statusTitle}>Patient Status</Text>
-        </View>
-        <View style={styles.statusBadge}>
-          <View style={[styles.statusDot, { backgroundColor: colors.success }]} />
-          <Text style={styles.statusText}>Active Today</Text>
-        </View>
-        <Text style={styles.statusSubtext}>Last activity: 15 minutes ago</Text>
-      </Card>
+  const handleAddPatient = async () => {
+    if (!firstName.trim() || !lastNameInitial.trim()) {
+      Alert.alert('Error', 'Please enter both first name and last name initial');
+      return;
+    }
 
-      <View style={styles.statsGrid}>
-        <Card style={styles.statCard}>
-          <CheckCircle2 size={28} color={colors.success} />
-          <Text style={styles.statValue}>{completedTasks}</Text>
-          <Text style={styles.statLabel}>Completed</Text>
-        </Card>
-        <Card style={styles.statCard}>
-          <Clock size={28} color={colors.warning} />
-          <Text style={styles.statValue}>{inProgressTasks}</Text>
-          <Text style={styles.statLabel}>In Progress</Text>
-        </Card>
-        <Card style={styles.statCard}>
-          <Target size={28} color={colors.primary} />
-          <Text style={styles.statValue}>{pendingTasks}</Text>
-          <Text style={styles.statLabel}>Pending</Text>
-        </Card>
-        <Card style={styles.statCard}>
-          <Heart size={28} color={colors.error} />
-          <Text style={styles.statValue}>{mockWellnessData.breathingSessions}</Text>
-          <Text style={styles.statLabel}>Breathing</Text>
-        </Card>
-      </View>
+    if (lastNameInitial.length > 1) {
+      Alert.alert('Error', 'Last name initial should be a single letter');
+      return;
+    }
 
-      <Card style={styles.insightCard}>
-        <View style={styles.insightHeader}>
-          <Brain size={20} color={colors.primary} />
-          <Text style={styles.insightTitle}>AI Insights</Text>
-        </View>
-        <Text style={styles.insightText}>
-          Patient is showing consistent progress with task completion. Stress levels have improved by 12% this week. 
-          Consider encouraging more breathing exercises in the evening for better sleep quality.
-        </Text>
-        <TouchableOpacity style={styles.insightButton}>
-          <Text style={styles.insightButtonText}>View Detailed Analysis</Text>
-        </TouchableOpacity>
-      </Card>
+    await addPatient(firstName.trim(), lastNameInitial.trim().toUpperCase(), 'current-caregiver-id');
+    setFirstName('');
+    setLastNameInitial('');
+    setShowAddModal(false);
+  };
 
-      <Card style={styles.summaryCard}>
-        <Text style={styles.summaryTitle}>Daily Summary</Text>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Tasks Completed:</Text>
-          <Text style={styles.summaryValue}>{completedTasks} / {allTasks.length}</Text>
-        </View>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Breathing Sessions:</Text>
-          <Text style={styles.summaryValue}>{mockWellnessData.breathingSessions}</Text>
-        </View>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Avg Heart Rate:</Text>
-          <Text style={styles.summaryValue}>{mockWellnessData.avgHeartRate} bpm</Text>
-        </View>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Stress Level:</Text>
-          <Text style={[styles.summaryValue, { color: colors.warning }]}>{mockWellnessData.stressLevel}</Text>
-        </View>
-      </Card>
-    </View>
-  );
+  const handleEditPatient = () => {
+    if (!editingPatient || !firstName.trim() || !lastNameInitial.trim()) {
+      Alert.alert('Error', 'Please enter both first name and last name initial');
+      return;
+    }
 
-  const renderTasks = () => (
-    <View style={styles.tabContent}>
-      <View style={styles.sectionHeader}>
-        <View>
-          <Text style={styles.sectionTitle}>Patient Tasks</Text>
-          <Text style={styles.sectionSubtitle}>View and manage patient tasks</Text>
-        </View>
-        <TouchableOpacity
-          style={styles.manageButton}
-          onPress={() => router.push('/caregiver-task-manager')}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.manageButtonText}>Manage Tasks</Text>
-        </TouchableOpacity>
-      </View>
-      
-      {recentTasks.length === 0 ? (
-        <Card style={styles.emptyCard}>
-          <CheckCircle2 size={48} color={colors.textLight} />
-          <Text style={styles.emptyText}>No tasks yet</Text>
-        </Card>
-      ) : (
-        recentTasks.map((task) => (
-          <Card key={task.id} style={styles.taskCard}>
-            <View style={styles.taskHeader}>
-              <View style={styles.taskTitleRow}>
-                <Text style={styles.taskTitle}>{task.title}</Text>
-                <View style={[styles.statusBadgeSmall, getStatusStyle(task.status)]}>
-                  <Text style={[styles.statusBadgeText, getStatusTextStyle(task.status)]}>
-                    {task.status}
-                  </Text>
-                </View>
-              </View>
-              {task.description && (
-                <Text style={styles.taskDescription}>{task.description}</Text>
-              )}
-            </View>
-            {task.steps.length > 0 && (
-              <View style={styles.taskSteps}>
-                <Text style={styles.taskStepsTitle}>
-                  Steps: {task.steps.filter(s => s.completed).length} / {task.steps.length}
-                </Text>
-                <View style={styles.progressBar}>
-                  <View
-                    style={[
-                      styles.progressFill,
-                      { width: `${(task.steps.filter(s => s.completed).length / task.steps.length) * 100}%` },
-                    ]}
-                  />
-                </View>
-              </View>
-            )}
-          </Card>
-        ))
-      )}
-    </View>
-  );
+    if (lastNameInitial.length > 1) {
+      Alert.alert('Error', 'Last name initial should be a single letter');
+      return;
+    }
 
-  const renderWellness = () => (
-    <View style={styles.tabContent}>
-      <Text style={styles.sectionTitle}>Wellness Overview</Text>
-      
-      <Card style={styles.wellnessCard}>
-        <View style={styles.wellnessHeader}>
-          <Heart size={24} color={colors.error} />
-          <Text style={styles.wellnessTitle}>Heart Rate</Text>
-        </View>
-        <Text style={styles.wellnessValue}>{mockWellnessData.avgHeartRate} bpm</Text>
-        <Text style={styles.wellnessSubtext}>Average this week</Text>
-      </Card>
+    updatePatient(editingPatient, {
+      firstName: firstName.trim(),
+      lastNameInitial: lastNameInitial.trim().toUpperCase(),
+    });
+    setFirstName('');
+    setLastNameInitial('');
+    setEditingPatient(null);
+    setShowEditModal(false);
+  };
 
-      <Card style={styles.wellnessCard}>
-        <View style={styles.wellnessHeader}>
-          <TrendingUp size={24} color={colors.primary} />
-          <Text style={styles.wellnessTitle}>Weekly Progress</Text>
-        </View>
-        <Text style={styles.wellnessValue}>{mockWellnessData.weeklyProgress}%</Text>
-        <View style={styles.progressBar}>
-          <View style={[styles.progressFill, { width: `${mockWellnessData.weeklyProgress}%` }]} />
-        </View>
-      </Card>
+  const handleDeletePatient = (patientId: string, patientName: string) => {
+    Alert.alert(
+      'Delete Patient',
+      `Are you sure you want to remove ${patientName}? This will also delete all their tasks.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => deletePatient(patientId),
+        },
+      ]
+    );
+  };
 
-      <Card style={styles.wellnessCard}>
-        <View style={styles.wellnessHeader}>
-          <Activity size={24} color={colors.success} />
-          <Text style={styles.wellnessTitle}>Breathing Sessions</Text>
-        </View>
-        <Text style={styles.wellnessValue}>{mockWellnessData.breathingSessions}</Text>
-        <Text style={styles.wellnessSubtext}>This week</Text>
-      </Card>
+  const handleSelectPatient = (patientId: string) => {
+    selectPatient(patientId);
+    router.push('/caregiver-patient-tasks');
+  };
 
-      <Card style={[styles.insightCard, { marginTop: spacing.lg }]}>
-        <View style={styles.insightHeader}>
-          <Brain size={20} color={colors.primary} />
-          <Text style={styles.insightTitle}>Wellness Insights</Text>
-        </View>
-        <Text style={styles.insightText}>
-          Breathing exercises are helping reduce stress levels. Heart rate variability shows improvement. 
-          Encourage continued practice, especially during high-stress periods.
-        </Text>
-      </Card>
-    </View>
-  );
-
-  const renderAlerts = () => (
-    <View style={styles.tabContent}>
-      <View style={styles.alertsHeader}>
-        <Text style={styles.sectionTitle}>Updates from Patient</Text>
-        {unreadCount > 0 && (
-          <TouchableOpacity
-            style={styles.markAllButton}
-            onPress={markAllNotificationsRead}
-          >
-            <Text style={styles.markAllText}>Mark all read</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-      
-      {notifications.length === 0 ? (
-        <Card style={styles.emptyCard}>
-          <AlertCircle size={48} color={colors.textLight} />
-          <Text style={styles.emptyText}>No updates yet</Text>
-          <Text style={styles.emptySubtext}>You&apos;ll see patient activity here</Text>
-        </Card>
-      ) : (
-        notifications.map((notification) => (
-          <TouchableOpacity
-            key={notification.id}
-            onPress={() => markNotificationRead(notification.id)}
-            activeOpacity={0.7}
-          >
-            <Card style={[
-              styles.alertCard,
-              !notification.read && styles.unreadCard
-            ]}>
-              <View style={styles.alertHeader}>
-                <View style={styles.alertIconRow}>
-                  <AlertCircle
-                    size={20}
-                    color={
-                      notification.severity === 'high' ? colors.error :
-                      notification.severity === 'medium' ? colors.warning :
-                      colors.success
-                    }
-                  />
-                  {!notification.read && (
-                    <View style={styles.unreadDot} />
-                  )}
-                </View>
-                <Text style={styles.alertTime}>{formatTimeAgo(notification.timestamp)}</Text>
-              </View>
-              <Text style={styles.alertTitle}>{notification.title}</Text>
-              <Text style={styles.alertMessage}>{notification.message}</Text>
-              {notification.taskTitle && (
-                <View style={styles.taskBadge}>
-                  <CheckCircle2 size={14} color={colors.primary} />
-                  <Text style={styles.taskBadgeText}>{notification.taskTitle}</Text>
-                </View>
-              )}
-            </Card>
-          </TouchableOpacity>
-        ))
-      )}
-
-      <Card style={styles.infoCard}>
-        <MessageSquare size={20} color={colors.primary} />
-        <Text style={styles.infoTitle}>Communication</Text>
-        <Text style={styles.infoText}>
-          Send supportive messages or suggestions to help your patient stay on track.
-        </Text>
-        <TouchableOpacity style={styles.messageButton}>
-          <MessageSquare size={16} color={colors.surface} />
-          <Text style={styles.messageButtonText}>Send Message</Text>
-        </TouchableOpacity>
-      </Card>
-    </View>
-  );
+  const openEditModal = (patientId: string) => {
+    const patient = patients.find(p => p.id === patientId);
+    if (patient) {
+      setEditingPatient(patientId);
+      setFirstName(patient.firstName);
+      setLastNameInitial(patient.lastNameInitial);
+      setShowEditModal(true);
+    }
+  };
 
   return (
     <PremiumGate
       feature="Caregiver Dashboard"
-      featureDescription="Empower your support network with real-time insights, task monitoring, wellness tracking, and AI-powered recommendations to help you succeed."
+      featureDescription="Manage multiple patients, create tasks, and monitor their progress in real-time."
     >
-    <View style={styles.container}>
-      <Stack.Screen options={{ headerShown: false }} />
-      
-      <View style={[styles.header, { paddingTop: insets.top + spacing.md }]}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-          activeOpacity={0.7}
-        >
-          <ArrowLeft size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Caregiver Dashboard</Text>
-        <View style={{ width: 40 }} />
-      </View>
+      <View style={styles.container}>
+        <Stack.Screen options={{ headerShown: false }} />
+        
+        <View style={[styles.header, { paddingTop: insets.top + spacing.md }]}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            activeOpacity={0.7}
+          >
+            <ArrowLeft size={24} color={colors.text} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Caregiver Dashboard</Text>
+          <View style={{ width: 40 }} />
+        </View>
 
-      <View style={styles.tabBar}>
-        <TouchableOpacity
-          style={[styles.tab, selectedTab === 'overview' && styles.tabActive]}
-          onPress={() => setSelectedTab('overview')}
-        >
-          <Activity size={20} color={selectedTab === 'overview' ? colors.primary : colors.textLight} />
-          <Text style={[styles.tabText, selectedTab === 'overview' && styles.tabTextActive]}>
-            Overview
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, selectedTab === 'tasks' && styles.tabActive]}
-          onPress={() => setSelectedTab('tasks')}
-        >
-          <CheckCircle2 size={20} color={selectedTab === 'tasks' ? colors.primary : colors.textLight} />
-          <Text style={[styles.tabText, selectedTab === 'tasks' && styles.tabTextActive]}>
-            Tasks
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, selectedTab === 'wellness' && styles.tabActive]}
-          onPress={() => setSelectedTab('wellness')}
-        >
-          <Heart size={20} color={selectedTab === 'wellness' ? colors.primary : colors.textLight} />
-          <Text style={[styles.tabText, selectedTab === 'wellness' && styles.tabTextActive]}>
-            Wellness
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, selectedTab === 'alerts' && styles.tabActive]}
-          onPress={() => setSelectedTab('alerts')}
-        >
-          <View style={styles.tabIconContainer}>
-            <AlertCircle size={20} color={selectedTab === 'alerts' ? colors.primary : colors.textLight} />
-            {unreadCount > 0 && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>{unreadCount > 9 ? '9+' : unreadCount}</Text>
-              </View>
-            )}
+        <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
+          <Card style={styles.infoCard}>
+            <Text style={styles.infoText}>
+              Manage your patients here. Select a patient to view and manage their tasks with a calendar view.
+              All changes sync in real-time.
+            </Text>
+          </Card>
+
+          <View style={styles.sectionHeader}>
+            <View>
+              <Text style={styles.sectionTitle}>My Patients</Text>
+              <Text style={styles.sectionSubtitle}>
+                {patients.length} {patients.length === 1 ? 'patient' : 'patients'}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => setShowAddModal(true)}
+              activeOpacity={0.7}
+            >
+              <Plus size={16} color={colors.surface} />
+              <Text style={styles.addButtonText}>Add Patient</Text>
+            </TouchableOpacity>
           </View>
-          <Text style={[styles.tabText, selectedTab === 'alerts' && styles.tabTextActive]}>
-            Updates
-          </Text>
-        </TouchableOpacity>
-      </View>
 
-      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
-        {selectedTab === 'overview' && renderOverview()}
-        {selectedTab === 'tasks' && renderTasks()}
-        {selectedTab === 'wellness' && renderWellness()}
-        {selectedTab === 'alerts' && renderAlerts()}
-      </ScrollView>
-    </View>
+          {patients.length === 0 ? (
+            <Card style={styles.emptyState}>
+              <Users size={48} color={colors.textLight} />
+              <Text style={styles.emptyText}>
+                No patients yet. Add your first patient to get started.
+              </Text>
+            </Card>
+          ) : (
+            patients.map((patient) => (
+              <TouchableOpacity
+                key={patient.id}
+                onPress={() => handleSelectPatient(patient.id)}
+                activeOpacity={0.7}
+              >
+                <Card style={styles.patientCard}>
+                  <View style={[styles.patientAvatar, { backgroundColor: patient.profileColor || colors.primary }]}>
+                    <Text style={styles.patientInitials}>
+                      {patient.firstName.charAt(0).toUpperCase()}{patient.lastNameInitial.toUpperCase()}
+                    </Text>
+                  </View>
+                  <View style={styles.patientInfo}>
+                    <Text style={styles.patientName}>
+                      {patient.firstName} {patient.lastNameInitial}.
+                    </Text>
+                    <Text style={styles.patientMeta}>
+                      Added {new Date(patient.createdAt).toLocaleDateString()}
+                    </Text>
+                  </View>
+                  <View style={styles.patientActions}>
+                    <TouchableOpacity
+                      style={styles.iconButton}
+                      onPress={() => openEditModal(patient.id)}
+                      activeOpacity={0.7}
+                    >
+                      <Edit2 size={16} color={colors.primary} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.iconButton}
+                      onPress={() => handleDeletePatient(patient.id, `${patient.firstName} ${patient.lastNameInitial}.`)}
+                      activeOpacity={0.7}
+                    >
+                      <Trash2 size={16} color={colors.error} />
+                    </TouchableOpacity>
+                    <View style={styles.iconButton}>
+                      <ChevronRight size={16} color={colors.textSecondary} />
+                    </View>
+                  </View>
+                </Card>
+              </TouchableOpacity>
+            ))
+          )}
+        </ScrollView>
+
+        <Modal
+          visible={showAddModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowAddModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Add New Patient</Text>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setShowAddModal(false)}
+                  activeOpacity={0.7}
+                >
+                  <X size={24} color={colors.text} />
+                </TouchableOpacity>
+              </View>
+
+              <View>
+                <Text style={styles.inputLabel}>First Name *</Text>
+                <TextInput
+                  style={styles.input}
+                  value={firstName}
+                  onChangeText={setFirstName}
+                  placeholder="e.g., John"
+                  placeholderTextColor={colors.textLight}
+                  autoCapitalize="words"
+                />
+              </View>
+
+              <View>
+                <Text style={styles.inputLabel}>Last Name Initial *</Text>
+                <TextInput
+                  style={styles.input}
+                  value={lastNameInitial}
+                  onChangeText={(text) => setLastNameInitial(text.slice(0, 1))}
+                  placeholder="e.g., D"
+                  placeholderTextColor={colors.textLight}
+                  maxLength={1}
+                  autoCapitalize="characters"
+                />
+              </View>
+
+              <View style={styles.modalActions}>
+                <Button
+                  title="Cancel"
+                  onPress={() => setShowAddModal(false)}
+                  variant="secondary"
+                  style={{ flex: 1 }}
+                />
+                <Button
+                  title="Add Patient"
+                  onPress={handleAddPatient}
+                  style={{ flex: 1 }}
+                />
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        <Modal
+          visible={showEditModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowEditModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Edit Patient</Text>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setShowEditModal(false)}
+                  activeOpacity={0.7}
+                >
+                  <X size={24} color={colors.text} />
+                </TouchableOpacity>
+              </View>
+
+              <View>
+                <Text style={styles.inputLabel}>First Name *</Text>
+                <TextInput
+                  style={styles.input}
+                  value={firstName}
+                  onChangeText={setFirstName}
+                  placeholder="e.g., John"
+                  placeholderTextColor={colors.textLight}
+                  autoCapitalize="words"
+                />
+              </View>
+
+              <View>
+                <Text style={styles.inputLabel}>Last Name Initial *</Text>
+                <TextInput
+                  style={styles.input}
+                  value={lastNameInitial}
+                  onChangeText={(text) => setLastNameInitial(text.slice(0, 1))}
+                  placeholder="e.g., D"
+                  placeholderTextColor={colors.textLight}
+                  maxLength={1}
+                  autoCapitalize="characters"
+                />
+              </View>
+
+              <View style={styles.modalActions}>
+                <Button
+                  title="Cancel"
+                  onPress={() => setShowEditModal(false)}
+                  variant="secondary"
+                  style={{ flex: 1 }}
+                />
+                <Button
+                  title="Save Changes"
+                  onPress={handleEditPatient}
+                  style={{ flex: 1 }}
+                />
+              </View>
+            </View>
+          </View>
+        </Modal>
+      </View>
     </PremiumGate>
   );
 }

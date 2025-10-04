@@ -5,6 +5,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { Task, TaskPriority, TaskStatus, TaskStep } from '@/types/task';
 import { generateText } from '@rork/toolkit-sdk';
 import { useNotifications } from './NotificationContext';
+import { usePatients } from './PatientContext';
 
 const TASKS_STORAGE_KEY = '@neuronexa_tasks';
 
@@ -32,6 +33,7 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState<TaskStatus | 'all'>('all');
   const { addNotification } = useNotifications();
+  const { updateTaskLink, getTaskPatient } = usePatients();
 
   const tasksQuery = useQuery({
     queryKey: ['tasks'],
@@ -130,16 +132,21 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
       mutateTasks(updatedTasks);
       console.log('[TaskContext] Task updated, mutation called');
 
+      const patient = getTaskPatient(task.id);
       addNotification({
         type: 'task_completed',
         title: 'Task Completed! 🎉',
-        message: `"${task.title}" has been completed`,
+        message: patient 
+          ? `${patient.firstName} ${patient.lastNameInitial}. completed "${task.title}"`
+          : `"${task.title}" has been completed`,
         taskId: task.id,
         taskTitle: task.title,
         priority: 'low',
         category: 'task',
         metadata: { priority: task.priority },
       });
+      
+      updateTaskLink(task.id, 'patient');
     } else {
       console.log('[TaskContext] Task not updated - either not found or already completed');
     }
@@ -165,16 +172,21 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
       return task;
     });
     mutateTasks(updatedTasks);
+    
+    updateTaskLink(taskId, 'patient');
 
     if (task && completed) {
       const completedSteps = task.steps.filter(s => s.completed || s.id === stepId).length;
       const totalSteps = task.steps.length;
 
+      const patient = getTaskPatient(task.id);
+      const patientName = patient ? `${patient.firstName} ${patient.lastNameInitial}.` : 'Patient';
+      
       if (completedSteps === totalSteps) {
         addNotification({
           type: 'all_steps_completed',
           title: 'All Steps Completed! 🎉',
-          message: `All steps for "${task.title}" are done`,
+          message: `${patientName} completed all steps for "${task.title}"`,
           taskId: task.id,
           taskTitle: task.title,
           priority: 'low',
@@ -185,7 +197,7 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
         addNotification({
           type: 'step_completed',
           title: 'Step Completed',
-          message: `Progress on "${task.title}": ${completedSteps}/${totalSteps} steps`,
+          message: `${patientName} made progress on "${task.title}": ${completedSteps}/${totalSteps} steps`,
           taskId: task.id,
           taskTitle: task.title,
           priority: 'low',

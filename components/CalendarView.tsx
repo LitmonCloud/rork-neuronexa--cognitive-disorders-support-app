@@ -6,12 +6,13 @@ import { useTheme } from '@/contexts/ThemeContext';
 
 interface CalendarViewProps {
   tasks: Task[];
+  selectedDate?: Date;
   onDateSelect?: (date: Date) => void;
 }
 
-export default function CalendarView({ tasks, onDateSelect }: CalendarViewProps) {
+export default function CalendarView({ tasks, selectedDate, onDateSelect }: CalendarViewProps) {
   const { colors } = useTheme();
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(selectedDate || new Date());
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
