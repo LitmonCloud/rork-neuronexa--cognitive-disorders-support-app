@@ -324,7 +324,7 @@ export default function CalendarView({ tasks, selectedDate, onDateSelect }: Cale
                     <View style={[
                       styles.taskDot,
                       (isToday(day) || isSelectedDate(day)) && styles.taskDotToday,
-                    ]} />
+                    ]}></View>
                   )}
                 </TouchableOpacity>
               </View>

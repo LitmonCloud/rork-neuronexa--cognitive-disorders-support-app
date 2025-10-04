@@ -29,6 +29,7 @@ import { useNotifications } from '@/contexts/NotificationContext';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import CalendarView from '@/components/CalendarView';
+import TimeWheelPicker from '@/components/TimeWheelPicker';
 import { Task, TaskPriority } from '@/types/task';
 
 export default function CaregiverPatientTasksScreen() {
@@ -36,13 +37,14 @@ export default function CaregiverPatientTasksScreen() {
   const router = useRouter();
   const { colors } = useTheme();
   const { selectedPatient, selectedDate, setSelectedDate, linkTaskToPatient, unlinkTaskFromPatient, updateTaskLink, getPatientTasks } = usePatients();
-  const { allTasks, addTask, deleteTask, addStep, editStep, deleteStep } = useTasks();
+  const { allTasks, addTask, updateTask, deleteTask, addStep, editStep, deleteStep } = useTasks();
   const { addNotification } = useNotifications();
 
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [showStepModal, setShowStepModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [editingStepId, setEditingStepId] = useState<string | null>(null);
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
 
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
@@ -384,36 +386,75 @@ export default function CaregiverPatientTasksScreen() {
     }
   };
 
-  const handleCreateTask = async () => {
+  const handleOpenTaskModal = (task?: Task) => {
+    if (task) {
+      setEditingTaskId(task.id);
+      setTaskTitle(task.title);
+      setTaskDescription(task.description || '');
+      setTaskPriority(task.priority);
+      setCompleteByTime(task.completeByTime || '');
+    } else {
+      setEditingTaskId(null);
+      setTaskTitle('');
+      setTaskDescription('');
+      setTaskPriority('medium');
+      setCompleteByTime('');
+    }
+    setShowTaskModal(true);
+  };
+
+  const handleSaveTask = async () => {
     if (!taskTitle.trim() || !selectedPatient) {
       Alert.alert('Error', 'Please enter a task title');
       return;
     }
 
-    const newTask = await addTask(
-      taskTitle,
-      taskDescription || undefined,
-      taskPriority,
-      selectedDate,
-      completeByTime || undefined
-    );
+    if (editingTaskId) {
+      updateTask(editingTaskId, {
+        title: taskTitle,
+        description: taskDescription || undefined,
+        priority: taskPriority,
+        completeByTime: completeByTime || undefined,
+      });
 
-    linkTaskToPatient(selectedPatient.id, newTask.id, 'caregiver');
+      updateTaskLink(editingTaskId, 'caregiver');
 
-    addNotification({
-      type: 'task_assigned',
-      title: 'Task Assigned',
-      message: `New task "${taskTitle}" assigned to ${selectedPatient.firstName} ${selectedPatient.lastNameInitial}. for ${selectedDate.toLocaleDateString()}`,
-      priority: 'low',
-      category: 'task',
-      taskId: newTask.id,
-      taskTitle: taskTitle,
-    });
+      addNotification({
+        type: 'task_modified',
+        title: 'Task Updated',
+        message: `Task "${taskTitle}" was updated by caregiver`,
+        priority: 'low',
+        category: 'task',
+        taskId: editingTaskId,
+        taskTitle: taskTitle,
+      });
+    } else {
+      const newTask = await addTask(
+        taskTitle,
+        taskDescription || undefined,
+        taskPriority,
+        selectedDate,
+        completeByTime || undefined
+      );
+
+      linkTaskToPatient(selectedPatient.id, newTask.id, 'caregiver');
+
+      addNotification({
+        type: 'task_assigned',
+        title: 'Task Assigned',
+        message: `New task "${taskTitle}" assigned to ${selectedPatient.firstName} ${selectedPatient.lastNameInitial}. for ${selectedDate.toLocaleDateString()}`,
+        priority: 'low',
+        category: 'task',
+        taskId: newTask.id,
+        taskTitle: taskTitle,
+      });
+    }
 
     setTaskTitle('');
     setTaskDescription('');
     setTaskPriority('medium');
     setCompleteByTime('');
+    setEditingTaskId(null);
     setShowTaskModal(false);
   };
 
@@ -600,7 +641,7 @@ export default function CaregiverPatientTasksScreen() {
           </View>
           <TouchableOpacity
             style={styles.addButton}
-            onPress={() => setShowTaskModal(true)}
+            onPress={() => handleOpenTaskModal()}
             activeOpacity={0.7}
           >
             <Plus size={16} color={colors.surface} />
@@ -621,6 +662,13 @@ export default function CaregiverPatientTasksScreen() {
               <View style={styles.taskHeader}>
                 <Text style={styles.taskTitle}>{task.title}</Text>
                 <View style={styles.taskActions}>
+                  <TouchableOpacity
+                    style={styles.iconButton}
+                    onPress={() => handleOpenTaskModal(task)}
+                    activeOpacity={0.7}
+                  >
+                    <Edit2 size={16} color={colors.primary} />
+                  </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.iconButton}
                     onPress={() => handleDeleteTask(task.id, task.title)}
@@ -726,10 +774,13 @@ export default function CaregiverPatientTasksScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Create Task</Text>
+              <Text style={styles.modalTitle}>{editingTaskId ? 'Edit Task' : 'Create Task'}</Text>
               <TouchableOpacity
                 style={styles.closeButton}
-                onPress={() => setShowTaskModal(false)}
+                onPress={() => {
+                  setShowTaskModal(false);
+                  setEditingTaskId(null);
+                }}
                 activeOpacity={0.7}
               >
                 <X size={24} color={colors.text} />
@@ -787,25 +838,25 @@ export default function CaregiverPatientTasksScreen() {
 
             <View>
               <Text style={styles.inputLabel}>Complete By Time (Optional)</Text>
-              <TextInput
-                style={styles.input}
+              <TimeWheelPicker
                 value={completeByTime}
-                onChangeText={setCompleteByTime}
-                placeholder="e.g., 9:00 AM, 2:30 PM, Before lunch"
-                placeholderTextColor={colors.textLight}
+                onChange={setCompleteByTime}
               />
             </View>
 
             <View style={styles.modalActions}>
               <Button
                 title="Cancel"
-                onPress={() => setShowTaskModal(false)}
+                onPress={() => {
+                  setShowTaskModal(false);
+                  setEditingTaskId(null);
+                }}
                 variant="secondary"
                 style={{ flex: 1 }}
               />
               <Button
-                title="Create Task"
-                onPress={handleCreateTask}
+                title={editingTaskId ? 'Save Changes' : 'Create Task'}
+                onPress={handleSaveTask}
                 style={{ flex: 1 }}
               />
             </View>
