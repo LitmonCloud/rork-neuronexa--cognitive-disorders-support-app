@@ -5,75 +5,35 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TextInput,
-  Modal,
   Alert,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Plus,
   Users,
-  Edit2,
   Trash2,
-  X,
   ChevronRight,
+  Phone,
 } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { spacing, borderRadius } from '@/theme/spacing';
 import { fontSizes, fontWeights } from '@/theme/typography';
 import { usePatients } from '@/contexts/PatientContext';
 import Card from '@/components/Card';
-import Button from '@/components/Button';
 import PremiumGate from '@/components/PremiumGate';
+import EnterCodeBar from '@/components/EnterCodeBar';
+import AddPatientModal from '@/components/AddPatientModal';
 
 export default function CaregiverScreen() {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const { colors } = useTheme();
-  const { patients, addPatient, updatePatient, deletePatient, selectPatient } = usePatients();
+  const { patients, deletePatient, selectPatient } = usePatients();
 
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editingPatient, setEditingPatient] = useState<string | null>(null);
-  const [firstName, setFirstName] = useState('');
-  const [lastNameInitial, setLastNameInitial] = useState('');
 
-  const handleAddPatient = async () => {
-    if (!firstName.trim() || !lastNameInitial.trim()) {
-      Alert.alert('Error', 'Please enter both first name and last name initial');
-      return;
-    }
 
-    if (lastNameInitial.length > 1) {
-      Alert.alert('Error', 'Last name initial should be a single letter');
-      return;
-    }
-
-    await addPatient(firstName.trim(), lastNameInitial.trim().toUpperCase(), 'current-caregiver-id');
-    setFirstName('');
-    setLastNameInitial('');
-    setShowAddModal(false);
-  };
-
-  const handleEditPatient = () => {
-    if (!editingPatient || !firstName.trim() || !lastNameInitial.trim()) {
-      Alert.alert('Error', 'Please enter both first name and last name initial');
-      return;
-    }
-
-    if (lastNameInitial.length > 1) {
-      Alert.alert('Error', 'Last name initial should be a single letter');
-      return;
-    }
-
-    updatePatient(editingPatient, {
-      firstName: firstName.trim(),
-      lastNameInitial: lastNameInitial.trim().toUpperCase(),
-    });
-    setFirstName('');
-    setLastNameInitial('');
-    setEditingPatient(null);
-    setShowEditModal(false);
-  };
 
   const handleDeletePatient = (patientId: string, patientName: string) => {
     Alert.alert(
@@ -95,20 +55,24 @@ export default function CaregiverScreen() {
     router.push('/caregiver-patient-tasks');
   };
 
-  const openEditModal = (patientId: string) => {
-    const patient = patients.find(p => p.id === patientId);
-    if (patient) {
-      setEditingPatient(patientId);
-      setFirstName(patient.firstName);
-      setLastNameInitial(patient.lastNameInitial);
-      setShowEditModal(true);
-    }
-  };
+
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: colors.background,
+    },
+    header: {
+      paddingHorizontal: spacing.lg,
+      paddingBottom: spacing.md,
+      backgroundColor: colors.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    headerTitle: {
+      fontSize: fontSizes.xxl,
+      fontWeight: fontWeights.bold,
+      color: colors.text,
     },
     content: {
       flex: 1,
@@ -136,15 +100,21 @@ export default function CaregiverScreen() {
     addButton: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: spacing.xs,
+      justifyContent: 'center',
+      gap: spacing.sm,
       backgroundColor: colors.primary,
-      paddingHorizontal: spacing.md,
-      paddingVertical: spacing.sm,
-      borderRadius: borderRadius.md,
+      paddingHorizontal: spacing.lg,
+      paddingVertical: spacing.md,
+      borderRadius: borderRadius.lg,
+      elevation: 2,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
     },
     addButtonText: {
-      fontSize: fontSizes.sm,
-      fontWeight: fontWeights.semibold,
+      fontSize: fontSizes.md,
+      fontWeight: fontWeights.bold,
       color: colors.surface,
     },
     patientCard: {
@@ -200,56 +170,7 @@ export default function CaregiverScreen() {
       marginTop: spacing.md,
       textAlign: 'center' as const,
     },
-    modalOverlay: {
-      flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: spacing.lg,
-    },
-    modalContent: {
-      width: '100%',
-      maxWidth: 500,
-      backgroundColor: colors.surface,
-      borderRadius: borderRadius.lg,
-      padding: spacing.xl,
-      gap: spacing.lg,
-    },
-    modalHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    modalTitle: {
-      fontSize: fontSizes.xl,
-      fontWeight: fontWeights.bold,
-      color: colors.text,
-    },
-    closeButton: {
-      width: 32,
-      height: 32,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    inputLabel: {
-      fontSize: fontSizes.sm,
-      fontWeight: fontWeights.medium,
-      color: colors.text,
-      marginBottom: spacing.xs,
-    },
-    input: {
-      backgroundColor: colors.background,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: borderRadius.md,
-      padding: spacing.md,
-      fontSize: fontSizes.md,
-      color: colors.text,
-    },
-    modalActions: {
-      flexDirection: 'row',
-      gap: spacing.md,
-    },
+
     infoCard: {
       padding: spacing.lg,
       backgroundColor: colors.primaryLight + '15',
@@ -263,11 +184,19 @@ export default function CaregiverScreen() {
   });
 
   return (
-    <PremiumGate
-      feature="Caregiver Dashboard"
-      featureDescription="Manage multiple patients, create tasks, and monitor their progress in real-time."
-    >
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <Stack.Screen options={{ headerShown: false }} />
+      
+      <View style={[styles.header, { paddingTop: insets.top + spacing.md }]}>
+        <Text style={styles.headerTitle}>Caregiver Dashboard</Text>
+      </View>
+
+      <EnterCodeBar />
+
+      <PremiumGate
+        feature="Caregiver Dashboard"
+        featureDescription="Manage multiple patients, create tasks, and monitor their progress in real-time."
+      >
         <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
           <Card style={styles.infoCard}>
             <Text style={styles.infoText}>
@@ -276,6 +205,15 @@ export default function CaregiverScreen() {
             </Text>
           </Card>
 
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => setShowAddModal(true)}
+            activeOpacity={0.7}
+          >
+            <Plus size={20} color={colors.surface} />
+            <Text style={styles.addButtonText}>Add Patient</Text>
+          </TouchableOpacity>
+
           <View style={styles.sectionHeader}>
             <View>
               <Text style={styles.sectionTitle}>My Patients</Text>
@@ -283,14 +221,6 @@ export default function CaregiverScreen() {
                 {patients.length} {patients.length === 1 ? 'patient' : 'patients'}
               </Text>
             </View>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => setShowAddModal(true)}
-              activeOpacity={0.7}
-            >
-              <Plus size={16} color={colors.surface} />
-              <Text style={styles.addButtonText}>Add Patient</Text>
-            </TouchableOpacity>
           </View>
 
           {patients.length === 0 ? (
@@ -324,14 +254,21 @@ export default function CaregiverScreen() {
                   <View style={styles.patientActions}>
                     <TouchableOpacity
                       style={styles.iconButton}
-                      onPress={() => openEditModal(patient.id)}
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        selectPatient(patient.id);
+                        router.push('/emergency-contacts');
+                      }}
                       activeOpacity={0.7}
                     >
-                      <Edit2 size={16} color={colors.primary} />
+                      <Phone size={16} color={colors.secondary} />
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.iconButton}
-                      onPress={() => handleDeletePatient(patient.id, `${patient.firstName} ${patient.lastNameInitial}.`)}
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        handleDeletePatient(patient.id, `${patient.firstName} ${patient.lastNameInitial}.`);
+                      }}
                       activeOpacity={0.7}
                     >
                       <Trash2 size={16} color={colors.error} />
@@ -345,130 +282,14 @@ export default function CaregiverScreen() {
             ))
           )}
         </ScrollView>
+      </PremiumGate>
 
-        <Modal
-          visible={showAddModal}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setShowAddModal(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Add New Patient</Text>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setShowAddModal(false)}
-                  activeOpacity={0.7}
-                >
-                  <X size={24} color={colors.text} />
-                </TouchableOpacity>
-              </View>
-
-              <View>
-                <Text style={styles.inputLabel}>First Name *</Text>
-                <TextInput
-                  style={styles.input}
-                  value={firstName}
-                  onChangeText={setFirstName}
-                  placeholder="e.g., John"
-                  placeholderTextColor={colors.textLight}
-                  autoCapitalize="words"
-                />
-              </View>
-
-              <View>
-                <Text style={styles.inputLabel}>Last Name Initial *</Text>
-                <TextInput
-                  style={styles.input}
-                  value={lastNameInitial}
-                  onChangeText={(text) => setLastNameInitial(text.slice(0, 1))}
-                  placeholder="e.g., D"
-                  placeholderTextColor={colors.textLight}
-                  maxLength={1}
-                  autoCapitalize="characters"
-                />
-              </View>
-
-              <View style={styles.modalActions}>
-                <Button
-                  title="Cancel"
-                  onPress={() => setShowAddModal(false)}
-                  variant="secondary"
-                  style={{ flex: 1 }}
-                />
-                <Button
-                  title="Add Patient"
-                  onPress={handleAddPatient}
-                  style={{ flex: 1 }}
-                />
-              </View>
-            </View>
-          </View>
-        </Modal>
-
-        <Modal
-          visible={showEditModal}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setShowEditModal(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Edit Patient</Text>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setShowEditModal(false)}
-                  activeOpacity={0.7}
-                >
-                  <X size={24} color={colors.text} />
-                </TouchableOpacity>
-              </View>
-
-              <View>
-                <Text style={styles.inputLabel}>First Name *</Text>
-                <TextInput
-                  style={styles.input}
-                  value={firstName}
-                  onChangeText={setFirstName}
-                  placeholder="e.g., John"
-                  placeholderTextColor={colors.textLight}
-                  autoCapitalize="words"
-                />
-              </View>
-
-              <View>
-                <Text style={styles.inputLabel}>Last Name Initial *</Text>
-                <TextInput
-                  style={styles.input}
-                  value={lastNameInitial}
-                  onChangeText={(text) => setLastNameInitial(text.slice(0, 1))}
-                  placeholder="e.g., D"
-                  placeholderTextColor={colors.textLight}
-                  maxLength={1}
-                  autoCapitalize="characters"
-                />
-              </View>
-
-              <View style={styles.modalActions}>
-                <Button
-                  title="Cancel"
-                  onPress={() => setShowEditModal(false)}
-                  variant="secondary"
-                  style={{ flex: 1 }}
-                />
-                <Button
-                  title="Save Changes"
-                  onPress={handleEditPatient}
-                  style={{ flex: 1 }}
-                />
-              </View>
-            </View>
-          </View>
-        </Modal>
-      </View>
-    </PremiumGate>
+      <AddPatientModal
+        visible={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        defaultMethod="manual"
+      />
+    </View>
   );
 }
 
