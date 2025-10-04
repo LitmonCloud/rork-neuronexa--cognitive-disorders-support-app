@@ -226,16 +226,17 @@ export default function CaregiverDashboardScreen() {
       gap: spacing.sm,
       backgroundColor: colors.secondary,
       paddingHorizontal: spacing.lg,
-      paddingVertical: spacing.md,
+      paddingVertical: spacing.lg,
       borderRadius: borderRadius.lg,
-      elevation: 2,
+      elevation: 4,
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.2,
+      shadowRadius: 8,
+      minHeight: 56,
     },
     codeButtonText: {
-      fontSize: fontSizes.md,
+      fontSize: fontSizes.lg,
       fontWeight: fontWeights.bold,
       color: colors.surface,
     },
@@ -247,16 +248,17 @@ export default function CaregiverDashboardScreen() {
       gap: spacing.sm,
       backgroundColor: colors.primary,
       paddingHorizontal: spacing.lg,
-      paddingVertical: spacing.md,
+      paddingVertical: spacing.lg,
       borderRadius: borderRadius.lg,
-      elevation: 2,
+      elevation: 4,
       shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.2,
+      shadowRadius: 8,
+      minHeight: 56,
     },
     addButtonText: {
-      fontSize: fontSizes.md,
+      fontSize: fontSizes.lg,
       fontWeight: fontWeights.bold,
       color: colors.surface,
     },
@@ -492,39 +494,40 @@ export default function CaregiverDashboardScreen() {
             </Text>
           </Card>
 
+          <View style={{ flexDirection: 'row', gap: spacing.md, marginBottom: spacing.lg }}>
+            <TouchableOpacity
+              style={styles.codeButton}
+              onPress={() => {
+                console.log('[Dashboard] Opening code modal');
+                setShowCodeModal(true);
+              }}
+              activeOpacity={0.7}
+              testID="enter-code-button"
+            >
+              <Key size={20} color={colors.surface} />
+              <Text style={styles.codeButtonText}>Enter Code</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => {
+                console.log('[Dashboard] Opening add patient modal');
+                setAddMethod('manual');
+                setShowAddModal(true);
+              }}
+              activeOpacity={0.7}
+              testID="add-patient-button"
+            >
+              <Plus size={20} color={colors.surface} />
+              <Text style={styles.addButtonText}>Add Patient</Text>
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.sectionHeader}>
             <View>
               <Text style={styles.sectionTitle}>My Patients</Text>
               <Text style={styles.sectionSubtitle}>
                 {patients.length} {patients.length === 1 ? 'patient' : 'patients'}
               </Text>
-            </View>
-            <View style={{ flexDirection: 'row', gap: spacing.md, marginTop: spacing.md }}>
-              <TouchableOpacity
-                style={styles.codeButton}
-                onPress={() => {
-                  console.log('[Dashboard] Opening code modal');
-                  setShowCodeModal(true);
-                }}
-                activeOpacity={0.7}
-                testID="enter-code-button"
-              >
-                <Key size={20} color={colors.surface} />
-                <Text style={styles.codeButtonText}>Enter Code</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.addButton}
-                onPress={() => {
-                  console.log('[Dashboard] Opening add patient modal');
-                  setAddMethod('manual');
-                  setShowAddModal(true);
-                }}
-                activeOpacity={0.7}
-                testID="add-patient-button"
-              >
-                <Plus size={20} color={colors.surface} />
-                <Text style={styles.addButtonText}>Add Patient</Text>
-              </TouchableOpacity>
             </View>
           </View>
 
