@@ -38,17 +38,17 @@ async function loadSubscription(): Promise<UserSubscription> {
   }
 }
 
-async function loadUserRole(): Promise<'patient' | 'caregiver' | undefined> {
+async function loadUserRole(): Promise<'patient' | 'caregiver'> {
   try {
     const stored = await AsyncStorage.getItem('@nexa_user_profile');
     if (stored) {
       const profile = JSON.parse(stored);
-      return profile.role;
+      return profile.role || 'patient';
     }
-    return undefined;
+    return 'patient';
   } catch (error) {
     console.error('Error loading user role:', error);
-    return undefined;
+    return 'patient';
   }
 }
 
