@@ -195,7 +195,7 @@ export default function TimeWheelPicker({ value, onChange }: TimeWheelPickerProp
 
   return (
     <View style={styles.container}>
-      <View style={styles.selectionOverlay}></View>
+      <View style={styles.selectionOverlay} />
       
       <View style={styles.wheelContainer}>
         {renderWheel(
@@ -221,7 +221,7 @@ export default function TimeWheelPicker({ value, onChange }: TimeWheelPickerProp
         )}
       </View>
 
-      <View style={styles.separator}></View>
+      <View style={styles.separator} />
 
       <View style={styles.periodContainer}>
         {renderWheel(
