@@ -7,9 +7,13 @@ import { useUserProfile } from "@/contexts/UserProfileContext";
 export default function TabLayout() {
   const theme = useTheme();
   const { colors } = theme;
-  const { profile } = useUserProfile();
+  const { profile, isLoading } = useUserProfile();
   
   const isCaregiver = profile?.role === 'caregiver';
+  
+  if (isLoading || !profile) {
+    return null;
+  }
   
   if (isCaregiver) {
     return (
