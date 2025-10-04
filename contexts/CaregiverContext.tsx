@@ -1,9 +1,10 @@
 import createContextHook from '@nkzw/create-context-hook';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useEffect } from 'react';
 import { CaregiverNotification } from '@/types/caregiverNotification';
 import { CaregiverInvite, GenerateInviteResult, RedeemInviteResult } from '@/types/caregiverInvite';
+import { realtimeNotificationService } from '@/services/notifications/RealtimeNotificationService';
 
 export interface Caregiver {
   id: string;
@@ -168,7 +169,7 @@ export const [CaregiverProvider, useCaregivers] = createContextHook(() => {
     mutateCaregivers(updated);
   }, [caregivers, mutateCaregivers]);
 
-  const addNotification = useCallback((notification: Omit<CaregiverNotification, 'id' | 'timestamp' | 'read'>) => {
+  const addNotification = useCallback(async (notification: Omit<CaregiverNotification, 'id' | 'timestamp' | 'read'>) => {
     if (caregivers.length === 0 || !caregivers.some(c => c.notificationsEnabled)) {
       console.log('[CaregiverContext] No caregivers with notifications enabled');
       return;
@@ -184,6 +185,20 @@ export const [CaregiverProvider, useCaregivers] = createContextHook(() => {
     console.log('[CaregiverContext] Adding notification:', newNotification.title);
     const updated = [newNotification, ...notifications];
     mutateNotifications(updated);
+
+    const enabledCaregivers = caregivers.filter(c => c.notificationsEnabled);
+    for (const caregiver of enabledCaregivers) {
+      await realtimeNotificationService.sendCaregiverAlert({
+        caregiverId: caregiver.id,
+        patientId: 'current-patient-id',
+        patientName: 'Patient',
+        alertType: notification.type,
+        title: notification.title,
+        message: notification.message,
+        metadata: notification.metadata,
+        priority: notification.severity === 'critical' ? 'urgent' : notification.severity === 'high' ? 'high' : 'medium',
+      });
+    }
   }, [caregivers, notifications, mutateNotifications]);
 
   const markNotificationRead = useCallback((notificationId: string) => {
@@ -290,6 +305,76 @@ export const [CaregiverProvider, useCaregivers] = createContextHook(() => {
     );
   }, [invites]);
 
+  useEffect(() => {
+    const unsubscribe = realtimeNotificationService.subscribe(
+      'caregiver-context',
+      (notification) => {
+        if (notification.type === 'caregiver_alert') {
+          console.log('[CaregiverContext] Received real-time notification:', notification.title);
+          
+          const caregiverNotification: CaregiverNotification = {
+            id: notification.id,
+            type: (notification.data?.alertType as any) || 'task_completed',
+            title: notification.title,
+            message: notification.body,
+            timestamp: notification.timestamp,
+            read: false,
+            severity: notification.priority === 'urgent' ? 'critical' : notification.priority === 'high' ? 'high' : 'medium',
+            metadata: notification.data,
+          };
+
+          const updated = [caregiverNotification, ...notifications];
+          mutateNotifications(updated);
+        }
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, [notifications, mutateNotifications]);
+
+  const sendRealtimeAlert = useCallback(async (params: {
+    title: string;
+    message: string;
+    type: CaregiverNotification['type'];
+    severity?: 'low' | 'medium' | 'high' | 'critical';
+    taskId?: string;
+    taskTitle?: string;
+    metadata?: Record<string, any>;
+  }) => {
+    const enabledCaregivers = caregivers.filter(c => c.notificationsEnabled);
+    
+    if (enabledCaregivers.length === 0) {
+      console.log('[CaregiverContext] No caregivers with notifications enabled');
+      return { success: false, error: 'No caregivers available' };
+    }
+
+    const results = await Promise.all(
+      enabledCaregivers.map((caregiver) =>
+        realtimeNotificationService.sendCaregiverAlert({
+          caregiverId: caregiver.id,
+          patientId: 'current-patient-id',
+          patientName: 'Patient',
+          alertType: params.type,
+          title: params.title,
+          message: params.message,
+          taskId: params.taskId,
+          taskTitle: params.taskTitle,
+          metadata: params.metadata,
+          priority: params.severity === 'critical' ? 'urgent' : params.severity === 'high' ? 'high' : 'medium',
+        })
+      )
+    );
+
+    const allSuccess = results.every(r => r.success);
+    return {
+      success: allSuccess,
+      sentCount: results.filter(r => r.success).length,
+      totalCount: enabledCaregivers.length,
+    };
+  }, [caregivers]);
+
   return useMemo(() => ({
     caregivers,
     notifications,
@@ -308,6 +393,7 @@ export const [CaregiverProvider, useCaregivers] = createContextHook(() => {
     clearNotifications,
     generateInvite,
     redeemInvite,
+    sendRealtimeAlert,
   }), [
     caregivers,
     notifications,
@@ -326,5 +412,6 @@ export const [CaregiverProvider, useCaregivers] = createContextHook(() => {
     clearNotifications,
     generateInvite,
     redeemInvite,
+    sendRealtimeAlert,
   ]);
 });

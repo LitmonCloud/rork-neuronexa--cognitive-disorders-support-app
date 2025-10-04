@@ -18,7 +18,7 @@ export interface CaregiverNotification {
   taskTitle?: string;
   timestamp: string;
   read: boolean;
-  severity: 'low' | 'medium' | 'high';
+  severity: 'low' | 'medium' | 'high' | 'critical';
   metadata?: {
     completedSteps?: number;
     totalSteps?: number;

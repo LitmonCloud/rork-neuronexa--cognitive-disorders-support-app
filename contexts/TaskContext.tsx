@@ -6,6 +6,7 @@ import { Task, TaskPriority, TaskStatus, TaskStep } from '@/types/task';
 import { generateText } from '@rork/toolkit-sdk';
 import { useNotifications } from './NotificationContext';
 import { usePatients } from './PatientContext';
+import { useCaregivers } from './CaregiverContext';
 
 const TASKS_STORAGE_KEY = '@neuronexa_tasks';
 
@@ -34,6 +35,7 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
   const [filter, setFilter] = useState<TaskStatus | 'all'>('all');
   const { addNotification } = useNotifications();
   const { updateTaskLink, getTaskPatient } = usePatients();
+  const { sendRealtimeAlert } = useCaregivers();
 
   const tasksQuery = useQuery({
     queryKey: ['tasks'],
@@ -89,6 +91,17 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
       category: 'task',
     });
 
+    sendRealtimeAlert({
+      title: 'New Task Created',
+      message: scheduledDate 
+        ? `Patient created task "${title}" scheduled for ${scheduledDate.toLocaleDateString()}`
+        : `Patient created task "${title}"`,
+      type: 'task_created',
+      severity: priority === 'high' ? 'high' : 'medium',
+      taskId: newTask.id,
+      taskTitle: title,
+    });
+
     return newTask;
   }, [tasks, mutateTasksAsync, addNotification]);
 
@@ -109,6 +122,15 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
           taskTitle: task.title,
           priority: 'low',
           category: 'task',
+        });
+
+        sendRealtimeAlert({
+          title: 'Task Started',
+          message: `Patient started working on "${task.title}"`,
+          type: 'task_started',
+          severity: 'medium',
+          taskId: task.id,
+          taskTitle: task.title,
         });
       }
     }
@@ -135,16 +157,28 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
       console.log('[TaskContext] Task updated, mutation called');
 
       const patient = getTaskPatient(task.id);
+      const patientName = patient ? `${patient.firstName} ${patient.lastNameInitial}.` : 'Patient';
+      
       addNotification({
         type: 'task_completed',
         title: 'Task Completed! 🎉',
         message: patient 
-          ? `${patient.firstName} ${patient.lastNameInitial}. completed "${task.title}"`
+          ? `${patientName} completed "${task.title}"`
           : `"${task.title}" has been completed`,
         taskId: task.id,
         taskTitle: task.title,
         priority: 'low',
         category: 'task',
+        metadata: { priority: task.priority },
+      });
+
+      sendRealtimeAlert({
+        title: 'Task Completed! 🎉',
+        message: `${patientName} completed "${task.title}"`,
+        type: 'task_completed',
+        severity: 'low',
+        taskId: task.id,
+        taskTitle: task.title,
         metadata: { priority: task.priority },
       });
       
@@ -195,6 +229,16 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
           category: 'task',
           metadata: { completedSteps, totalSteps },
         });
+
+        sendRealtimeAlert({
+          title: 'All Steps Completed! 🎉',
+          message: `${patientName} completed all steps for "${task.title}"`,
+          type: 'all_steps_completed',
+          severity: 'low',
+          taskId: task.id,
+          taskTitle: task.title,
+          metadata: { completedSteps, totalSteps },
+        });
       } else {
         addNotification({
           type: 'step_completed',
@@ -204,6 +248,16 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
           taskTitle: task.title,
           priority: 'low',
           category: 'task',
+          metadata: { completedSteps, totalSteps },
+        });
+
+        sendRealtimeAlert({
+          title: 'Step Completed',
+          message: `${patientName} made progress on "${task.title}": ${completedSteps}/${totalSteps} steps`,
+          type: 'step_completed',
+          severity: 'low',
+          taskId: task.id,
+          taskTitle: task.title,
           metadata: { completedSteps, totalSteps },
         });
       }

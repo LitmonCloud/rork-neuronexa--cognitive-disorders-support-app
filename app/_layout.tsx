@@ -22,7 +22,9 @@ import { posthog } from "@/services/analytics/PostHogService";
 import { sentry } from "@/services/analytics/SentryService";
 import { supabase } from "@/services/backend/SupabaseService";
 import { pushNotifications } from "@/services/notifications/PushNotificationService";
+import { realtimeNotificationService } from "@/services/notifications/RealtimeNotificationService";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { RealtimeNotificationListener } from "@/components/RealtimeNotificationListener";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -166,6 +168,7 @@ export default function RootLayout() {
             posthog.initialize(),
             supabase.initialize(),
             pushNotifications.initialize(),
+            realtimeNotificationService.initialize(),
           ]),
           new Promise(resolve => setTimeout(resolve, 3000)),
         ]);
@@ -199,6 +202,7 @@ export default function RootLayout() {
                           <PatientProvider>
                             <TaskProvider>
                               <GestureHandlerRootView style={{ flex: 1 }}>
+                                <RealtimeNotificationListener />
                                 <RootLayoutNav />
                               </GestureHandlerRootView>
                             </TaskProvider>
