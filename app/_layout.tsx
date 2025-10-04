@@ -41,7 +41,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const TERMS_ACCEPTED_KEY = '@neuronexa_terms_accepted';
+const TERMS_ACCEPTED_KEY = '@nexa_terms_accepted';
 
 function RootLayoutNav() {
   const { isLoading: subscriptionLoading } = useSubscription();

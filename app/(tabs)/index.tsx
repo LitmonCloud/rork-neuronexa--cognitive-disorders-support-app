@@ -686,7 +686,7 @@ export default function TasksScreen() {
               <Smile size={20} color={colors.accent} style={styles.greetingIcon} />
             </View>
             <View style={styles.titleRow}>
-              <Text style={[styles.title, { fontSize: 28 * textSize }]}>NeuroNexa</Text>
+              <Text style={[styles.title, { fontSize: 28 * textSize }]}>Nexa</Text>
               {(isPremium || isInTrial) && (
                 <View style={styles.premiumBadge}>
                   <Crown size={14} color={colors.primary} />

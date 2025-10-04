@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { AccessibilitySettings } from '@/types/task';
 
-const SETTINGS_STORAGE_KEY = '@neuronexa_accessibility';
+const SETTINGS_STORAGE_KEY = '@nexa_accessibility';
 
 const defaultSettings: AccessibilitySettings = {
   highContrast: false,

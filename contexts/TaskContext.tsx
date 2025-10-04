@@ -8,7 +8,7 @@ import { useNotifications } from './NotificationContext';
 import { usePatients } from './PatientContext';
 import { useCaregivers } from './CaregiverContext';
 
-const TASKS_STORAGE_KEY = '@neuronexa_tasks';
+const TASKS_STORAGE_KEY = '@nexa_tasks';
 
 async function loadTasks(): Promise<Task[]> {
   try {
