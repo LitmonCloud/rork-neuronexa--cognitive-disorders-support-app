@@ -28,6 +28,8 @@ export default function TabLayout() {
   
   const isCaregiver = profile.role === 'caregiver';
   
+  console.log('[TabLayout] Profile role:', profile.role, 'isCaregiver:', isCaregiver);
+  
   const currentTab = segments[1];
   if (isCaregiver && currentTab && !CAREGIVER_ALLOWED.has(currentTab)) {
     return <Redirect href="/(tabs)/caregiver" />;
