@@ -1,4 +1,4 @@
-export type SubscriptionTier = 'free' | 'premium' | 'lifetime';
+export type SubscriptionTier = 'free' | 'premium';
 
 export interface SubscriptionFeatures {
   maxTasks: number;
@@ -60,20 +60,6 @@ export const SUBSCRIPTION_FEATURES: Record<SubscriptionTier, SubscriptionFeature
     unlimitedWellness: true,
     premiumResources: true,
   },
-  lifetime: {
-    maxTasks: -1,
-    maxTasksPerDay: -1,
-    aiBreakdown: true,
-    aiMemoryJournal: true,
-    caregiverMode: true,
-    advancedAnalytics: true,
-    customReminders: true,
-    prioritySupport: true,
-    offlineMode: true,
-    exportData: true,
-    unlimitedWellness: true,
-    premiumResources: true,
-  },
 };
 
 export interface PricingPlan {
@@ -81,7 +67,7 @@ export interface PricingPlan {
   tier: SubscriptionTier;
   name: string;
   price: number;
-  period: 'month' | 'year' | 'lifetime';
+  period: 'month' | 'year';
   description: string;
   features: string[];
   popular?: boolean;
@@ -138,20 +124,5 @@ export const PRICING_PLANS: PricingPlan[] = [
       'Early access to new features',
     ],
     savings: 'Save 33%',
-  },
-  {
-    id: 'lifetime',
-    tier: 'lifetime',
-    name: 'Lifetime',
-    price: 199.99,
-    period: 'lifetime',
-    description: 'One-time payment, forever access',
-    features: [
-      'Everything in Premium',
-      'Lifetime updates',
-      'VIP support',
-      'Exclusive community access',
-      'Shape the future of NeuroNexa',
-    ],
   },
 ];

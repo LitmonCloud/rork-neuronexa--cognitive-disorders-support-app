@@ -341,9 +341,7 @@ export default function PaywallScreen() {
                   </View>
                   <View style={styles.planPriceContainer}>
                     <Text style={styles.planPrice}>${plan.price}</Text>
-                    {plan.period !== 'lifetime' && (
-                      <Text style={styles.planPeriod}>/{plan.period}</Text>
-                    )}
+                    <Text style={styles.planPeriod}>/{plan.period}</Text>
                   </View>
                 </View>
                 <View style={styles.planFeatures}>

@@ -195,7 +195,7 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
   const features = useMemo(() => SUBSCRIPTION_FEATURES[subscription.tier], [subscription.tier]);
 
   const isPremium = useMemo(() => 
-    subscription.tier === 'premium' || subscription.tier === 'lifetime',
+    subscription.tier === 'premium',
     [subscription.tier]
   );
 
@@ -254,14 +254,13 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
     mutateUsage(newUsage);
   }, [usage, mutateUsage]);
 
-  const upgradeToPremium = useCallback((period: 'month' | 'year' | 'lifetime') => {
+  const upgradeToPremium = useCallback((period: 'month' | 'year') => {
     const newSubscription: UserSubscription = {
-      tier: period === 'lifetime' ? 'lifetime' : 'premium',
+      tier: 'premium',
       startDate: new Date().toISOString(),
-      expiryDate: period === 'lifetime' ? undefined : 
-        period === 'year' ? 
-          new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() :
-          new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      expiryDate: period === 'year' ? 
+        new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() :
+        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       trialUsed: true,
     };
     mutateSubscription(newSubscription);
