@@ -387,27 +387,28 @@ export default function CaregiverDashboardScreen() {
   };
 
   return (
-    <PremiumGate
-      feature="Caregiver Dashboard"
-      featureDescription="Manage multiple patients, create tasks, and monitor their progress in real-time."
-    >
-      <View style={styles.container}>
-        <Stack.Screen options={{ headerShown: false }} />
-        
-        <View style={[styles.header, { paddingTop: insets.top + spacing.md }]}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
-            activeOpacity={0.7}
-          >
-            <ArrowLeft size={24} color={colors.text} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Caregiver Dashboard</Text>
-          <View style={{ width: 40 }} />
-        </View>
+    <View style={styles.container}>
+      <Stack.Screen options={{ headerShown: false }} />
+      
+      <View style={[styles.header, { paddingTop: insets.top + spacing.md }]}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+          activeOpacity={0.7}
+        >
+          <ArrowLeft size={24} color={colors.text} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Caregiver Dashboard</Text>
+        <View style={{ width: 40 }} />
+      </View>
 
-        {/* Code redemption bar - FIXED at top, outside scroll */}
-        <EnterCodeBar />
+      {/* Code redemption bar - ALWAYS visible, outside PremiumGate */}
+      <EnterCodeBar />
+
+      <PremiumGate
+        feature="Caregiver Dashboard"
+        featureDescription="Manage multiple patients, create tasks, and monitor their progress in real-time."
+      >
 
         <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
           <Card style={styles.infoCard}>
@@ -511,12 +512,6 @@ export default function CaregiverDashboardScreen() {
           )}
         </ScrollView>
 
-        <AddPatientModal
-          visible={showAddModal}
-          onClose={() => setShowAddModal(false)}
-          defaultMethod="code"
-        />
-
         <Modal
           visible={showEditModal}
           transparent
@@ -577,7 +572,14 @@ export default function CaregiverDashboardScreen() {
             </View>
           </View>
         </Modal>
-      </View>
-    </PremiumGate>
+      </PremiumGate>
+
+      {/* Modals outside PremiumGate so they're always accessible */}
+      <AddPatientModal
+        visible={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        defaultMethod="code"
+      />
+    </View>
   );
 }
