@@ -17,6 +17,7 @@ import { FunnelProvider } from "@/contexts/FunnelContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { UserProfileProvider } from "@/contexts/UserProfileContext";
+import { DementiaProvider } from "@/contexts/DementiaContext";
 import { posthog } from "@/services/analytics/PostHogService";
 import { sentry } from "@/services/analytics/SentryService";
 import { supabase } from "@/services/backend/SupabaseService";
@@ -193,15 +194,17 @@ export default function RootLayout() {
                 <AccessibilityProvider>
                   <NotificationProvider>
                     <UserProfileProvider>
-                      <CaregiverProvider>
-                        <PatientProvider>
-                          <TaskProvider>
-                            <GestureHandlerRootView style={{ flex: 1 }}>
-                              <RootLayoutNav />
-                            </GestureHandlerRootView>
-                          </TaskProvider>
-                        </PatientProvider>
-                      </CaregiverProvider>
+                      <DementiaProvider>
+                        <CaregiverProvider>
+                          <PatientProvider>
+                            <TaskProvider>
+                              <GestureHandlerRootView style={{ flex: 1 }}>
+                                <RootLayoutNav />
+                              </GestureHandlerRootView>
+                            </TaskProvider>
+                          </PatientProvider>
+                        </CaregiverProvider>
+                      </DementiaProvider>
                     </UserProfileProvider>
                   </NotificationProvider>
                 </AccessibilityProvider>

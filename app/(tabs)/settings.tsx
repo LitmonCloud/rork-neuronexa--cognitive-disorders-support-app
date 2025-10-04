@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTheme, ThemeMode } from '@/contexts/ThemeContext';
+import { useDementia } from '@/contexts/DementiaContext';
 import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database } from 'lucide-react-native';
 import { mentalHealthResources } from '@/constants/mentalHealthResources';
 import { MentalHealthResource } from '@/types/mentalHealth';
@@ -10,6 +11,7 @@ import { MentalHealthResource } from '@/types/mentalHealth';
 export default function SettingsScreen() {
   const { settings, toggleSetting } = useAccessibility();
   const { colors, themeMode, setThemeMode } = useTheme();
+  const { settings: dementiaSettings, updateSettings: updateDementiaSettings } = useDementia();
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
@@ -439,6 +441,32 @@ export default function SettingsScreen() {
               value={settings.voiceGuidance}
               onValueChange={() => toggleSetting('voiceGuidance')}
               trackColor={{ false: colors.borderLight, true: colors.primaryDark }}
+              thumbColor={colors.surface}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Memory Support</Text>
+          
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => updateDementiaSettings({ enabled: !dementiaSettings?.enabled })}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+                <Brain size={20} color={colors.primary} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Memory Support Mode</Text>
+                <Text style={styles.settingDescription}>Specialized features for memory challenges</Text>
+              </View>
+            </View>
+            <Switch
+              value={dementiaSettings?.enabled || false}
+              onValueChange={() => updateDementiaSettings({ enabled: !dementiaSettings?.enabled })}
+              trackColor={{ false: colors.borderLight, true: colors.primary }}
               thumbColor={colors.surface}
             />
           </TouchableOpacity>

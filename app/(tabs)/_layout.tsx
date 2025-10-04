@@ -1,6 +1,6 @@
 // template
 import { Tabs } from "expo-router";
-import { CheckSquare, Settings, TrendingUp, Users, Heart, Sparkles } from "lucide-react-native";
+import { CheckSquare, Settings, TrendingUp, Users, Heart, Sparkles, Brain } from "lucide-react-native";
 import React from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -58,6 +58,13 @@ export default function TabLayout() {
         options={{
           title: "Caregiver",
           tabBarIcon: ({ color }) => <Users size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="dementia-support"
+        options={{
+          title: "Memory",
+          tabBarIcon: ({ color }) => <Brain size={24} color={color} />,
         }}
       />
       <Tabs.Screen
