@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTheme, ThemeMode } from '@/contexts/ThemeContext';
 import { useDementia } from '@/contexts/DementiaContext';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database } from 'lucide-react-native';
 import { mentalHealthResources } from '@/constants/mentalHealthResources';
 import { MentalHealthResource } from '@/types/mentalHealth';
@@ -12,8 +13,11 @@ export default function SettingsScreen() {
   const { settings, toggleSetting } = useAccessibility();
   const { colors, themeMode, setThemeMode } = useTheme();
   const { settings: dementiaSettings, updateSettings: updateDementiaSettings } = useDementia();
+  const { profile } = useUserProfile();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+
+  const isCaregiver = profile?.role === 'caregiver';
 
   const styles = StyleSheet.create({
     container: {
@@ -304,8 +308,8 @@ export default function SettingsScreen() {
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={[styles.content, { paddingTop: insets.top + 20 }]}>
         <View style={styles.header}>
-          <Text style={styles.title}>Accessibility</Text>
-          <Text style={styles.subtitle}>Customize your experience</Text>
+          <Text style={styles.title}>{isCaregiver ? 'Settings' : 'Accessibility'}</Text>
+          <Text style={styles.subtitle}>{isCaregiver ? 'Manage your preferences' : 'Customize your experience'}</Text>
         </View>
 
         <View style={styles.section}>
@@ -346,6 +350,7 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         </View>
 
+        {!isCaregiver && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Visual Settings</Text>
           
@@ -393,7 +398,9 @@ export default function SettingsScreen() {
             />
           </TouchableOpacity>
         </View>
+        )}
 
+        {!isCaregiver && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Motion & Interaction</Text>
           
@@ -419,7 +426,9 @@ export default function SettingsScreen() {
             />
           </TouchableOpacity>
         </View>
+        )}
 
+        {!isCaregiver && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Audio Assistance</Text>
           
@@ -445,7 +454,9 @@ export default function SettingsScreen() {
             />
           </TouchableOpacity>
         </View>
+        )}
 
+        {!isCaregiver && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Memory Support</Text>
           
@@ -519,7 +530,9 @@ export default function SettingsScreen() {
             </>
           )}
         </View>
+        )}
 
+        {!isCaregiver && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Cognitive Support</Text>
           
@@ -633,7 +646,9 @@ export default function SettingsScreen() {
             />
           </TouchableOpacity>
         </View>
+        )}
 
+        {!isCaregiver && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Mental Health Resources</Text>
           
@@ -674,13 +689,14 @@ export default function SettingsScreen() {
             </Text>
           </View>
         </View>
+        )}
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Legal & Support</Text>
           
           <TouchableOpacity 
             style={styles.settingRow}
-            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_PRIVACY_POLICY_URL || 'https://neuronexa.app/legal/privacy')}
+            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_PRIVACY_POLICY_URL || 'https://nexa.app/legal/privacy')}
             activeOpacity={0.7}
           >
             <View style={styles.settingLeft}>
@@ -697,7 +713,7 @@ export default function SettingsScreen() {
 
           <TouchableOpacity 
             style={styles.settingRow}
-            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_TERMS_URL || 'https://neuronexa.app/legal/terms')}
+            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_TERMS_URL || 'https://nexa.app/legal/terms')}
             activeOpacity={0.7}
           >
             <View style={styles.settingLeft}>
@@ -714,7 +730,7 @@ export default function SettingsScreen() {
 
           <TouchableOpacity 
             style={styles.settingRow}
-            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_ACCESSIBILITY_URL || 'https://neuronexa.app/legal/accessibility')}
+            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_ACCESSIBILITY_URL || 'https://nexa.app/legal/accessibility')}
             activeOpacity={0.7}
           >
             <View style={styles.settingLeft}>
@@ -731,7 +747,7 @@ export default function SettingsScreen() {
 
           <TouchableOpacity 
             style={styles.settingRow}
-            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_DATA_RETENTION_URL || 'https://neuronexa.app/legal/data-retention')}
+            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_DATA_RETENTION_URL || 'https://nexa.app/legal/data-retention')}
             activeOpacity={0.7}
           >
             <View style={styles.settingLeft}>
@@ -748,7 +764,7 @@ export default function SettingsScreen() {
 
           <TouchableOpacity 
             style={styles.settingRow}
-            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_SUPPORT_URL || 'https://neuronexa.app/support')}
+            onPress={() => Linking.openURL(process.env.EXPO_PUBLIC_SUPPORT_URL || 'https://nexa.app/support')}
             activeOpacity={0.7}
           >
             <View style={styles.settingLeft}>
@@ -765,26 +781,29 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.infoCard}>
-          <Text style={styles.infoTitle}>About NeuroNexa</Text>
+          <Text style={styles.infoTitle}>About Nexa</Text>
           <Text style={styles.infoText}>
-            Designed with neurodiversity in mind. We support individuals with ADHD, Autism, 
-            Anxiety, and cognitive challenges through compassionate, AI-powered task guidance.
+            {isCaregiver 
+              ? 'Supporting caregivers in providing compassionate care through real-time monitoring and communication tools.'
+              : 'Designed with neurodiversity in mind. We support individuals with ADHD, Autism, Anxiety, and cognitive challenges through compassionate, AI-powered task guidance.'}
           </Text>
           <Text style={[styles.infoText, { marginTop: 12, fontSize: 13, fontStyle: 'italic' as const }]}>
             Version {process.env.EXPO_PUBLIC_APP_VERSION || '1.0.0'}
           </Text>
           <Text style={[styles.infoText, { marginTop: 8, fontSize: 12, color: colors.textLight }]}>
-            © 2025 NeuroNexa. All rights reserved.
+            © 2025 Nexa. All rights reserved.
           </Text>
         </View>
 
+        {!isCaregiver && (
         <View style={[styles.infoCard, { backgroundColor: colors.warning + '15', borderColor: colors.warning, marginTop: 16 }]}>
           <Text style={[styles.infoTitle, { color: colors.warning }]}>Medical Disclaimer</Text>
           <Text style={[styles.infoText, { color: colors.text }]}>
-            NeuroNexa is not a medical device and does not provide medical advice, diagnosis, or treatment. 
+            Nexa is not a medical device and does not provide medical advice, diagnosis, or treatment. 
             Always consult with a qualified healthcare professional for medical concerns.
           </Text>
         </View>
+        )}
       </ScrollView>
     </View>
   );
