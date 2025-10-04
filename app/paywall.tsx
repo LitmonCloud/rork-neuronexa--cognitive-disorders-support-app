@@ -253,18 +253,18 @@ export default function PaywallScreen() {
 
   const handleUpgrade = () => {
     upgradeToPremium(selectedPlan.period);
-    if (isCaregiver) {
-      router.replace('/(tabs)');
-    } else {
-      router.back();
-    }
+    router.replace('/(tabs)');
   };
 
   const handleClose = () => {
     if (isCaregiver) {
       return;
     }
-    router.back();
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)');
+    }
   };
 
   const paidPlans = PRICING_PLANS.filter(p => p.tier !== 'free');
