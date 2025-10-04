@@ -35,49 +35,6 @@ export default function TabLayout() {
     return <Redirect href="/(tabs)/caregiver" />;
   }
   
-  if (isCaregiver) {
-    return (
-      <Tabs
-        screenOptions={{
-          tabBarActiveTintColor: colors.primary,
-          tabBarInactiveTintColor: colors.textLight,
-          headerShown: false,
-          tabBarStyle: {
-            backgroundColor: colors.surface,
-            borderTopColor: colors.border,
-            borderTopWidth: 1,
-          },
-          tabBarLabelStyle: {
-            fontSize: 12,
-            fontWeight: '600' as const,
-          },
-        }}
-      >
-        <Tabs.Screen
-          name="caregiver"
-          options={{
-            title: "Dashboard",
-            tabBarIcon: ({ color }) => <Users size={24} color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: "Tasks",
-            tabBarIcon: ({ color }) => <CheckSquare size={24} color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="settings"
-          options={{
-            title: "Settings",
-            tabBarIcon: ({ color }) => <Settings size={24} color={color} />,
-          }}
-        />
-      </Tabs>
-    );
-  }
-  
   return (
     <Tabs
       screenOptions={{
@@ -107,6 +64,7 @@ export default function TabLayout() {
         options={{
           title: "Nexa",
           tabBarIcon: ({ color }) => <Sparkles size={24} color={color} />,
+          href: isCaregiver ? null : undefined,
         }}
       />
       <Tabs.Screen
@@ -114,6 +72,7 @@ export default function TabLayout() {
         options={{
           title: "Progress",
           tabBarIcon: ({ color }) => <TrendingUp size={24} color={color} />,
+          href: isCaregiver ? null : undefined,
         }}
       />
       <Tabs.Screen
@@ -121,12 +80,13 @@ export default function TabLayout() {
         options={{
           title: "Wellness",
           tabBarIcon: ({ color }) => <Heart size={24} color={color} />,
+          href: isCaregiver ? null : undefined,
         }}
       />
       <Tabs.Screen
         name="caregiver"
         options={{
-          title: "Caregiver",
+          title: isCaregiver ? "Dashboard" : "Caregiver",
           tabBarIcon: ({ color }) => <Users size={24} color={color} />,
         }}
       />
@@ -135,6 +95,7 @@ export default function TabLayout() {
         options={{
           title: "Memory",
           tabBarIcon: ({ color }) => <Brain size={24} color={color} />,
+          href: isCaregiver ? null : undefined,
         }}
       />
       <Tabs.Screen
