@@ -5,7 +5,7 @@ import { useTasks } from '@/contexts/TaskContext';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Plus, Sparkles, Circle, CheckCircle2, Clock, Heart, Smile, Crown, Calendar as CalendarIcon, X } from 'lucide-react-native';
+import { Plus, Sparkles, Circle, CheckCircle2, Clock, Heart, Smile, Crown, Calendar as CalendarIcon, X, Clock as ClockIcon } from 'lucide-react-native';
 import { Task, TaskPriority } from '@/types/task';
 import { router } from 'expo-router';
 import CalendarView from '@/components/CalendarView';
@@ -24,6 +24,7 @@ export default function TasksScreen() {
   const [newTaskPriority, setNewTaskPriority] = useState<TaskPriority>('medium');
   const [isCreating, setIsCreating] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [completeByTime, setCompleteByTime] = useState<string>('');
 
   const handleAddTask = async () => {
     if (!newTaskTitle.trim()) return;
@@ -41,7 +42,8 @@ export default function TasksScreen() {
         newTaskTitle, 
         newTaskDescription || undefined, 
         newTaskPriority,
-        selectedDate || undefined
+        selectedDate || undefined,
+        completeByTime || undefined
       );
       if (task) {
         incrementTaskUsage();
@@ -49,6 +51,7 @@ export default function TasksScreen() {
         setNewTaskDescription('');
         setNewTaskPriority('medium');
         setSelectedDate(null);
+        setCompleteByTime('');
         setShowAddWidget(false);
         setIsCreating(false);
         
@@ -77,6 +80,7 @@ export default function TasksScreen() {
     setNewTaskDescription('');
     setNewTaskPriority('medium');
     setSelectedDate(null);
+    setCompleteByTime('');
     Keyboard.dismiss();
   };
 
@@ -582,6 +586,85 @@ export default function TasksScreen() {
     clearDateButton: {
       padding: 4,
     },
+    timePickerContainer: {
+      marginBottom: 16,
+    },
+    timePickerLabel: {
+      fontSize: 12,
+      fontWeight: '600' as const,
+      color: colors.textSecondary,
+      marginBottom: 8,
+      textTransform: 'uppercase' as const,
+      letterSpacing: 0.5,
+    },
+    timePickerButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: colors.surfaceTint,
+      borderRadius: 14,
+      padding: 14,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+    },
+    timePickerButtonActive: {
+      borderColor: colors.primary,
+      backgroundColor: colors.primaryLight + '20',
+    },
+    timePickerText: {
+      fontSize: 15,
+      color: colors.text,
+      fontWeight: '500' as const,
+    },
+    timePickerTextPlaceholder: {
+      color: colors.textLight,
+    },
+    timeInputRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    timeInput: {
+      backgroundColor: colors.surface,
+      borderRadius: 10,
+      padding: 10,
+      fontSize: 16,
+      color: colors.text,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      width: 60,
+      textAlign: 'center' as const,
+      fontWeight: '600' as const,
+    },
+    timeSeparator: {
+      fontSize: 20,
+      color: colors.text,
+      fontWeight: '700' as const,
+    },
+    timeAmPmContainer: {
+      flexDirection: 'row',
+      gap: 6,
+    },
+    timeAmPmButton: {
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 8,
+      backgroundColor: colors.surfaceTint,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+    },
+    timeAmPmButtonActive: {
+      backgroundColor: colors.primary,
+      borderColor: colors.primary,
+    },
+    timeAmPmText: {
+      fontSize: 13,
+      color: colors.text,
+      fontWeight: '600' as const,
+    },
+    timeAmPmTextActive: {
+      color: colors.surface,
+    },
   });
 
   return (
@@ -821,6 +904,38 @@ export default function TasksScreen() {
                     <TouchableOpacity 
                       style={styles.clearDateButton}
                       onPress={() => setSelectedDate(null)}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    >
+                      <X size={18} color={colors.textSecondary} />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
+
+              <View style={styles.timePickerContainer}>
+                <Text style={[styles.timePickerLabel, { fontSize: 12 * textSize }]}>Complete By Time (Optional)</Text>
+                <View style={[
+                  styles.timePickerButton,
+                  completeByTime && styles.timePickerButtonActive,
+                ]}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1 }}>
+                    <ClockIcon size={18} color={completeByTime ? colors.primary : colors.textLight} />
+                    <TextInput
+                      style={[
+                        styles.timePickerText,
+                        { fontSize: 15 * textSize, flex: 1 },
+                        !completeByTime && styles.timePickerTextPlaceholder,
+                      ]}
+                      placeholder="e.g., 3:00 PM, 15:30, or by dinner"
+                      placeholderTextColor={colors.textLight}
+                      value={completeByTime}
+                      onChangeText={setCompleteByTime}
+                    />
+                  </View>
+                  {completeByTime && (
+                    <TouchableOpacity 
+                      style={styles.clearDateButton}
+                      onPress={() => setCompleteByTime('')}
                       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     >
                       <X size={18} color={colors.textSecondary} />

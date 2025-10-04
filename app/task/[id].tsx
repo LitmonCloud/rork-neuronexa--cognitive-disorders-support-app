@@ -473,6 +473,14 @@ export default function TaskDetailScreen() {
               {task.description}
             </Text>
           )}
+          {task.completeByTime && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12 }}>
+              <Clock size={16} color={colors.textSecondary} />
+              <Text style={[styles.description, { fontSize: 14 * textSize, marginTop: 0 }]}>
+                Complete by: {task.completeByTime}
+              </Text>
+            </View>
+          )}
         </View>
 
         {showTimer && settings.cognitiveMode && (
