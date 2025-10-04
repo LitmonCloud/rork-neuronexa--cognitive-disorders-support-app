@@ -5,7 +5,7 @@ import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTheme, ThemeMode } from '@/contexts/ThemeContext';
 import { useDementia } from '@/contexts/DementiaContext';
 import { useUserProfile } from '@/contexts/UserProfileContext';
-import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database, Clock, MapPin, Search } from 'lucide-react-native';
+import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database, Clock, MapPin, Search, UserPlus } from 'lucide-react-native';
 import { mentalHealthResources, caregiverResources } from '@/constants/mentalHealthResources';
 import { MentalHealthResource } from '@/types/mentalHealth';
 
@@ -652,6 +652,29 @@ export default function SettingsScreen() {
               trackColor={{ false: colors.borderLight, true: colors.success }}
               thumbColor={colors.surface}
             />
+          </TouchableOpacity>
+        </View>
+        )}
+
+        {!isCaregiver && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Caregiver Connection</Text>
+          
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => router.push('/invite-generate')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+                <UserPlus size={20} color={colors.primary} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Invite Caregiver</Text>
+                <Text style={styles.settingDescription}>Generate a code to connect with a caregiver</Text>
+              </View>
+            </View>
+            <ChevronRight size={20} color={colors.textLight} />
           </TouchableOpacity>
         </View>
         )}

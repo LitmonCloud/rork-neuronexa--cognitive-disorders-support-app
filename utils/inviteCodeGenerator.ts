@@ -39,7 +39,7 @@ export function validateInviteCodeFormat(code: string): boolean {
 }
 
 export function generateDeepLink(code: string): string {
-  return `neuronexa://caregiver/join?code=${code}`;
+  return `nexa://caregiver/join?code=${code}`;
 }
 
 export function getExpirationTime(): Date {

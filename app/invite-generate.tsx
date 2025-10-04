@@ -104,12 +104,12 @@ export default function InviteGenerateScreen() {
 
   const handleShare = async () => {
     try {
-      const message = `Join me on NeuroNexa as my caregiver!\n\nInvite Code: ${code}\n\nOr tap this link: ${deepLink}\n\nThis code expires in ${formatRemainingTime(remainingTime)}.`;
+      const message = `Join me on Nexa as my caregiver!\n\nInvite Code: ${code}\n\nOr tap this link: ${deepLink}\n\nThis code expires in ${formatRemainingTime(remainingTime)}.`;
 
       if (Platform.OS === 'web') {
         if (navigator.share && navigator.canShare && navigator.canShare({ text: message })) {
           await navigator.share({
-            title: 'NeuroNexa Caregiver Invite',
+            title: 'Nexa Caregiver Invite',
             text: message,
           });
           console.log('[InviteGenerate] Share sheet opened (web)');
@@ -121,7 +121,7 @@ export default function InviteGenerateScreen() {
       } else {
         await Share.share({
           message,
-          title: 'NeuroNexa Caregiver Invite',
+          title: 'Nexa Caregiver Invite',
         });
         console.log('[InviteGenerate] Share sheet opened');
       }
@@ -131,7 +131,7 @@ export default function InviteGenerateScreen() {
         return;
       }
       console.error('[InviteGenerate] Error sharing:', error);
-      await Clipboard.setStringAsync(`Join me on NeuroNexa as my caregiver!\n\nInvite Code: ${code}\n\nOr tap this link: ${deepLink}\n\nThis code expires in ${formatRemainingTime(remainingTime)}.`);
+      await Clipboard.setStringAsync(`Join me on Nexa as my caregiver!\n\nInvite Code: ${code}\n\nOr tap this link: ${deepLink}\n\nThis code expires in ${formatRemainingTime(remainingTime)}.`);
       Alert.alert('Copied', 'Could not open share dialog. Invite details copied to clipboard instead.');
     }
   };
@@ -437,7 +437,7 @@ export default function InviteGenerateScreen() {
           1. Share the code or QR code with your caregiver
         </Text>
         <Text style={styles.infoText}>
-          2. They enter the code in the NeuroNexa app
+          2. They enter the code in the Nexa app
         </Text>
         <Text style={styles.infoText}>
           3. Once verified, they&apos;ll have access to your dashboard
