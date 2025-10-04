@@ -23,7 +23,7 @@ const steps: OnboardingStep[] = [
   {
     id: 2,
     title: 'Your Role',
-    description: 'How will you be using NeuroNexa?',
+    description: 'How will you be using Nexa?',
   },
   {
     id: 3,

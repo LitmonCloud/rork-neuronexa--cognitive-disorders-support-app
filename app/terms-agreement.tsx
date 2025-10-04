@@ -7,7 +7,7 @@ import { useUserProfile } from '@/contexts/UserProfileContext';
 import { Check, FileText, Shield, ExternalLink } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const TERMS_ACCEPTED_KEY = '@neuronexa_terms_accepted';
+const TERMS_ACCEPTED_KEY = '@nexa_terms_accepted';
 
 export default function TermsAgreementScreen() {
   const insets = useSafeAreaInsets();
@@ -217,7 +217,7 @@ export default function TermsAgreementScreen() {
           <View style={styles.iconContainer}>
             <Shield size={40} color={colors.primary} />
           </View>
-          <Text style={styles.title}>Welcome to NeuroNexa</Text>
+          <Text style={styles.title}>Welcome to Nexa</Text>
           <Text style={styles.subtitle}>
             Before we begin, please review and accept our terms
           </Text>
@@ -226,7 +226,7 @@ export default function TermsAgreementScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Your Privacy Matters</Text>
           <Text style={styles.sectionText}>
-            NeuroNexa is designed with your privacy in mind. All your data is stored locally on your device by default, and we never sell your personal information.
+            Nexa is designed with your privacy in mind. All your data is stored locally on your device by default, and we never sell your personal information.
           </Text>
         </View>
 
@@ -289,7 +289,7 @@ export default function TermsAgreementScreen() {
         <View style={styles.disclaimer}>
           <Text style={styles.disclaimerTitle}>Important Medical Disclaimer</Text>
           <Text style={styles.disclaimerText}>
-            NeuroNexa is NOT a medical device and does NOT provide medical advice, diagnosis, or treatment. It is a productivity and wellness tool. Always consult qualified healthcare professionals for medical concerns.
+            Nexa is NOT a medical device and does NOT provide medical advice, diagnosis, or treatment. It is a productivity and wellness tool. Always consult qualified healthcare professionals for medical concerns.
           </Text>
         </View>
 

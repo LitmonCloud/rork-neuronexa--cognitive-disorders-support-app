@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { UserProfile, UserPreference, UserHabit, UserInteraction } from '@/types/userProfile';
 
-const USER_PROFILE_KEY = '@neuronexa_user_profile';
+const USER_PROFILE_KEY = '@nexa_user_profile';
 
 async function loadUserProfile(): Promise<UserProfile> {
   try {
