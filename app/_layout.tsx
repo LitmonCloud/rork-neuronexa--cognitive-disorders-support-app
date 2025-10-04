@@ -109,7 +109,7 @@ function RootLayoutNav() {
     const inTabs = segments[0] === '(tabs)';
     const inTask = segments[0] === 'task';
     const inPaywall = segments[0] === 'paywall';
-    const inCaregiver = segments[0] === 'caregiver-dashboard' || segments[0] === 'caregiver-task-manager' || segments[0] === 'caregiver-patient-tasks' || segments[0] === 'invite-generate' || segments[0] === 'invite-redeem';
+    const inCaregiver = segments[0] === 'caregiver-dashboard' || segments[0] === 'caregiver-task-manager' || segments[0] === 'caregiver-patient-tasks' || segments[0] === 'invite-generate' || segments[0] === 'invite-redeem' || segments[0] === 'emergency-contacts' || segments[0] === 'memory-journal';
     const inNotifications = segments[0] === 'notifications' || segments[0] === 'notification-settings';
     const inFingerTrace = segments[0] === 'finger-trace';
     const inAllowedScreen = inTabs || inTask || inPaywall || inCaregiver || inNotifications || inFingerTrace;
@@ -126,9 +126,9 @@ function RootLayoutNav() {
       console.log('[RootLayout] Caregiver requires subscription, redirecting to paywall');
       router.replace('/paywall');
     } else if (termsAccepted && onboardingCompleted && !inAllowedScreen && !requiresSubscription) {
-      console.log('[RootLayout] Redirecting to tabs');
+      console.log('[RootLayout] Redirecting to main screen');
       if (isCaregiver) {
-        router.replace('/(tabs)/caregiver');
+        router.replace('/caregiver-dashboard');
       } else {
         router.replace('/(tabs)');
       }
@@ -159,6 +159,8 @@ function RootLayoutNav() {
       <Stack.Screen name="notifications" options={{ headerShown: false }} />
       <Stack.Screen name="notification-settings" options={{ headerShown: true, title: 'Notification Settings' }} />
       <Stack.Screen name="finger-trace" options={{ headerShown: false }} />
+      <Stack.Screen name="emergency-contacts" options={{ headerShown: true, title: 'Emergency Contacts' }} />
+      <Stack.Screen name="memory-journal" options={{ headerShown: true, title: 'Memory Journal' }} />
     </Stack>
   );
 }

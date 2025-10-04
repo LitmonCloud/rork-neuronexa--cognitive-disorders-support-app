@@ -1,5 +1,5 @@
 import { Tabs, Redirect, useSegments } from "expo-router";
-import { CheckSquare, Settings, TrendingUp, Users, Heart, Sparkles, Brain } from "lucide-react-native";
+import { CheckSquare, Settings, TrendingUp, Heart, Sparkles, Brain } from "lucide-react-native";
 import React from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -28,12 +28,15 @@ export default function TabLayout() {
   
   console.log('[TabLayout] Profile role:', profile?.role, 'isCaregiver:', isCaregiver);
   
-  const CAREGIVER_ALLOWED = new Set(["caregiver", "settings"]);
+  const PATIENT_TABS = new Set(["index", "coach", "progress", "wellness", "dementia-support", "settings"]);
+  const CAREGIVER_TABS = new Set(["settings"]);
   
+  const allowedTabs = isCaregiver ? CAREGIVER_TABS : PATIENT_TABS;
   const currentTab = segments[1];
-  if (isCaregiver && currentTab && !CAREGIVER_ALLOWED.has(currentTab)) {
-    console.log('[TabLayout] Redirecting caregiver from', currentTab, 'to caregiver tab');
-    return <Redirect href="/(tabs)/caregiver" />;
+  
+  if (currentTab && !allowedTabs.has(currentTab)) {
+    console.log('[TabLayout] Redirecting from', currentTab, 'to', isCaregiver ? '/caregiver-dashboard' : '/settings');
+    return <Redirect href={isCaregiver ? "/caregiver-dashboard" : "/settings"} />;
   }
   
   return (
@@ -83,14 +86,6 @@ export default function TabLayout() {
           title: "Wellness",
           tabBarIcon: ({ color }) => <Heart size={24} color={color} />,
           href: isCaregiver ? null : undefined,
-        }}
-      />
-      <Tabs.Screen
-        name="caregiver"
-        options={{
-          title: isCaregiver ? "Dashboard" : "Caregiver",
-          tabBarIcon: ({ color }) => <Users size={24} color={color} />,
-          href: isCaregiver ? undefined : null,
         }}
       />
       <Tabs.Screen
