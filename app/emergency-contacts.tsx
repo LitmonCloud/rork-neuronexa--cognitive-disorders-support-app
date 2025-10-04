@@ -444,37 +444,39 @@ export default function EmergencyContactsScreen() {
                   )}
                 </View>
 
-                <View style={styles.contactActions}>
-                  {!contact.isPrimary && (
+                {!isCaregiver && (
+                  <View style={styles.contactActions}>
+                    {!contact.isPrimary && (
+                      <TouchableOpacity
+                        style={[styles.actionButton, { borderColor: colors.warning, backgroundColor: colors.warning + '10' }]}
+                        onPress={() => handleSetPrimary(contact.id)}
+                        activeOpacity={0.7}
+                      >
+                        <Star size={16} color={colors.warning} />
+                        <Text style={{ fontSize: 14, fontWeight: '600' as const, color: colors.warning }}>
+                          Set Primary
+                        </Text>
+                      </TouchableOpacity>
+                    )}
                     <TouchableOpacity
-                      style={[styles.actionButton, { borderColor: colors.warning, backgroundColor: colors.warning + '10' }]}
-                      onPress={() => handleSetPrimary(contact.id)}
+                      style={[styles.actionButton, { borderColor: colors.primary, backgroundColor: colors.primaryLight }]}
+                      onPress={() => handleEdit(contact)}
                       activeOpacity={0.7}
                     >
-                      <Star size={16} color={colors.warning} />
-                      <Text style={{ fontSize: 14, fontWeight: '600' as const, color: colors.warning }}>
-                        Set Primary
+                      <Edit2 size={16} color={colors.primary} />
+                      <Text style={{ fontSize: 14, fontWeight: '600' as const, color: colors.primary }}>
+                        Edit
                       </Text>
                     </TouchableOpacity>
-                  )}
-                  <TouchableOpacity
-                    style={[styles.actionButton, { borderColor: colors.primary, backgroundColor: colors.primaryLight }]}
-                    onPress={() => handleEdit(contact)}
-                    activeOpacity={0.7}
-                  >
-                    <Edit2 size={16} color={colors.primary} />
-                    <Text style={{ fontSize: 14, fontWeight: '600' as const, color: colors.primary }}>
-                      Edit
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.actionButton, { borderColor: colors.error, backgroundColor: colors.error + '10' }]}
-                    onPress={() => handleDelete(contact.id)}
-                    activeOpacity={0.7}
-                  >
-                    <Trash2 size={16} color={colors.error} />
-                  </TouchableOpacity>
-                </View>
+                    <TouchableOpacity
+                      style={[styles.actionButton, { borderColor: colors.error, backgroundColor: colors.error + '10' }]}
+                      onPress={() => handleDelete(contact.id)}
+                      activeOpacity={0.7}
+                    >
+                      <Trash2 size={16} color={colors.error} />
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
             ))
           )}
