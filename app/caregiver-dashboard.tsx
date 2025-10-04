@@ -104,20 +104,7 @@ export default function CaregiverDashboardScreen() {
       color: colors.textSecondary,
       marginTop: spacing.xs,
     },
-    addButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.xs,
-      backgroundColor: colors.primary,
-      paddingHorizontal: spacing.md,
-      paddingVertical: spacing.sm,
-      borderRadius: borderRadius.md,
-    },
-    addButtonText: {
-      fontSize: fontSizes.sm,
-      fontWeight: fontWeights.semibold,
-      color: colors.surface,
-    },
+
     patientCard: {
       padding: spacing.lg,
       flexDirection: 'row',
@@ -232,17 +219,45 @@ export default function CaregiverDashboardScreen() {
       lineHeight: 20,
     },
     codeButton: {
+      flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
-      gap: spacing.xs,
+      justifyContent: 'center',
+      gap: spacing.sm,
       backgroundColor: colors.secondary,
-      paddingHorizontal: spacing.md,
-      paddingVertical: spacing.sm,
-      borderRadius: borderRadius.md,
+      paddingHorizontal: spacing.lg,
+      paddingVertical: spacing.md,
+      borderRadius: borderRadius.lg,
+      elevation: 2,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
     },
     codeButtonText: {
-      fontSize: fontSizes.sm,
-      fontWeight: fontWeights.semibold,
+      fontSize: fontSizes.md,
+      fontWeight: fontWeights.bold,
+      color: colors.surface,
+    },
+    addButton: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: spacing.sm,
+      backgroundColor: colors.primary,
+      paddingHorizontal: spacing.lg,
+      paddingVertical: spacing.md,
+      borderRadius: borderRadius.lg,
+      elevation: 2,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    addButtonText: {
+      fontSize: fontSizes.md,
+      fontWeight: fontWeights.bold,
       color: colors.surface,
     },
     methodSelector: {
@@ -484,7 +499,7 @@ export default function CaregiverDashboardScreen() {
                 {patients.length} {patients.length === 1 ? 'patient' : 'patients'}
               </Text>
             </View>
-            <View style={{ flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' }}>
+            <View style={{ flexDirection: 'row', gap: spacing.md, marginTop: spacing.md }}>
               <TouchableOpacity
                 style={styles.codeButton}
                 onPress={() => {
@@ -494,7 +509,7 @@ export default function CaregiverDashboardScreen() {
                 activeOpacity={0.7}
                 testID="enter-code-button"
               >
-                <Key size={18} color={colors.surface} />
+                <Key size={20} color={colors.surface} />
                 <Text style={styles.codeButtonText}>Enter Code</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -507,7 +522,7 @@ export default function CaregiverDashboardScreen() {
                 activeOpacity={0.7}
                 testID="add-patient-button"
               >
-                <Plus size={18} color={colors.surface} />
+                <Plus size={20} color={colors.surface} />
                 <Text style={styles.addButtonText}>Add Patient</Text>
               </TouchableOpacity>
             </View>
