@@ -5,8 +5,8 @@ import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTheme, ThemeMode } from '@/contexts/ThemeContext';
 import { useDementia } from '@/contexts/DementiaContext';
 import { useUserProfile } from '@/contexts/UserProfileContext';
-import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database } from 'lucide-react-native';
-import { mentalHealthResources } from '@/constants/mentalHealthResources';
+import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database, Clock, MapPin, Search } from 'lucide-react-native';
+import { mentalHealthResources, caregiverResources } from '@/constants/mentalHealthResources';
 import { MentalHealthResource } from '@/types/mentalHealth';
 
 export default function SettingsScreen() {
@@ -256,6 +256,14 @@ export default function SettingsScreen() {
         return <Shield size={size} color={color} />;
       case 'video':
         return <Video size={size} color={color} />;
+      case 'clock':
+        return <Clock size={size} color={color} />;
+      case 'map-pin':
+        return <MapPin size={size} color={color} />;
+      case 'search':
+        return <Search size={size} color={color} />;
+      case 'file-text':
+        return <FileText size={size} color={color} />;
       default:
         return <Heart size={size} color={color} />;
     }
@@ -686,6 +694,58 @@ export default function SettingsScreen() {
           <View style={styles.crisisFooter}>
             <Text style={styles.crisisFooterText}>
               If you&apos;re in crisis, please call 988 or go to your nearest emergency room.
+            </Text>
+          </View>
+        </View>
+        )}
+
+        {isCaregiver && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Caregiver Resources</Text>
+          
+          <View style={styles.resourcesSection}>
+            <Text style={styles.resourcesSectionTitle}>Crisis & Immediate Support</Text>
+            <Text style={styles.resourcesSectionDescription}>
+              24/7 support for caregivers in need
+            </Text>
+            {caregiverResources
+              .filter((r) => r.category === 'crisis')
+              .map(renderResourceCard)}
+          </View>
+
+          <View style={styles.resourcesSection}>
+            <Text style={styles.resourcesSectionTitle}>Caregiver Support Services</Text>
+            <Text style={styles.resourcesSectionDescription}>
+              Connect with support networks and respite care
+            </Text>
+            {caregiverResources
+              .filter((r) => r.category === 'support')
+              .map(renderResourceCard)}
+          </View>
+
+          <View style={styles.resourcesSection}>
+            <Text style={styles.resourcesSectionTitle}>Education & Training</Text>
+            <Text style={styles.resourcesSectionDescription}>
+              Learn caregiving skills and access helpful resources
+            </Text>
+            {caregiverResources
+              .filter((r) => r.category === 'education')
+              .map(renderResourceCard)}
+          </View>
+
+          <View style={styles.resourcesSection}>
+            <Text style={styles.resourcesSectionTitle}>Mental Health Support</Text>
+            <Text style={styles.resourcesSectionDescription}>
+              Resources for caregiver stress and burnout prevention
+            </Text>
+            {caregiverResources
+              .filter((r) => r.category === 'therapy')
+              .map(renderResourceCard)}
+          </View>
+
+          <View style={styles.crisisFooter}>
+            <Text style={styles.crisisFooterText}>
+              Remember: Taking care of yourself is essential to providing the best care for others.
             </Text>
           </View>
         </View>
