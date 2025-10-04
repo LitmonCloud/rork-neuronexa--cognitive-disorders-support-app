@@ -50,6 +50,30 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <Settings size={24} color={color} />,
           }}
         />
+        <Tabs.Screen
+          name="coach"
+          options={{
+            href: null,
+          }}
+        />
+        <Tabs.Screen
+          name="progress"
+          options={{
+            href: null,
+          }}
+        />
+        <Tabs.Screen
+          name="wellness"
+          options={{
+            href: null,
+          }}
+        />
+        <Tabs.Screen
+          name="dementia-support"
+          options={{
+            href: null,
+          }}
+        />
       </Tabs>
     );
   }
