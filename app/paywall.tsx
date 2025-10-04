@@ -91,7 +91,7 @@ export default function PaywallScreen() {
       elevation: 4,
     },
     planCardPopular: {
-      borderColor: colors.primary,
+      borderColor: colors.border,
     },
     popularBadge: {
       position: 'absolute' as const,
@@ -115,7 +115,7 @@ export default function PaywallScreen() {
       paddingHorizontal: 10,
       paddingVertical: 4,
       borderRadius: 8,
-      alignSelf: 'flex-start',
+      alignSelf: 'flex-end',
       marginTop: 4,
     },
     savingsText: {
