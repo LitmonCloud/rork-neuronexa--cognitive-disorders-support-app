@@ -477,7 +477,7 @@ export default function DementiaSupportScreen() {
             <Text style={styles.sectionTitle}>Emergency Contacts</Text>
             <TouchableOpacity 
               style={styles.seeAllButton}
-              onPress={() => {}}
+              onPress={() => router.push('/emergency-contacts')}
             >
               <Text style={styles.seeAllText}>Manage</Text>
               <ChevronRight size={16} color={colors.primary} />
@@ -528,7 +528,7 @@ export default function DementiaSupportScreen() {
             <Text style={styles.sectionTitle}>Memory Journal</Text>
             <TouchableOpacity 
               style={styles.seeAllButton}
-              onPress={() => {}}
+              onPress={() => router.push('/memory-journal')}
             >
               <Text style={styles.seeAllText}>View All</Text>
               <ChevronRight size={16} color={colors.primary} />
@@ -547,7 +547,7 @@ export default function DementiaSupportScreen() {
               <TouchableOpacity
                 key={entry.id}
                 style={styles.journalCard}
-                onPress={() => {}}
+                onPress={() => router.push('/memory-journal')}
                 activeOpacity={0.7}
               >
                 {entry.photoUris.length > 0 && (

@@ -8,8 +8,9 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { Wind, ArrowLeft, Hand, Sparkles } from 'lucide-react-native';
+import { Wind, ArrowLeft, Hand, Sparkles, Brain, Shield } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useDementia } from '@/contexts/DementiaContext';
 import { breathingPatterns } from '@/constants/mentalHealthResources';
 import { BreathingPattern } from '@/types/mentalHealth';
 import BreathingExercise from '@/components/BreathingExercise';
@@ -17,7 +18,12 @@ import BreathingExercise from '@/components/BreathingExercise';
 export default function WellnessScreen() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
+  const { settings } = useDementia();
   const [selectedPattern, setSelectedPattern] = useState<BreathingPattern | null>(null);
+
+  const memorySupportEnabled = settings?.enabled || false;
+  const cognitiveExercisesEnabled = settings?.photoBasedNavigationEnabled || false;
+  const shouldShowWellness = !memorySupportEnabled || (memorySupportEnabled && cognitiveExercisesEnabled);
 
   const styles = StyleSheet.create({
     container: {
@@ -164,6 +170,20 @@ export default function WellnessScreen() {
       color: colors.textSecondary,
       lineHeight: 20,
     },
+    aiButton: {
+      backgroundColor: colors.primary,
+      borderRadius: 12,
+      padding: 12,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+    },
+    aiButtonText: {
+      fontSize: 14,
+      fontWeight: '600' as const,
+      color: colors.surface,
+    },
   });
 
   if (selectedPattern) {
@@ -185,6 +205,42 @@ export default function WellnessScreen() {
             console.log('Breathing exercise completed');
           }}
         />
+      </View>
+    );
+  }
+
+  if (!shouldShowWellness) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Brain size={28} color={colors.primary} />
+          <Text style={styles.headerTitle}>Wellness</Text>
+        </View>
+
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          <View style={styles.section}>
+            <View style={[styles.featureCard, { borderLeftColor: colors.primary, flexDirection: 'column', alignItems: 'flex-start' }]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 16 }}>
+                <View style={styles.featureCardIcon}>
+                  <Shield size={32} color={colors.primary} />
+                </View>
+                <Text style={styles.featureCardTitle}>Memory Support Active</Text>
+              </View>
+              <Text style={styles.featureCardDescription}>
+                Wellness exercises are currently hidden because Memory Support is enabled. 
+                To access breathing exercises and other wellness features, please enable 
+                Cognitive Exercises in your Memory Support settings.
+              </Text>
+              <TouchableOpacity
+                style={[styles.aiButton, { marginTop: 16, width: '100%' }]}
+                onPress={() => router.push('/settings')}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.aiButtonText}>Go to Settings</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
       </View>
     );
   }

@@ -4,6 +4,7 @@ export interface SubscriptionFeatures {
   maxTasks: number;
   maxTasksPerDay: number;
   aiBreakdown: boolean;
+  aiMemoryJournal: boolean;
   caregiverMode: boolean;
   advancedAnalytics: boolean;
   customReminders: boolean;
@@ -35,6 +36,7 @@ export const SUBSCRIPTION_FEATURES: Record<SubscriptionTier, SubscriptionFeature
     maxTasks: 5,
     maxTasksPerDay: 3,
     aiBreakdown: true,
+    aiMemoryJournal: false,
     caregiverMode: false,
     advancedAnalytics: false,
     customReminders: false,
@@ -48,6 +50,7 @@ export const SUBSCRIPTION_FEATURES: Record<SubscriptionTier, SubscriptionFeature
     maxTasks: -1,
     maxTasksPerDay: -1,
     aiBreakdown: true,
+    aiMemoryJournal: true,
     caregiverMode: true,
     advancedAnalytics: true,
     customReminders: true,
@@ -61,6 +64,7 @@ export const SUBSCRIPTION_FEATURES: Record<SubscriptionTier, SubscriptionFeature
     maxTasks: -1,
     maxTasksPerDay: -1,
     aiBreakdown: true,
+    aiMemoryJournal: true,
     caregiverMode: true,
     advancedAnalytics: true,
     customReminders: true,
