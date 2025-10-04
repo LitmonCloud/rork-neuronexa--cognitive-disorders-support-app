@@ -249,28 +249,30 @@ export default function CaregiverDashboardScreen() {
     methodSelector: {
       flexDirection: 'row',
       gap: spacing.md,
-      marginBottom: spacing.lg,
+      marginBottom: spacing.md,
     },
     methodButton: {
       flex: 1,
-      padding: spacing.md,
-      borderRadius: borderRadius.md,
+      padding: spacing.lg,
+      borderRadius: borderRadius.lg,
       borderWidth: 2,
       borderColor: colors.border,
       alignItems: 'center',
+      backgroundColor: colors.background,
     },
     methodButtonActive: {
       borderColor: colors.primary,
-      backgroundColor: colors.primary + '10',
+      backgroundColor: colors.primary + '20',
     },
     methodButtonText: {
       fontSize: fontSizes.md,
-      fontWeight: fontWeights.medium,
+      fontWeight: fontWeights.semibold,
       color: colors.textSecondary,
-      marginTop: spacing.xs,
+      marginTop: spacing.sm,
     },
     methodButtonTextActive: {
       color: colors.primary,
+      fontWeight: fontWeights.bold,
     },
     codeInputWrapper: {
       flexDirection: 'row',
@@ -584,6 +586,10 @@ export default function CaregiverDashboardScreen() {
                 </TouchableOpacity>
               </View>
 
+              <Text style={styles.helpText}>
+                Choose how you want to add a patient:
+              </Text>
+
               <View style={styles.methodSelector}>
                 <TouchableOpacity
                   style={[
@@ -593,11 +599,13 @@ export default function CaregiverDashboardScreen() {
                   onPress={() => {
                     console.log('[Dashboard] Switched to code method');
                     setAddMethod('code');
+                    setCodeError('');
+                    setInviteCode('');
                   }}
                   activeOpacity={0.7}
                   testID="use-code-method"
                 >
-                  <Key size={24} color={addMethod === 'code' ? colors.primary : colors.textSecondary} />
+                  <Key size={28} color={addMethod === 'code' ? colors.primary : colors.textSecondary} />
                   <Text style={[
                     styles.methodButtonText,
                     addMethod === 'code' && styles.methodButtonTextActive,
@@ -611,11 +619,13 @@ export default function CaregiverDashboardScreen() {
                   onPress={() => {
                     console.log('[Dashboard] Switched to manual method');
                     setAddMethod('manual');
+                    setFirstName('');
+                    setLastNameInitial('');
                   }}
                   activeOpacity={0.7}
                   testID="manual-entry-method"
                 >
-                  <Plus size={24} color={addMethod === 'manual' ? colors.primary : colors.textSecondary} />
+                  <Plus size={28} color={addMethod === 'manual' ? colors.primary : colors.textSecondary} />
                   <Text style={[
                     styles.methodButtonText,
                     addMethod === 'manual' && styles.methodButtonTextActive,
@@ -625,9 +635,6 @@ export default function CaregiverDashboardScreen() {
 
               {addMethod === 'code' ? (
                 <>
-                  <Text style={styles.helpText}>
-                    Enter the 8-character code provided by the patient to connect as their caregiver.
-                  </Text>
                   <View
                     style={[
                       styles.codeInputWrapper,
