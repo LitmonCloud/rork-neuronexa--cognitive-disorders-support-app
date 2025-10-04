@@ -15,6 +15,9 @@ async function loadUserProfile(): Promise<UserProfile> {
     
     const defaultProfile: UserProfile = {
       userId: Date.now().toString(),
+      name: undefined,
+      role: undefined,
+      onboardingCompleted: false,
       preferences: [],
       habits: [],
       interactions: [],
@@ -34,6 +37,9 @@ async function loadUserProfile(): Promise<UserProfile> {
     console.error('[UserProfile] Error loading profile:', error);
     return {
       userId: Date.now().toString(),
+      name: undefined,
+      role: undefined,
+      onboardingCompleted: false,
       preferences: [],
       habits: [],
       interactions: [],

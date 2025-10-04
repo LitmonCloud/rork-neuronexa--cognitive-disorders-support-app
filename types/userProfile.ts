@@ -27,6 +27,8 @@ export interface UserInteraction {
 export interface UserProfile {
   userId: string;
   name?: string;
+  role?: 'patient' | 'caregiver';
+  onboardingCompleted?: boolean;
   preferences: UserPreference[];
   habits: UserHabit[];
   interactions: UserInteraction[];

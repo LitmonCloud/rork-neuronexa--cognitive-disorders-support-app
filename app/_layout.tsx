@@ -16,7 +16,7 @@ import { PatientProvider } from "@/contexts/PatientContext";
 import { FunnelProvider } from "@/contexts/FunnelContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import { UserProfileProvider } from "@/contexts/UserProfileContext";
+import { UserProfileProvider, useUserProfile } from "@/contexts/UserProfileContext";
 import { DementiaProvider } from "@/contexts/DementiaContext";
 import { posthog } from "@/services/analytics/PostHogService";
 import { sentry } from "@/services/analytics/SentryService";
@@ -44,11 +44,15 @@ const queryClient = new QueryClient({
 const TERMS_ACCEPTED_KEY = '@neuronexa_terms_accepted';
 
 function RootLayoutNav() {
-  const { onboardingCompleted, isLoading } = useSubscription();
+  const { isLoading: subscriptionLoading } = useSubscription();
+  const { profile, isLoading: profileLoading } = useUserProfile();
   const segments = useSegments();
   const router = useRouter();
   const [termsAccepted, setTermsAccepted] = useState<boolean | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  
+  const isLoading = subscriptionLoading || profileLoading;
+  const onboardingCompleted = profile?.onboardingCompleted ?? false;
 
   const checkTermsAcceptance = React.useCallback(async () => {
     try {
