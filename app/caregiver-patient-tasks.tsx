@@ -54,6 +54,7 @@ export default function CaregiverPatientTasksScreen() {
   const [stepDescription, setStepDescription] = useState('');
   const [stepSimplified, setStepSimplified] = useState('');
   const [stepContext, setStepContext] = useState('');
+  const [tempSteps, setTempSteps] = useState<{id: string; description: string; simplifiedText?: string; contextualPrompt?: string}[]>([]);
 
   const patientTaskLinks = useMemo(() => {
     if (!selectedPatient) return [];
@@ -351,6 +352,61 @@ export default function CaregiverPatientTasksScreen() {
       textAlign: 'center' as const,
       paddingVertical: spacing.md,
     },
+    modalStepsSection: {
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      paddingTop: spacing.lg,
+      gap: spacing.md,
+    },
+    modalStepsSectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    modalStepsTitle: {
+      fontSize: fontSizes.md,
+      fontWeight: fontWeights.semibold,
+      color: colors.text,
+    },
+    addStepButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+      backgroundColor: colors.primary + '20',
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderRadius: borderRadius.sm,
+    },
+    addStepButtonText: {
+      fontSize: fontSizes.xs,
+      fontWeight: fontWeights.semibold,
+      color: colors.primary,
+    },
+    tempStepItem: {
+      flexDirection: 'row',
+      gap: spacing.sm,
+      padding: spacing.sm,
+      backgroundColor: colors.background,
+      borderRadius: borderRadius.md,
+      alignItems: 'center',
+    },
+    tempStepText: {
+      flex: 1,
+      fontSize: fontSizes.sm,
+      color: colors.text,
+    },
+    tempStepActions: {
+      flexDirection: 'row',
+      gap: spacing.xs,
+    },
+    smallIconButton: {
+      width: 28,
+      height: 28,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: borderRadius.sm,
+      backgroundColor: colors.border,
+    },
   });
 
   const getPriorityColor = (priority: TaskPriority) => {
@@ -393,12 +449,19 @@ export default function CaregiverPatientTasksScreen() {
       setTaskDescription(task.description || '');
       setTaskPriority(task.priority);
       setCompleteByTime(task.completeByTime || '');
+      setTempSteps(task.steps.map(s => ({
+        id: s.id,
+        description: s.description,
+        simplifiedText: s.simplifiedText,
+        contextualPrompt: s.contextualPrompt,
+      })));
     } else {
       setEditingTaskId(null);
       setTaskTitle('');
       setTaskDescription('');
       setTaskPriority('medium');
       setCompleteByTime('');
+      setTempSteps([]);
     }
     setShowTaskModal(true);
   };
@@ -416,6 +479,36 @@ export default function CaregiverPatientTasksScreen() {
         priority: taskPriority,
         completeByTime: completeByTime || undefined,
       });
+
+      const task = allTasks.find(t => t.id === editingTaskId);
+      if (task) {
+        const existingStepIds = task.steps.map(s => s.id);
+        const tempStepIds = tempSteps.map(s => s.id);
+        
+        existingStepIds.forEach(stepId => {
+          if (!tempStepIds.includes(stepId)) {
+            deleteStep(editingTaskId, stepId);
+          }
+        });
+        
+        tempSteps.forEach((step, index) => {
+          const existingStep = task.steps.find(s => s.id === step.id);
+          if (existingStep) {
+            editStep(editingTaskId, step.id, {
+              description: step.description,
+              simplifiedText: step.simplifiedText,
+              contextualPrompt: step.contextualPrompt,
+            });
+          } else {
+            addStep(
+              editingTaskId,
+              step.description,
+              step.simplifiedText,
+              step.contextualPrompt
+            );
+          }
+        });
+      }
 
       updateTaskLink(editingTaskId, 'caregiver');
 
@@ -437,6 +530,15 @@ export default function CaregiverPatientTasksScreen() {
         completeByTime || undefined
       );
 
+      tempSteps.forEach((step) => {
+        addStep(
+          newTask.id,
+          step.description,
+          step.simplifiedText,
+          step.contextualPrompt
+        );
+      });
+
       linkTaskToPatient(selectedPatient.id, newTask.id, 'caregiver');
 
       addNotification({
@@ -454,6 +556,7 @@ export default function CaregiverPatientTasksScreen() {
     setTaskDescription('');
     setTaskPriority('medium');
     setCompleteByTime('');
+    setTempSteps([]);
     setEditingTaskId(null);
     setShowTaskModal(false);
   };
@@ -486,15 +589,17 @@ export default function CaregiverPatientTasksScreen() {
     );
   };
 
-  const handleOpenStepModal = (task: Task, stepId?: string) => {
+  const handleOpenStepModal = (task: Task | null, stepId?: string) => {
     setSelectedTask(task);
     if (stepId) {
-      const step = task.steps.find(s => s.id === stepId);
-      if (step) {
-        setEditingStepId(stepId);
-        setStepDescription(step.description);
-        setStepSimplified(step.simplifiedText || '');
-        setStepContext(step.contextualPrompt || '');
+      if (task) {
+        const step = task.steps.find(s => s.id === stepId);
+        if (step) {
+          setEditingStepId(stepId);
+          setStepDescription(step.description);
+          setStepSimplified(step.simplifiedText || '');
+          setStepContext(step.contextualPrompt || '');
+        }
       }
     } else {
       setEditingStepId(null);
@@ -506,38 +611,55 @@ export default function CaregiverPatientTasksScreen() {
   };
 
   const handleSaveStep = () => {
-    if (!selectedTask || !stepDescription.trim()) {
+    if (!stepDescription.trim()) {
       Alert.alert('Error', 'Please enter a step description');
       return;
     }
 
-    if (editingStepId) {
-      editStep(selectedTask.id, editingStepId, {
-        description: stepDescription,
-        simplifiedText: stepSimplified || undefined,
-        contextualPrompt: stepContext || undefined,
-      });
+    if (selectedTask) {
+      if (editingStepId) {
+        editStep(selectedTask.id, editingStepId, {
+          description: stepDescription,
+          simplifiedText: stepSimplified || undefined,
+          contextualPrompt: stepContext || undefined,
+        });
+      } else {
+        addStep(
+          selectedTask.id,
+          stepDescription,
+          stepSimplified || undefined,
+          stepContext || undefined
+        );
+      }
+
+      updateTaskLink(selectedTask.id, 'caregiver');
+
+      if (selectedPatient) {
+        addNotification({
+          type: 'task_modified',
+          title: 'Task Updated',
+          message: `Task "${selectedTask.title}" was updated by caregiver`,
+          priority: 'low',
+          category: 'task',
+          taskId: selectedTask.id,
+          taskTitle: selectedTask.title,
+        });
+      }
     } else {
-      addStep(
-        selectedTask.id,
-        stepDescription,
-        stepSimplified || undefined,
-        stepContext || undefined
-      );
-    }
-
-    updateTaskLink(selectedTask.id, 'caregiver');
-
-    if (selectedPatient) {
-      addNotification({
-        type: 'task_modified',
-        title: 'Task Updated',
-        message: `Task "${selectedTask.title}" was updated by caregiver`,
-        priority: 'low',
-        category: 'task',
-        taskId: selectedTask.id,
-        taskTitle: selectedTask.title,
-      });
+      if (editingStepId) {
+        setTempSteps(tempSteps.map(s => 
+          s.id === editingStepId 
+            ? { ...s, description: stepDescription, simplifiedText: stepSimplified || undefined, contextualPrompt: stepContext || undefined }
+            : s
+        ));
+      } else {
+        setTempSteps([...tempSteps, {
+          id: Date.now().toString(),
+          description: stepDescription,
+          simplifiedText: stepSimplified || undefined,
+          contextualPrompt: stepContext || undefined,
+        }]);
+      }
     }
 
     setStepDescription('');
@@ -844,12 +966,62 @@ export default function CaregiverPatientTasksScreen() {
               />
             </View>
 
+            <View style={styles.modalStepsSection}>
+              <View style={styles.modalStepsSectionHeader}>
+                <Text style={styles.modalStepsTitle}>Steps ({tempSteps.length})</Text>
+                <TouchableOpacity
+                  style={styles.addStepButton}
+                  onPress={() => handleOpenStepModal(null)}
+                  activeOpacity={0.7}
+                >
+                  <Plus size={12} color={colors.primary} />
+                  <Text style={styles.addStepButtonText}>Add Step</Text>
+                </TouchableOpacity>
+              </View>
+              {tempSteps.length === 0 ? (
+                <Text style={styles.noStepsText}>No steps yet. Add steps to guide the patient.</Text>
+              ) : (
+                tempSteps.map((step, index) => (
+                  <View key={step.id} style={styles.tempStepItem}>
+                    <Text style={styles.tempStepText}>
+                      {index + 1}. {step.description}
+                    </Text>
+                    <View style={styles.tempStepActions}>
+                      <TouchableOpacity
+                        style={styles.smallIconButton}
+                        onPress={() => {
+                          setStepDescription(step.description);
+                          setStepSimplified(step.simplifiedText || '');
+                          setStepContext(step.contextualPrompt || '');
+                          setEditingStepId(step.id);
+                          setShowStepModal(true);
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <Edit2 size={12} color={colors.primary} />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.smallIconButton}
+                        onPress={() => {
+                          setTempSteps(tempSteps.filter(s => s.id !== step.id));
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <Trash2 size={12} color={colors.error} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ))
+              )}
+            </View>
+
             <View style={styles.modalActions}>
               <Button
                 title="Cancel"
                 onPress={() => {
                   setShowTaskModal(false);
                   setEditingTaskId(null);
+                  setTempSteps([]);
                 }}
                 variant="secondary"
                 style={{ flex: 1 }}
