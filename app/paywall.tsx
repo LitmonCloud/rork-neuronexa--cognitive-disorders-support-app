@@ -82,8 +82,9 @@ export default function PaywallScreen() {
       position: 'relative' as const,
     },
     planCardSelected: {
-      borderColor: colors.primary,
-      shadowColor: colors.primary,
+      borderColor: colors.success,
+      backgroundColor: colors.success + '10',
+      shadowColor: colors.success,
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.2,
       shadowRadius: 12,
@@ -110,13 +111,12 @@ export default function PaywallScreen() {
       color: colors.surface,
     },
     savingsBadge: {
-      position: 'absolute' as const,
-      top: 20,
-      right: 20,
       backgroundColor: colors.success + '20',
       paddingHorizontal: 10,
       paddingVertical: 4,
       borderRadius: 8,
+      alignSelf: 'flex-start',
+      marginTop: 4,
     },
     savingsText: {
       fontSize: 12,
@@ -140,6 +140,9 @@ export default function PaywallScreen() {
       color: colors.textSecondary,
     },
     planPriceContainer: {
+      alignItems: 'flex-end',
+    },
+    planPriceRow: {
       flexDirection: 'row',
       alignItems: 'baseline',
     },
@@ -166,23 +169,7 @@ export default function PaywallScreen() {
       color: colors.text,
       flex: 1,
     },
-    selectedIndicator: {
-      position: 'absolute' as const,
-      top: 20,
-      right: 20,
-      width: 24,
-      height: 24,
-      borderRadius: 12,
-      backgroundColor: colors.primary,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    selectedDot: {
-      width: 8,
-      height: 8,
-      borderRadius: 4,
-      backgroundColor: colors.surface,
-    },
+
     benefitsSection: {
       marginBottom: 20,
     },
@@ -329,19 +316,21 @@ export default function PaywallScreen() {
                     <Text style={styles.popularText}>Most Popular</Text>
                   </View>
                 )}
-                {plan.savings && (
-                  <View style={styles.savingsBadge}>
-                    <Text style={styles.savingsText}>{plan.savings}</Text>
-                  </View>
-                )}
                 <View style={styles.planHeader}>
                   <View>
                     <Text style={styles.planName}>{plan.name}</Text>
                     <Text style={styles.planDescription}>{plan.description}</Text>
                   </View>
                   <View style={styles.planPriceContainer}>
-                    <Text style={styles.planPrice}>${plan.price}</Text>
-                    <Text style={styles.planPeriod}>/{plan.period}</Text>
+                    <View style={styles.planPriceRow}>
+                      <Text style={styles.planPrice}>${plan.price}</Text>
+                      <Text style={styles.planPeriod}>/{plan.period}</Text>
+                    </View>
+                    {plan.savings && (
+                      <View style={styles.savingsBadge}>
+                        <Text style={styles.savingsText}>{plan.savings}</Text>
+                      </View>
+                    )}
                   </View>
                 </View>
                 <View style={styles.planFeatures}>
@@ -352,11 +341,6 @@ export default function PaywallScreen() {
                     </View>
                   ))}
                 </View>
-                {isSelected && (
-                  <View style={styles.selectedIndicator}>
-                    <View style={styles.selectedDot} />
-                  </View>
-                )}
               </TouchableOpacity>
             );
           })}
