@@ -483,11 +483,15 @@ export default function CaregiverDashboardScreen() {
                 {patients.length} {patients.length === 1 ? 'patient' : 'patients'}
               </Text>
             </View>
-            <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+            <View style={{ flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap' }}>
               <TouchableOpacity
                 style={styles.codeButton}
-                onPress={() => setShowCodeModal(true)}
+                onPress={() => {
+                  console.log('[Dashboard] Opening code modal');
+                  setShowCodeModal(true);
+                }}
                 activeOpacity={0.7}
+                testID="enter-code-button"
               >
                 <Key size={16} color={colors.surface} />
                 <Text style={styles.codeButtonText}>Enter Code</Text>
@@ -495,10 +499,12 @@ export default function CaregiverDashboardScreen() {
               <TouchableOpacity
                 style={styles.addButton}
                 onPress={() => {
+                  console.log('[Dashboard] Opening add patient modal');
                   setAddMethod('manual');
                   setShowAddModal(true);
                 }}
                 activeOpacity={0.7}
+                testID="add-patient-button"
               >
                 <Plus size={16} color={colors.surface} />
                 <Text style={styles.addButtonText}>Add Patient</Text>
@@ -584,8 +590,12 @@ export default function CaregiverDashboardScreen() {
                     styles.methodButton,
                     addMethod === 'code' && styles.methodButtonActive,
                   ]}
-                  onPress={() => setAddMethod('code')}
+                  onPress={() => {
+                    console.log('[Dashboard] Switched to code method');
+                    setAddMethod('code');
+                  }}
                   activeOpacity={0.7}
+                  testID="use-code-method"
                 >
                   <Key size={24} color={addMethod === 'code' ? colors.primary : colors.textSecondary} />
                   <Text style={[
@@ -598,8 +608,12 @@ export default function CaregiverDashboardScreen() {
                     styles.methodButton,
                     addMethod === 'manual' && styles.methodButtonActive,
                   ]}
-                  onPress={() => setAddMethod('manual')}
+                  onPress={() => {
+                    console.log('[Dashboard] Switched to manual method');
+                    setAddMethod('manual');
+                  }}
                   activeOpacity={0.7}
+                  testID="manual-entry-method"
                 >
                   <Plus size={24} color={addMethod === 'manual' ? colors.primary : colors.textSecondary} />
                   <Text style={[
