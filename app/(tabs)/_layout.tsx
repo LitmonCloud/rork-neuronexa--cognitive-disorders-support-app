@@ -20,7 +20,7 @@ export default function TabLayout() {
   const theme = useTheme();
   const { colors } = theme;
   const { profile, isLoading } = useUserProfile();
-  const segments = useSegments();
+  const segments = useSegments() as string[];
   
   if (isLoading || !profile) {
     return <TabsSkeleton />;
@@ -70,30 +70,6 @@ export default function TabLayout() {
           options={{
             title: "Settings",
             tabBarIcon: ({ color }) => <Settings size={24} color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="coach"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="progress"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="wellness"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="dementia-support"
-          options={{
-            href: null,
           }}
         />
       </Tabs>
