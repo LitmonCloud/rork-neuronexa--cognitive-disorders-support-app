@@ -1,18 +1,36 @@
-import { Tabs } from "expo-router";
+import { Tabs, Redirect, useSegments } from "expo-router";
 import { CheckSquare, Settings, TrendingUp, Users, Heart, Sparkles, Brain } from "lucide-react-native";
 import React from "react";
+import { ActivityIndicator, Text, View } from "react-native";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
+
+function TabsSkeleton() {
+  return (
+    <View style={{ flex: 1, backgroundColor: "#0b0b0d", alignItems: "center", justifyContent: "center", gap: 12, padding: 16 }}>
+      <ActivityIndicator size="large" color="#7b61ff" />
+      <Text style={{ color: "#cfd0d9", fontSize: 16 }}>Loading profile…</Text>
+    </View>
+  );
+}
+
+const CAREGIVER_ALLOWED = new Set(["caregiver", "index", "settings"]);
 
 export default function TabLayout() {
   const theme = useTheme();
   const { colors } = theme;
   const { profile, isLoading } = useUserProfile();
-  
-  const isCaregiver = profile?.role === 'caregiver';
+  const segments = useSegments();
   
   if (isLoading || !profile) {
-    return null;
+    return <TabsSkeleton />;
+  }
+  
+  const isCaregiver = profile.role === 'caregiver';
+  
+  const currentTab = segments[1];
+  if (isCaregiver && currentTab && !CAREGIVER_ALLOWED.has(currentTab)) {
+    return <Redirect href="/(tabs)/caregiver" />;
   }
   
   if (isCaregiver) {
