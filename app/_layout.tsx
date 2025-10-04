@@ -127,7 +127,11 @@ function RootLayoutNav() {
       router.replace('/paywall');
     } else if (termsAccepted && onboardingCompleted && !inAllowedScreen && !requiresSubscription) {
       console.log('[RootLayout] Redirecting to tabs');
-      router.replace('/(tabs)');
+      if (isCaregiver) {
+        router.replace('/(tabs)/caregiver');
+      } else {
+        router.replace('/(tabs)');
+      }
     }
   }, [isInitialized, termsAccepted, onboardingCompleted, isCaregiver, requiresSubscription, segments, isLoading, router]);
 

@@ -14,8 +14,6 @@ function TabsSkeleton() {
   );
 }
 
-const CAREGIVER_ALLOWED = new Set(["caregiver", "index", "settings"]);
-
 export default function TabLayout() {
   const theme = useTheme();
   const { colors } = theme;
@@ -26,12 +24,15 @@ export default function TabLayout() {
     return <TabsSkeleton />;
   }
   
-  const isCaregiver = profile.role === 'caregiver';
+  const isCaregiver = profile?.role === 'caregiver';
   
-  console.log('[TabLayout] Profile role:', profile.role, 'isCaregiver:', isCaregiver);
+  console.log('[TabLayout] Profile role:', profile?.role, 'isCaregiver:', isCaregiver);
+  
+  const CAREGIVER_ALLOWED = new Set(["caregiver", "settings"]);
   
   const currentTab = segments[1];
   if (isCaregiver && currentTab && !CAREGIVER_ALLOWED.has(currentTab)) {
+    console.log('[TabLayout] Redirecting caregiver from', currentTab, 'to caregiver tab');
     return <Redirect href="/(tabs)/caregiver" />;
   }
   
@@ -57,6 +58,7 @@ export default function TabLayout() {
         options={{
           title: "Tasks",
           tabBarIcon: ({ color }) => <CheckSquare size={24} color={color} />,
+          href: isCaregiver ? null : undefined,
         }}
       />
       <Tabs.Screen
