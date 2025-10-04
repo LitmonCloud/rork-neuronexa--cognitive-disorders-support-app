@@ -96,6 +96,13 @@ export default function CalendarView({ tasks, selectedDate, onDateSelect }: Cale
            year === today.getFullYear();
   };
 
+  const isSelectedDate = (day: number) => {
+    if (!selectedDate) return false;
+    return day === selectedDate.getDate() && 
+           month === selectedDate.getMonth() && 
+           year === selectedDate.getFullYear();
+  };
+
   const hasTasksOnDay = (day: number) => {
     const date = new Date(year, month, day);
     return getTasksForDate(date).length > 0;
@@ -206,6 +213,9 @@ export default function CalendarView({ tasks, selectedDate, onDateSelect }: Cale
     dayButtonToday: {
       backgroundColor: colors.primary,
     },
+    dayButtonSelected: {
+      backgroundColor: '#10B981',
+    },
     dayButtonHasTasks: {
       backgroundColor: colors.primaryLight + '30',
     },
@@ -215,6 +225,10 @@ export default function CalendarView({ tasks, selectedDate, onDateSelect }: Cale
       fontWeight: '500' as const,
     },
     dayTextToday: {
+      color: colors.surface,
+      fontWeight: '700' as const,
+    },
+    dayTextSelected: {
       color: colors.surface,
       fontWeight: '700' as const,
     },
@@ -288,7 +302,8 @@ export default function CalendarView({ tasks, selectedDate, onDateSelect }: Cale
                   style={[
                     styles.dayButton,
                     isToday(day) && styles.dayButtonToday,
-                    !isToday(day) && hasTasksOnDay(day) && styles.dayButtonHasTasks,
+                    !isToday(day) && isSelectedDate(day) && styles.dayButtonSelected,
+                    !isToday(day) && !isSelectedDate(day) && hasTasksOnDay(day) && styles.dayButtonHasTasks,
                   ]}
                   onPress={() => {
                     const selectedDate = new Date(year, month, day);
@@ -300,6 +315,7 @@ export default function CalendarView({ tasks, selectedDate, onDateSelect }: Cale
                     style={[
                       styles.dayText,
                       isToday(day) && styles.dayTextToday,
+                      !isToday(day) && isSelectedDate(day) && styles.dayTextSelected,
                     ]}
                   >
                     {day}
@@ -307,7 +323,7 @@ export default function CalendarView({ tasks, selectedDate, onDateSelect }: Cale
                   {hasTasksOnDay(day) && (
                     <View style={[
                       styles.taskDot,
-                      isToday(day) && styles.taskDotToday,
+                      (isToday(day) || isSelectedDate(day)) && styles.taskDotToday,
                     ]} />
                   )}
                 </TouchableOpacity>
