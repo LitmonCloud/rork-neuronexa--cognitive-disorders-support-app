@@ -405,10 +405,10 @@ export default function CaregiverDashboardScreen() {
           <View style={{ width: 40 }} />
         </View>
 
-        {/* Code redemption bar - always visible */}
-        <EnterCodeBar />
-
         <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
+          {/* Code redemption bar - always visible at top */}
+          <EnterCodeBar />
+
           <Card style={styles.infoCard}>
             <Text style={styles.infoText}>
               Manage your patients here. Select a patient to view and manage their tasks with a calendar view.
@@ -420,7 +420,7 @@ export default function CaregiverDashboardScreen() {
             <TouchableOpacity
               style={styles.addButton}
               onPress={() => {
-                console.log('[Dashboard] Opening add patient modal');
+                console.log('[Dashboard] Opening add patient modal - manual');
                 setShowAddModal(true);
               }}
               activeOpacity={0.7}

@@ -48,9 +48,10 @@ export default function EnterCodeBar() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#0b0b0d',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    backgroundColor: 'transparent',
+    marginBottom: 16,
   },
   card: {
     borderRadius: 14,

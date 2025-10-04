@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import {
-  Modal, View, Text, Pressable, TextInput, KeyboardAvoidingView, Platform, ScrollView, SafeAreaView,
+  Modal, View, Text, Pressable, TextInput, KeyboardAvoidingView, Platform, ScrollView, SafeAreaView, Alert,
 } from 'react-native';
 import { router } from 'expo-router';
+import { usePatients } from '@/contexts/PatientContext';
 
 type Method = 'code' | 'manual';
 
 export default function AddPatientModal({
   visible, onClose, defaultMethod = 'code',
 }: { visible: boolean; onClose: () => void; defaultMethod?: Method }) {
+  const { addPatient } = usePatients();
   const [method, setMethod] = useState<Method>(defaultMethod);
   const [code, setCode] = useState('');
   const [first, setFirst] = useState('');
   const [last, setLast] = useState('');
+  const [isAdding, setIsAdding] = useState(false);
 
   const redeem = () => {
     const c = code.trim();
@@ -22,11 +25,34 @@ export default function AddPatientModal({
     router.push({ pathname: '/invite-redeem', params: { code: c } });
   };
 
-  const addManual = () => {
-    if (!first.trim() || !last.trim()) return;
-    console.log('[AddPatientModal] Manual add:', first.trim(), last.trim());
-    // TODO: Wire to PatientContext.addPatient
-    onClose();
+  const addManual = async () => {
+    const firstName = first.trim();
+    const lastNameInitial = last.trim().toUpperCase();
+    
+    if (!firstName || !lastNameInitial) {
+      Alert.alert('Error', 'Please enter both first name and last name initial');
+      return;
+    }
+
+    if (lastNameInitial.length > 1) {
+      Alert.alert('Error', 'Last name initial should be a single letter');
+      return;
+    }
+
+    setIsAdding(true);
+    try {
+      console.log('[AddPatientModal] Adding patient:', firstName, lastNameInitial);
+      await addPatient(firstName, lastNameInitial, 'caregiver-id');
+      setFirst('');
+      setLast('');
+      onClose();
+      Alert.alert('Success', `${firstName} ${lastNameInitial}. has been added to your patient list.`);
+    } catch (error) {
+      console.error('[AddPatientModal] Error adding patient:', error);
+      Alert.alert('Error', 'Failed to add patient. Please try again.');
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   return (
@@ -135,13 +161,15 @@ export default function AddPatientModal({
                   </View>
                   <Pressable
                     onPress={addManual}
-                    disabled={!first.trim() || !last.trim()}
+                    disabled={!first.trim() || !last.trim() || isAdding}
                     style={({ pressed }) => ({
-                      backgroundColor: !first.trim() || !last.trim() ? '#3a3b44' : '#7b61ff',
+                      backgroundColor: !first.trim() || !last.trim() || isAdding ? '#3a3b44' : '#7b61ff',
                       borderRadius: 12, padding: 14, alignItems: 'center', opacity: pressed ? 0.9 : 1,
                     })}
                   >
-                    <Text style={{ color: '#0b0b0d', fontWeight: '800' }}>Add Patient</Text>
+                    <Text style={{ color: isAdding ? '#9aa0aa' : '#0b0b0d', fontWeight: '800' }}>
+                      {isAdding ? 'Adding...' : 'Add Patient'}
+                    </Text>
                   </Pressable>
                 </View>
               )}
