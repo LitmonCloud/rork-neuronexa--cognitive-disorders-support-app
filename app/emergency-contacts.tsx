@@ -3,7 +3,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useDementia } from '@/contexts/DementiaContext';
-import { ArrowLeft, User, Phone, Plus, Trash2, Edit2, Star } from 'lucide-react-native';
+import { usePatients } from '@/contexts/PatientContext';
+import { useUserProfile } from '@/contexts/UserProfileContext';
+import { ArrowLeft, User, Plus, Trash2, Edit2, Star } from 'lucide-react-native';
 import { useState } from 'react';
 import { EmergencyContact } from '@/types/dementia';
 
@@ -11,7 +13,12 @@ export default function EmergencyContactsScreen() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { profile } = useUserProfile();
+  const { selectedPatientId, patients } = usePatients();
   const { emergencyContacts, addEmergencyContact, updateEmergencyContact, deleteEmergencyContact } = useDementia();
+  
+  const isCaregiver = profile?.role === 'caregiver';
+  const selectedPatient = selectedPatientId ? patients.find(p => p.id === selectedPatientId) : null;
   
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -22,6 +29,11 @@ export default function EmergencyContactsScreen() {
   });
 
   const handleSave = () => {
+    if (isCaregiver) {
+      Alert.alert('View Only', 'Caregivers can view but not edit patient emergency contacts.');
+      return;
+    }
+
     if (!formData.name || !formData.phoneNumber) {
       Alert.alert('Missing Information', 'Please enter name and phone number');
       return;
@@ -43,6 +55,10 @@ export default function EmergencyContactsScreen() {
   };
 
   const handleEdit = (contact: EmergencyContact) => {
+    if (isCaregiver) {
+      Alert.alert('View Only', 'Caregivers can view but not edit patient emergency contacts.');
+      return;
+    }
     setEditingId(contact.id);
     setFormData({
       name: contact.name,
@@ -53,6 +69,10 @@ export default function EmergencyContactsScreen() {
   };
 
   const handleDelete = (id: string) => {
+    if (isCaregiver) {
+      Alert.alert('View Only', 'Caregivers can view but not edit patient emergency contacts.');
+      return;
+    }
     Alert.alert(
       'Delete Contact',
       'Are you sure you want to delete this emergency contact?',
@@ -68,6 +88,10 @@ export default function EmergencyContactsScreen() {
   };
 
   const handleSetPrimary = (id: string) => {
+    if (isCaregiver) {
+      Alert.alert('View Only', 'Caregivers can view but not edit patient emergency contacts.');
+      return;
+    }
     emergencyContacts.forEach(contact => {
       updateEmergencyContact(contact.id, { isPrimary: contact.id === id });
     });
@@ -296,12 +320,23 @@ export default function EmergencyContactsScreen() {
           <ArrowLeft size={24} color="#000000" />
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Emergency Contacts</Text>
+        <Text style={styles.headerTitle}>
+          {isCaregiver && selectedPatient
+            ? `${selectedPatient.firstName}'s Contacts`
+            : 'Emergency Contacts'}
+        </Text>
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
-          {!isAdding && (
+          {isCaregiver && (
+            <View style={[styles.contactCard, { backgroundColor: colors.primaryLight + '20', borderColor: colors.primary }]}>
+              <Text style={{ color: colors.text, fontSize: 14, lineHeight: 20 }}>
+                You are viewing {selectedPatient?.firstName || 'patient'}&apos;s emergency contacts. Only the patient can edit these contacts.
+              </Text>
+            </View>
+          )}
+          {!isAdding && !isCaregiver && (
             <TouchableOpacity
               style={styles.addButton}
               onPress={() => setIsAdding(true)}

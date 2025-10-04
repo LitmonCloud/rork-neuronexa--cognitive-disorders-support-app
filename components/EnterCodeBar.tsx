@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     backgroundColor: 'transparent',
     marginBottom: 16,
+    zIndex: 10,
   },
   card: {
     borderRadius: 14,
@@ -65,6 +66,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+    minHeight: 100,
   },
   title: {
     color: '#ffffff',

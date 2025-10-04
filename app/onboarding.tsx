@@ -290,6 +290,10 @@ export default function OnboardingScreen() {
     return true;
   };
 
+  const shouldShowEmergencyContacts = () => {
+    return role === 'patient';
+  };
+
   const handleNext = () => {
     if (currentIndex < steps.length - 1) {
       if (!canProceed()) return;
@@ -301,6 +305,12 @@ export default function OnboardingScreen() {
       if (currentIndex === 1) {
         updateProfile({ role: role! });
         trackStep('onboarding_goals');
+        
+        if (role === 'caregiver') {
+          setCurrentIndex(steps.length - 1);
+          slideAnim.setValue(0);
+          return;
+        }
       }
       if (currentIndex === 2) {
         contacts.forEach(contact => {
@@ -428,6 +438,9 @@ export default function OnboardingScreen() {
         );
 
       case 2:
+        if (!shouldShowEmergencyContacts()) {
+          return null;
+        }
         return (
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -442,7 +455,7 @@ export default function OnboardingScreen() {
               >
                 <View style={styles.textContainer}>
                   <Text style={styles.title}>{steps[2].title}</Text>
-                  <Text style={styles.description}>{steps[2].description}</Text>
+                  <Text style={styles.description}>Add people who can help you in case of emergency</Text>
                 </View>
 
                 {contacts.length > 0 && (

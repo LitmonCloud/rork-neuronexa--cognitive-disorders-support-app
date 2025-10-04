@@ -19,6 +19,7 @@ import {
   Trash2,
   X,
   ChevronRight,
+  Phone,
 } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { spacing, borderRadius } from '@/theme/spacing';
@@ -34,7 +35,7 @@ export default function CaregiverDashboardScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { colors } = useTheme();
-  const { patients, addPatient, updatePatient, deletePatient, selectPatient } = usePatients();
+  const { patients, updatePatient, deletePatient, selectPatient } = usePatients();
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -471,14 +472,31 @@ export default function CaregiverDashboardScreen() {
                   <View style={styles.patientActions}>
                     <TouchableOpacity
                       style={styles.iconButton}
-                      onPress={() => openEditModal(patient.id)}
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        selectPatient(patient.id);
+                        router.push('/emergency-contacts');
+                      }}
+                      activeOpacity={0.7}
+                    >
+                      <Phone size={16} color={colors.secondary} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.iconButton}
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        openEditModal(patient.id);
+                      }}
                       activeOpacity={0.7}
                     >
                       <Edit2 size={16} color={colors.primary} />
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.iconButton}
-                      onPress={() => handleDeletePatient(patient.id, `${patient.firstName} ${patient.lastNameInitial}.`)}
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        handleDeletePatient(patient.id, `${patient.firstName} ${patient.lastNameInitial}.`);
+                      }}
                       activeOpacity={0.7}
                     >
                       <Trash2 size={16} color={colors.error} />
