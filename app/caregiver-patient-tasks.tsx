@@ -47,6 +47,7 @@ export default function CaregiverPatientTasksScreen() {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [taskPriority, setTaskPriority] = useState<TaskPriority>('medium');
+  const [completeByTime, setCompleteByTime] = useState('');
 
   const [stepDescription, setStepDescription] = useState('');
   const [stepSimplified, setStepSimplified] = useState('');
@@ -393,7 +394,8 @@ export default function CaregiverPatientTasksScreen() {
       taskTitle,
       taskDescription || undefined,
       taskPriority,
-      selectedDate
+      selectedDate,
+      completeByTime || undefined
     );
 
     linkTaskToPatient(selectedPatient.id, newTask.id, 'caregiver');
@@ -411,6 +413,7 @@ export default function CaregiverPatientTasksScreen() {
     setTaskTitle('');
     setTaskDescription('');
     setTaskPriority('medium');
+    setCompleteByTime('');
     setShowTaskModal(false);
   };
 
@@ -644,6 +647,14 @@ export default function CaregiverPatientTasksScreen() {
                 </Text>
               </View>
 
+              {task.completeByTime && (
+                <View style={[styles.priorityBadge, { backgroundColor: colors.primary + '20' }]}>
+                  <Text style={[styles.priorityText, { color: colors.primary }]}>
+                    Complete by {task.completeByTime}
+                  </Text>
+                </View>
+              )}
+
               <View style={styles.stepsSection}>
                 <View style={styles.stepsSectionHeader}>
                   <Text style={styles.stepsTitle}>
@@ -772,6 +783,17 @@ export default function CaregiverPatientTasksScreen() {
                   </TouchableOpacity>
                 ))}
               </View>
+            </View>
+
+            <View>
+              <Text style={styles.inputLabel}>Complete By Time (Optional)</Text>
+              <TextInput
+                style={styles.input}
+                value={completeByTime}
+                onChangeText={setCompleteByTime}
+                placeholder="e.g., 9:00 AM, 2:30 PM, Before lunch"
+                placeholderTextColor={colors.textLight}
+              />
             </View>
 
             <View style={styles.modalActions}>

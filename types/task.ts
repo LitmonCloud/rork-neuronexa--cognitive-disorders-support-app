@@ -22,6 +22,7 @@ export interface Task {
   createdAt: string;
   completedAt?: string;
   dueDate?: string;
+  completeByTime?: string;
   reminderEnabled: boolean;
   tags?: string[];
   memoryAids?: MemoryAid[];

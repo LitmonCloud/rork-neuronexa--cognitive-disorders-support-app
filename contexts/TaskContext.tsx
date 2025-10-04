@@ -54,7 +54,8 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
     title: string,
     description?: string,
     priority: TaskPriority = 'medium',
-    scheduledDate?: Date
+    scheduledDate?: Date,
+    completeByTime?: string
   ) => {
     const newTask: Task = {
       id: Date.now().toString(),
@@ -65,6 +66,7 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
       steps: [],
       createdAt: new Date().toISOString(),
       dueDate: scheduledDate ? scheduledDate.toISOString() : undefined,
+      completeByTime,
       reminderEnabled: false,
     };
 
