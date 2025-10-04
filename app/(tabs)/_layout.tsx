@@ -90,6 +90,7 @@ export default function TabLayout() {
         options={{
           title: isCaregiver ? "Dashboard" : "Caregiver",
           tabBarIcon: ({ color }) => <Users size={24} color={color} />,
+          href: isCaregiver ? undefined : null,
         }}
       />
       <Tabs.Screen

@@ -8,8 +8,9 @@ import {
   TextInput,
   Modal,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useRouter, Redirect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   ArrowLeft,
@@ -25,6 +26,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { spacing, borderRadius } from '@/theme/spacing';
 import { fontSizes, fontWeights } from '@/theme/typography';
 import { usePatients } from '@/contexts/PatientContext';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import PremiumGate from '@/components/PremiumGate';
@@ -35,6 +37,7 @@ export default function CaregiverDashboardScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { colors } = useTheme();
+  const { profile, isLoading } = useUserProfile();
   const { patients, updatePatient, deletePatient, selectPatient } = usePatients();
 
   const [showAddModal, setShowAddModal] = useState(false);
@@ -42,6 +45,19 @@ export default function CaregiverDashboardScreen() {
   const [editingPatient, setEditingPatient] = useState<string | null>(null);
   const [firstName, setFirstName] = useState('');
   const [lastNameInitial, setLastNameInitial] = useState('');
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, backgroundColor: '#0b0b0d', alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color="#7b61ff" />
+        <Text style={{ color: '#cfd0d9', marginTop: 16 }}>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (profile?.role !== 'caregiver') {
+    return <Redirect href="/(tabs)" />;
+  }
 
   const styles = StyleSheet.create({
     container: {
