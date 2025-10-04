@@ -70,6 +70,48 @@ export const mentalHealthResources: MentalHealthResource[] = [
     url: 'https://betterhelp.com',
     icon: 'video',
   },
+  {
+    id: '9',
+    title: 'Alzheimer\'s Association',
+    description: '24/7 helpline for dementia support and resources',
+    category: 'support',
+    phone: '1-800-272-3900',
+    available24x7: true,
+    icon: 'brain',
+  },
+  {
+    id: '10',
+    title: 'Alzheimer\'s Foundation of America',
+    description: 'Support, education, and resources for dementia care',
+    category: 'support',
+    phone: '1-866-232-8484',
+    available24x7: false,
+    icon: 'heart-handshake',
+  },
+  {
+    id: '11',
+    title: 'Dementia Society of America',
+    description: 'Resources and support for dementia patients and caregivers',
+    category: 'education',
+    url: 'https://www.dementiasociety.org',
+    icon: 'book-open',
+  },
+  {
+    id: '12',
+    title: 'National Institute on Aging',
+    description: 'Research and information on Alzheimer\'s and dementia',
+    category: 'education',
+    url: 'https://www.nia.nih.gov/health/alzheimers',
+    icon: 'microscope',
+  },
+  {
+    id: '13',
+    title: 'Caregiver Action Network',
+    description: 'Support and resources for family caregivers',
+    category: 'support',
+    phone: '1-855-227-3640',
+    icon: 'users',
+  },
 ];
 
 export const breathingPatterns: BreathingPattern[] = [

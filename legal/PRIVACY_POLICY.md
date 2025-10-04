@@ -5,7 +5,7 @@
 
 ## Introduction
 
-Welcome to NeuroNexa ("we," "our," or "us"). We are committed to protecting your privacy and ensuring you have a positive experience using our cognitive support application. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application.
+Welcome to NeuroNexa ("we," "our," or "us"). We are committed to protecting your privacy and ensuring you have a positive experience using our cognitive support application designed for individuals with ADHD, autism, executive function challenges, mild cognitive impairment, early-stage dementia, and other cognitive differences. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application.
 
 **By using NeuroNexa, you agree to the collection and use of information in accordance with this policy.**
 
@@ -19,6 +19,8 @@ Welcome to NeuroNexa ("we," "our," or "us"). We are committed to protecting your
 - Task titles, descriptions, and steps
 - Priority levels and completion status
 - Notes and custom fields
+- Task completion times and reminders
+- Photo attachments for visual task guidance
 
 **User Profile (Optional):**
 - Display name
@@ -29,6 +31,8 @@ Welcome to NeuroNexa ("we," "our," or "us"). We are committed to protecting your
 - Caregiver names, phone numbers, and email addresses
 - Relationship to user
 - Emergency contact designation
+- Patient/care recipient information (first name and last name initial)
+- Caregiver-patient relationship data
 
 ### 1.2 Automatically Collected Information
 
@@ -47,13 +51,15 @@ Welcome to NeuroNexa ("we," "our," or "us"). We are committed to protecting your
 ### 1.3 Information We Do NOT Collect
 
 We do NOT collect:
-- Health data or medical information
+- Medical diagnoses or detailed health records
 - Precise geolocation
 - Biometric data
 - Social Security numbers or government IDs
 - Financial information (payment processing handled by Apple/Google)
 - Browsing history outside the app
-- Contacts or photos (unless you explicitly share)
+- Contacts or photos (unless you explicitly attach them to tasks)
+
+**Note:** While we support users with cognitive impairments including dementia, we do not collect or store medical diagnoses. Patient identification is limited to first name and last name initial only.
 
 ---
 
@@ -65,7 +71,10 @@ We use the information we collect to:
 - Store and sync your tasks across devices (when cloud sync enabled)
 - Generate AI-powered task breakdowns
 - Deliver personalized coaching and support
-- Send caregiver alerts (when configured)
+- Send caregiver alerts and notifications (when configured)
+- Enable real-time task synchronization between caregivers and patients
+- Provide memory aids and cognitive support features
+- Deliver dementia-specific support tools and resources
 
 **Improve Our Services:**
 - Analyze usage patterns to improve features
@@ -92,7 +101,10 @@ We use the information we collect to:
 - Tasks and notes
 - User preferences
 - Caregiver contacts
+- Patient information
 - Accessibility settings
+- Memory aids and reminders
+- Photo attachments
 
 Local data is protected by your device's security features (passcode, biometrics, encryption).
 

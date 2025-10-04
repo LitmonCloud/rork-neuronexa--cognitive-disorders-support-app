@@ -13,14 +13,16 @@ Welcome to NeuroNexa. By downloading, installing, or using our mobile applicatio
 
 ## 2. Description of Service
 
-NeuroNexa is a cognitive support application designed to help individuals with ADHD, autism, executive function challenges, and other cognitive differences. Our services include:
+NeuroNexa is a cognitive support application designed to help individuals with ADHD, autism, executive function challenges, mild cognitive impairment, early-stage dementia, and other cognitive differences. Our services include:
 
 - AI-powered task management and breakdowns
 - Personalized coaching with Nexa, our AI coach
 - Guided breathing and wellness exercises
 - Accessibility features and customization
-- Caregiver support tools
-- Mental health resources
+- Caregiver support tools and patient management
+- Mental health and dementia support resources
+- Memory aids and cognitive support features
+- Real-time task synchronization between caregivers and patients
 
 ---
 
@@ -55,7 +57,9 @@ You may use NeuroNexa for:
 - Personal cognitive support and task management
 - Wellness and breathing exercises
 - Connecting with caregivers and support networks
-- Accessing mental health resources
+- Accessing mental health and dementia support resources
+- Managing tasks for patients/care recipients (as a caregiver)
+- Receiving caregiver support and task assistance (as a patient)
 
 ### 5.2 Prohibited Use
 
@@ -81,6 +85,14 @@ You may NOT:
 - In case of emergency, call 911 or your local emergency number
 - We are not liable for any medical decisions made based on App use
 
+**Dementia and Cognitive Impairment Disclaimer:**
+- NeuroNexa provides supportive tools for individuals with mild cognitive impairment and early-stage dementia
+- The App is NOT a diagnostic tool and cannot detect, diagnose, or treat dementia
+- Memory aids and cognitive support features are supplementary tools only
+- Always work with qualified healthcare professionals for dementia care planning
+- Caregivers should supervise app usage for patients with moderate to severe cognitive impairment
+- The App does not replace professional caregiving or medical supervision
+
 **If you are experiencing a mental health crisis:**
 - Call 988 (Suicide & Crisis Lifeline)
 - Text HOME to 741741 (Crisis Text Line)
@@ -103,10 +115,17 @@ This includes:
 
 ### 7.2 Your Rights
 
-You retain ownership of any content you create in the App (tasks, notes, etc.). By using the App, you grant us a limited license to:
+You retain ownership of any content you create in the App (tasks, notes, photos, etc.). By using the App, you grant us a limited license to:
 - Store and process your content to provide services
 - Use anonymized, aggregated data to improve the App
 - Display your content back to you across devices (when cloud sync enabled)
+- Synchronize tasks between caregivers and patients (when configured)
+
+**Caregiver-Patient Data Sharing:**
+- When you connect as a caregiver to a patient, you consent to sharing task data
+- Caregivers can view and manage tasks for their connected patients
+- Patients can view tasks created by their caregivers
+- Either party can disconnect at any time through Settings
 
 ### 7.3 Feedback
 
@@ -123,7 +142,8 @@ NeuroNexa offers a free tier with limited features:
 - 3 tasks per day
 - Basic AI breakdowns
 - All accessibility features
-- Mental health resources
+- Mental health and dementia support resources
+- Basic caregiver features
 
 ### 8.2 Premium Subscriptions
 
@@ -132,6 +152,8 @@ Premium subscriptions unlock:
 - Advanced analytics and insights
 - Priority support
 - Early access to new features
+- Advanced caregiver features (multiple patients)
+- Enhanced memory aids and cognitive support tools
 
 **Subscription Options:**
 - **Monthly:** $9.99/month
@@ -169,6 +191,8 @@ Your privacy is important to us. Please review our [Privacy Policy](https://neur
 - We do not sell your personal information
 - You can delete your data at any time
 - Analytics is opt-in and can be disabled
+- Patient data is limited to first name and last name initial
+- Caregiver-patient connections are encrypted and secure
 
 ---
 
