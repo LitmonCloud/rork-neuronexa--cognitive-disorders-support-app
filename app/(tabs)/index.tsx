@@ -5,10 +5,11 @@ import { useTasks } from '@/contexts/TaskContext';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Plus, Sparkles, Circle, CheckCircle2, Clock, Heart, Smile, Crown, Calendar as CalendarIcon, X, Clock as ClockIcon } from 'lucide-react-native';
+import { Plus, Sparkles, Circle, CheckCircle2, Clock, Heart, Smile, Crown, Calendar as CalendarIcon, X } from 'lucide-react-native';
 import { Task, TaskPriority } from '@/types/task';
 import { router } from 'expo-router';
 import CalendarView from '@/components/CalendarView';
+import TimeWheelPicker from '@/components/TimeWheelPicker';
 
 export default function TasksScreen() {
   const { tasks, filter, setFilter, breakdownTask } = useTasks();
@@ -914,34 +915,10 @@ export default function TasksScreen() {
 
               <View style={styles.timePickerContainer}>
                 <Text style={[styles.timePickerLabel, { fontSize: 12 * textSize }]}>Complete By Time (Optional)</Text>
-                <View style={[
-                  styles.timePickerButton,
-                  completeByTime && styles.timePickerButtonActive,
-                ]}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1 }}>
-                    <ClockIcon size={18} color={completeByTime ? colors.primary : colors.textLight} />
-                    <TextInput
-                      style={[
-                        styles.timePickerText,
-                        { fontSize: 15 * textSize, flex: 1 },
-                        !completeByTime && styles.timePickerTextPlaceholder,
-                      ]}
-                      placeholder="e.g., 3:00 PM, 15:30, or by dinner"
-                      placeholderTextColor={colors.textLight}
-                      value={completeByTime}
-                      onChangeText={setCompleteByTime}
-                    />
-                  </View>
-                  {completeByTime && (
-                    <TouchableOpacity 
-                      style={styles.clearDateButton}
-                      onPress={() => setCompleteByTime('')}
-                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                    >
-                      <X size={18} color={colors.textSecondary} />
-                    </TouchableOpacity>
-                  )}
-                </View>
+                <TimeWheelPicker
+                  value={completeByTime}
+                  onChange={setCompleteByTime}
+                />
               </View>
 
               <TextInput
