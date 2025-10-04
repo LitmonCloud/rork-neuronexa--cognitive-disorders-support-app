@@ -78,8 +78,7 @@ export default function CaregiverDashboardScreen() {
     },
     sectionHeader: {
       flexDirection: 'column',
-      gap: spacing.md,
-      marginBottom: spacing.md,
+      gap: spacing.xs,
     },
     sectionTitle: {
       fontSize: fontSizes.xl,
