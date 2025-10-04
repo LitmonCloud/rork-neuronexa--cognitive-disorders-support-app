@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "app.rork.neuronexa-cognitive-disorders-support-ykokwhv",
+      "package": "app.rork.nexa-cognitive-disorders-support-ykokwhv",
       "permissions": [
         "android.permission.VIBRATE",
         "android.permission.RECEIVE_BOOT_COMPLETED",
