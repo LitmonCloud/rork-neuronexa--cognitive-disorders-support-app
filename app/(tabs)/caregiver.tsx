@@ -191,13 +191,12 @@ export default function CaregiverScreen() {
         <Text style={styles.headerTitle}>Caregiver Dashboard</Text>
       </View>
 
-      <EnterCodeBar />
-
       <PremiumGate
         feature="Caregiver Dashboard"
         featureDescription="Manage multiple patients, create tasks, and monitor their progress in real-time."
       >
         <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
+          <EnterCodeBar />
           <Card style={styles.infoCard}>
             <Text style={styles.infoText}>
               Manage your patients here. Select a patient to view and manage their tasks with a calendar view.

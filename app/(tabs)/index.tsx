@@ -745,9 +745,11 @@ export default function TasksScreen() {
           ))}
         </View>
 
-        <View style={{ marginBottom: 24 }}>
-          <CalendarView tasks={tasks} onDateSelect={handleDateSelect} />
-        </View>
+        {tasks.length > 0 && (
+          <View style={{ marginBottom: 24 }}>
+            <CalendarView tasks={tasks} onDateSelect={handleDateSelect} />
+          </View>
+        )}
 
         {tasks.length === 0 ? (
           <View style={styles.emptyState}>
