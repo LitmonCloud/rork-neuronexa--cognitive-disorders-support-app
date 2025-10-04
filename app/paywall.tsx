@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState, useRef, useEffect } from 'react';
 import { router } from 'expo-router';
 import { useSubscription } from '@/contexts/SubscriptionContext';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 import { PRICING_PLANS, PricingPlan } from '@/types/subscription';
 import { useTheme } from '@/contexts/ThemeContext';
 import { X, Check, Sparkles, Crown, Zap } from 'lucide-react-native';
@@ -11,7 +12,10 @@ export default function PaywallScreen() {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const { upgradeToPremium, isInTrial } = useSubscription();
+  const { profile } = useUserProfile();
   const [selectedPlan, setSelectedPlan] = useState<PricingPlan>(PRICING_PLANS[1]);
+  
+  const isCaregiver = profile?.role === 'caregiver';
   const scaleAnim = useRef(new Animated.Value(0)).current;
 
   const styles = StyleSheet.create({
@@ -262,10 +266,17 @@ export default function PaywallScreen() {
 
   const handleUpgrade = () => {
     upgradeToPremium(selectedPlan.period);
-    router.back();
+    if (isCaregiver) {
+      router.replace('/(tabs)');
+    } else {
+      router.back();
+    }
   };
 
   const handleClose = () => {
+    if (isCaregiver) {
+      return;
+    }
     router.back();
   };
 
@@ -273,22 +284,28 @@ export default function PaywallScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-          <X size={24} color={colors.text} />
-        </TouchableOpacity>
-      </View>
+      {!isCaregiver && (
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
+            <X size={24} color={colors.text} />
+          </TouchableOpacity>
+        </View>
+      )}
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
         <Animated.View style={[styles.heroSection, { transform: [{ scale: scaleAnim }] }]}>
           <View style={styles.crownContainer}>
             <Crown size={48} color={colors.primary} />
           </View>
-          <Text style={styles.heroTitle}>Unlock Your Full Potential</Text>
+          <Text style={styles.heroTitle}>
+            {isCaregiver ? 'Subscribe to Continue' : 'Unlock Your Full Potential'}
+          </Text>
           <Text style={styles.heroSubtitle}>
-            {isInTrial 
-              ? 'Continue your journey with Premium' 
-              : 'Start your 7-day free trial'}
+            {isCaregiver
+              ? 'Caregiver features require a premium subscription'
+              : isInTrial 
+                ? 'Continue your journey with Premium' 
+                : 'Start your 7-day free trial'}
           </Text>
         </Animated.View>
 
@@ -395,13 +412,15 @@ export default function PaywallScreen() {
         >
           <Sparkles size={20} color={colors.surface} />
           <Text style={styles.upgradeButtonText}>
-            {isInTrial ? 'Continue with Premium' : 'Start Free Trial'}
+            {isCaregiver ? 'Subscribe Now' : isInTrial ? 'Continue with Premium' : 'Start Free Trial'}
           </Text>
         </TouchableOpacity>
         <Text style={styles.disclaimer}>
-          {isInTrial 
-            ? 'Your trial will convert to the selected plan' 
-            : 'Cancel anytime during your 7-day trial'}
+          {isCaregiver
+            ? 'Subscription required for caregiver features'
+            : isInTrial 
+              ? 'Your trial will convert to the selected plan' 
+              : 'Cancel anytime during your 7-day trial'}
         </Text>
       </View>
     </View>

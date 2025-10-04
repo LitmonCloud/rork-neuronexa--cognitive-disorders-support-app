@@ -38,6 +38,20 @@ async function loadSubscription(): Promise<UserSubscription> {
   }
 }
 
+async function loadUserRole(): Promise<'patient' | 'caregiver' | undefined> {
+  try {
+    const stored = await AsyncStorage.getItem('@nexa_user_profile');
+    if (stored) {
+      const profile = JSON.parse(stored);
+      return profile.role;
+    }
+    return undefined;
+  } catch (error) {
+    console.error('Error loading user role:', error);
+    return undefined;
+  }
+}
+
 async function saveSubscription(subscription: UserSubscription): Promise<UserSubscription> {
   try {
     await AsyncStorage.setItem(SUBSCRIPTION_KEY, JSON.stringify(subscription));
@@ -132,6 +146,11 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
     queryFn: loadOnboardingStatus,
   });
 
+  const roleQuery = useQuery({
+    queryKey: ['userRole'],
+    queryFn: loadUserRole,
+  });
+
   const subscriptionMutation = useMutation({
     mutationFn: saveSubscription,
     onSuccess: (data) => {
@@ -181,9 +200,19 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
   );
 
   const isInTrial = useMemo(() => {
+    const userRole = roleQuery.data;
+    if (userRole === 'caregiver') return false;
     if (!subscription.trialEndDate || subscription.trialUsed) return false;
     return new Date(subscription.trialEndDate) > new Date();
-  }, [subscription.trialEndDate, subscription.trialUsed]);
+  }, [subscription.trialEndDate, subscription.trialUsed, roleQuery.data]);
+
+  const requiresSubscription = useMemo(() => {
+    const userRole = roleQuery.data;
+    if (userRole === 'caregiver') {
+      return !isPremium;
+    }
+    return false;
+  }, [roleQuery.data, isPremium]);
 
   const canCreateTask = useCallback(() => {
     if (isPremium || isInTrial) return true;
@@ -264,6 +293,7 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
     isPremium,
     isInTrial,
     onboardingCompleted,
+    requiresSubscription,
     canCreateTask,
     canAccessFeature,
     incrementTaskUsage,
@@ -271,7 +301,7 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
     upgradeToPremium,
     completeOnboarding,
     getRemainingTasks,
-    isLoading: subscriptionQuery.isLoading || usageQuery.isLoading || onboardingQuery.isLoading,
+    isLoading: subscriptionQuery.isLoading || usageQuery.isLoading || onboardingQuery.isLoading || roleQuery.isLoading,
   }), [
     subscription,
     usage,
@@ -279,6 +309,7 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
     isPremium,
     isInTrial,
     onboardingCompleted,
+    requiresSubscription,
     canCreateTask,
     canAccessFeature,
     incrementTaskUsage,
@@ -289,5 +320,6 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
     subscriptionQuery.isLoading,
     usageQuery.isLoading,
     onboardingQuery.isLoading,
+    roleQuery.isLoading,
   ]);
 });

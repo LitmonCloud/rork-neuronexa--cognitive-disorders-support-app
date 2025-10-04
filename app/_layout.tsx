@@ -44,7 +44,7 @@ const queryClient = new QueryClient({
 const TERMS_ACCEPTED_KEY = '@nexa_terms_accepted';
 
 function RootLayoutNav() {
-  const { isLoading: subscriptionLoading } = useSubscription();
+  const { isLoading: subscriptionLoading, requiresSubscription } = useSubscription();
   const { profile, isLoading: profileLoading } = useUserProfile();
   const segments = useSegments();
   const router = useRouter();
@@ -53,6 +53,7 @@ function RootLayoutNav() {
   
   const isLoading = subscriptionLoading || profileLoading;
   const onboardingCompleted = profile?.onboardingCompleted ?? false;
+  const isCaregiver = profile?.role === 'caregiver';
 
   const checkTermsAcceptance = React.useCallback(async () => {
     try {
@@ -113,19 +114,22 @@ function RootLayoutNav() {
     const inFingerTrace = segments[0] === 'finger-trace';
     const inAllowedScreen = inTabs || inTask || inPaywall || inCaregiver || inNotifications || inFingerTrace;
 
-    console.log('[RootLayout] Navigation check:', { termsAccepted, onboardingCompleted, inTermsAgreement, inOnboarding, inTabs, inTask, inAllowedScreen });
+    console.log('[RootLayout] Navigation check:', { termsAccepted, onboardingCompleted, isCaregiver, requiresSubscription, inTermsAgreement, inOnboarding, inPaywall, inTabs, inTask, inAllowedScreen });
 
     if (!termsAccepted && !inTermsAgreement) {
       console.log('[RootLayout] Redirecting to terms-agreement');
       router.replace('/terms-agreement');
-    } else if (termsAccepted && !onboardingCompleted && !inOnboarding) {
+    } else if (termsAccepted && !onboardingCompleted && !inOnboarding && !inPaywall) {
       console.log('[RootLayout] Redirecting to onboarding');
       router.replace('/onboarding');
-    } else if (termsAccepted && onboardingCompleted && !inAllowedScreen) {
+    } else if (termsAccepted && onboardingCompleted && isCaregiver && requiresSubscription && !inPaywall) {
+      console.log('[RootLayout] Caregiver requires subscription, redirecting to paywall');
+      router.replace('/paywall');
+    } else if (termsAccepted && onboardingCompleted && !inAllowedScreen && !requiresSubscription) {
       console.log('[RootLayout] Redirecting to tabs');
       router.replace('/(tabs)');
     }
-  }, [isInitialized, termsAccepted, onboardingCompleted, segments, isLoading, router]);
+  }, [isInitialized, termsAccepted, onboardingCompleted, isCaregiver, requiresSubscription, segments, isLoading, router]);
 
   if (!isInitialized || isLoading || termsAccepted === null) {
     return (

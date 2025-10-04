@@ -307,8 +307,9 @@ export default function OnboardingScreen() {
         trackStep('onboarding_goals');
         
         if (role === 'caregiver') {
-          setCurrentIndex(steps.length - 1);
-          slideAnim.setValue(0);
+          trackStep('onboarding_complete');
+          updateProfile({ onboardingCompleted: true });
+          router.replace('/paywall');
           return;
         }
       }
@@ -330,7 +331,11 @@ export default function OnboardingScreen() {
     } else {
       trackStep('onboarding_complete');
       updateProfile({ onboardingCompleted: true });
-      router.replace('/(tabs)');
+      if (role === 'caregiver') {
+        router.replace('/paywall');
+      } else {
+        router.replace('/(tabs)');
+      }
     }
   };
 
