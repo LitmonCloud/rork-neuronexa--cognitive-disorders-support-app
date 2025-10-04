@@ -3,15 +3,19 @@ import * as Device from 'expo-device';
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+const isExpoGo = Constants.appOwnership === 'expo';
+
+if (Platform.OS !== 'web') {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      shouldShowBanner: true,
+      shouldShowList: true,
+    }),
+  });
+}
 
 class PushNotificationService {
   private expoPushToken: string | null = null;
@@ -20,8 +24,21 @@ class PushNotificationService {
   async initialize() {
     if (this.isInitialized) return;
 
+    if (Platform.OS === 'web') {
+      console.log('[PushNotifications] Web platform - local notifications only');
+      this.isInitialized = true;
+      return;
+    }
+
+    if (isExpoGo) {
+      console.warn('[PushNotifications] Expo Go detected - push notifications disabled in SDK 53. Use development build for full functionality.');
+      this.isInitialized = true;
+      return;
+    }
+
     if (!Device.isDevice) {
       console.warn('[PushNotifications] Must use physical device for push notifications');
+      this.isInitialized = true;
       return;
     }
 
@@ -36,12 +53,14 @@ class PushNotificationService {
 
       if (finalStatus !== 'granted') {
         console.warn('[PushNotifications] Permission not granted');
+        this.isInitialized = true;
         return;
       }
 
       const projectId = Constants.expoConfig?.extra?.eas?.projectId;
       if (!projectId) {
-        console.warn('[PushNotifications] No project ID found');
+        console.warn('[PushNotifications] No project ID found - using local notifications only');
+        this.isInitialized = true;
         return;
       }
 
@@ -60,6 +79,7 @@ class PushNotificationService {
       }
     } catch (error) {
       console.error('[PushNotifications] Initialization failed:', error);
+      this.isInitialized = true;
     }
   }
 
@@ -70,6 +90,11 @@ class PushNotificationService {
   async scheduleTaskReminder(taskId: string, taskTitle: string, date: Date) {
     if (!this.isInitialized) {
       console.warn('[PushNotifications] Not initialized');
+      return null;
+    }
+
+    if (Platform.OS === 'web') {
+      console.log('[PushNotifications] Scheduled notifications not supported on web');
       return null;
     }
 
@@ -97,6 +122,11 @@ class PushNotificationService {
       return null;
     }
 
+    if (Platform.OS === 'web') {
+      console.log('[PushNotifications] Scheduled notifications not supported on web');
+      return null;
+    }
+
     try {
       const id = await Notifications.scheduleNotificationAsync({
         content: {
@@ -120,6 +150,8 @@ class PushNotificationService {
   }
 
   async cancelNotification(notificationId: string) {
+    if (Platform.OS === 'web') return;
+    
     try {
       await Notifications.cancelScheduledNotificationAsync(notificationId);
       console.log('[PushNotifications] Notification cancelled:', notificationId);
@@ -129,6 +161,8 @@ class PushNotificationService {
   }
 
   async cancelAllNotifications() {
+    if (Platform.OS === 'web') return;
+    
     try {
       await Notifications.cancelAllScheduledNotificationsAsync();
       console.log('[PushNotifications] All notifications cancelled');
@@ -140,6 +174,11 @@ class PushNotificationService {
   async sendLocalNotification(title: string, body: string, data?: Record<string, any>) {
     if (!this.isInitialized) {
       console.warn('[PushNotifications] Not initialized');
+      return;
+    }
+
+    if (Platform.OS === 'web') {
+      console.log('[PushNotifications] Local notifications not supported on web');
       return;
     }
 

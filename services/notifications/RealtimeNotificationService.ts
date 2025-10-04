@@ -1,6 +1,9 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
+import Constants from 'expo-constants';
 import { trpcClient } from '@/lib/trpc';
+
+const isExpoGo = Constants.appOwnership === 'expo';
 
 export interface RealtimeNotification {
   id: string;
@@ -23,15 +26,23 @@ class RealtimeNotificationService {
       return;
     }
 
-    this.notificationSubscription = Notifications.addNotificationReceivedListener(
-      this.handleNotificationReceived
-    );
+    if (isExpoGo) {
+      console.warn('[RealtimeNotification] Expo Go detected - limited notification support in SDK 53');
+    }
 
-    this.responseSubscription = Notifications.addNotificationResponseReceivedListener(
-      this.handleNotificationResponse
-    );
+    try {
+      this.notificationSubscription = Notifications.addNotificationReceivedListener(
+        this.handleNotificationReceived
+      );
 
-    console.log('[RealtimeNotification] Service initialized');
+      this.responseSubscription = Notifications.addNotificationResponseReceivedListener(
+        this.handleNotificationResponse
+      );
+
+      console.log('[RealtimeNotification] Service initialized');
+    } catch (error) {
+      console.error('[RealtimeNotification] Failed to initialize listeners:', error);
+    }
   }
 
   cleanup() {
@@ -120,24 +131,28 @@ class RealtimeNotificationService {
       if (result.success) {
         console.log('[RealtimeNotification] Caregiver alert sent:', result.alertId);
 
-        if (Platform.OS !== 'web') {
-          await Notifications.scheduleNotificationAsync({
-            content: {
-              title: params.title,
-              body: params.message,
-              data: {
-                type: 'caregiver_alert',
-                alertType: params.alertType,
-                caregiverId: params.caregiverId,
-                patientId: params.patientId,
-                taskId: params.taskId,
-                ...params.metadata,
+        if (Platform.OS !== 'web' && !isExpoGo) {
+          try {
+            await Notifications.scheduleNotificationAsync({
+              content: {
+                title: params.title,
+                body: params.message,
+                data: {
+                  type: 'caregiver_alert',
+                  alertType: params.alertType,
+                  caregiverId: params.caregiverId,
+                  patientId: params.patientId,
+                  taskId: params.taskId,
+                  ...params.metadata,
+                },
+                sound: true,
+                priority: params.priority === 'urgent' ? 'high' : 'default',
               },
-              sound: true,
-              priority: params.priority === 'urgent' ? 'high' : 'default',
-            },
-            trigger: null,
-          });
+              trigger: null,
+            });
+          } catch (error) {
+            console.warn('[RealtimeNotification] Local notification failed (Expo Go limitation):', error);
+          }
         }
 
         return { success: true, alertId: result.alertId };
@@ -178,18 +193,22 @@ class RealtimeNotificationService {
       if (result.success) {
         console.log('[RealtimeNotification] Push notification sent:', result.notificationId);
 
-        if (Platform.OS !== 'web') {
-          await Notifications.scheduleNotificationAsync({
-            content: {
-              title: params.title,
-              body: params.body,
-              data: params.data,
-              sound: params.sound ?? true,
-              badge: params.badge,
-              priority: params.priority === 'urgent' ? 'high' : 'default',
-            },
-            trigger: null,
-          });
+        if (Platform.OS !== 'web' && !isExpoGo) {
+          try {
+            await Notifications.scheduleNotificationAsync({
+              content: {
+                title: params.title,
+                body: params.body,
+                data: params.data,
+                sound: params.sound ?? true,
+                badge: params.badge,
+                priority: params.priority === 'urgent' ? 'high' : 'default',
+              },
+              trigger: null,
+            });
+          } catch (error) {
+            console.warn('[RealtimeNotification] Local notification failed (Expo Go limitation):', error);
+          }
         }
 
         return { success: true, notificationId: result.notificationId };
