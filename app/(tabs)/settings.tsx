@@ -470,6 +470,54 @@ export default function SettingsScreen() {
               thumbColor={colors.surface}
             />
           </TouchableOpacity>
+
+          {dementiaSettings?.enabled && (
+            <>
+              <TouchableOpacity 
+                style={styles.settingRow}
+                onPress={() => updateDementiaSettings({ autoReadStepsEnabled: !dementiaSettings?.autoReadStepsEnabled })}
+                activeOpacity={0.7}
+              >
+                <View style={styles.settingLeft}>
+                  <View style={[styles.iconContainer, { backgroundColor: colors.accent + '20' }]}>
+                    <Volume2 size={20} color={colors.accent} />
+                  </View>
+                  <View style={styles.settingText}>
+                    <Text style={styles.settingLabel}>Auto-Read Steps</Text>
+                    <Text style={styles.settingDescription}>Automatically read each step aloud</Text>
+                  </View>
+                </View>
+                <Switch
+                  value={dementiaSettings?.autoReadStepsEnabled || false}
+                  onValueChange={() => updateDementiaSettings({ autoReadStepsEnabled: !dementiaSettings?.autoReadStepsEnabled })}
+                  trackColor={{ false: colors.borderLight, true: colors.accent }}
+                  thumbColor={colors.surface}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={styles.settingRow}
+                onPress={() => updateDementiaSettings({ aiStepCoachEnabled: !dementiaSettings?.aiStepCoachEnabled })}
+                activeOpacity={0.7}
+              >
+                <View style={styles.settingLeft}>
+                  <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+                    <Sparkles size={20} color={colors.primary} />
+                  </View>
+                  <View style={styles.settingText}>
+                    <Text style={styles.settingLabel}>AI Step-by-Step Coach</Text>
+                    <Text style={styles.settingDescription}>Gentle AI guidance through each step</Text>
+                  </View>
+                </View>
+                <Switch
+                  value={dementiaSettings?.aiStepCoachEnabled || false}
+                  onValueChange={() => updateDementiaSettings({ aiStepCoachEnabled: !dementiaSettings?.aiStepCoachEnabled })}
+                  trackColor={{ false: colors.borderLight, true: colors.primary }}
+                  thumbColor={colors.surface}
+                />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
 
         <View style={styles.section}>

@@ -5,9 +5,10 @@ import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useRetention } from '@/contexts/RetentionContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useSubscription } from '@/contexts/SubscriptionContext';
+import { useDementia } from '@/contexts/DementiaContext';
 import { CheckCircle2, Trash2, ArrowLeft, Volume2, Clock, Sparkles, Crown, MessageCircle } from 'lucide-react-native';
 import * as Speech from 'expo-speech';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import VisualTimer from '@/components/VisualTimer';
 import AITaskCoach from '@/components/AITaskCoach';
 
@@ -18,11 +19,40 @@ export default function TaskDetailScreen() {
   const { updateStreak } = useRetention();
   const { colors } = useTheme();
   const { isPremium, isInTrial } = useSubscription();
+  const { settings: dementiaSettings } = useDementia();
   const [speakingStepId, setSpeakingStepId] = useState<string | null>(null);
   const [showTimer, setShowTimer] = useState<boolean>(false);
   const [useCoachMode, setUseCoachMode] = useState<boolean>(false);
+  const hasAutoReadRef = useRef<boolean>(false);
 
   const task = allTasks.find(t => t.id === id);
+
+  useEffect(() => {
+    if (!task || hasAutoReadRef.current) return;
+    
+    if (dementiaSettings?.autoReadStepsEnabled && task.steps.length > 0 && Platform.OS !== 'web') {
+      const firstIncompleteStep = task.steps.find(s => !s.completed);
+      if (firstIncompleteStep) {
+        hasAutoReadRef.current = true;
+        setTimeout(() => {
+          Speech.speak(firstIncompleteStep.description, {
+            onDone: () => setSpeakingStepId(null),
+            onStopped: () => setSpeakingStepId(null),
+            onError: () => setSpeakingStepId(null),
+          });
+          setSpeakingStepId(firstIncompleteStep.id);
+        }, 1000);
+      }
+    }
+  }, [task, dementiaSettings?.autoReadStepsEnabled]);
+
+  useEffect(() => {
+    return () => {
+      if (Platform.OS !== 'web') {
+        Speech.stop();
+      }
+    };
+  }, []);
 
   const textSize = settings.largeText ? 1.2 : 1;
   const completedSteps = task ? task.steps.filter(s => s.completed).length : 0;
@@ -352,6 +382,21 @@ export default function TaskDetailScreen() {
 
   const handleStepToggle = (stepId: string, completed: boolean) => {
     updateStep(task.id, stepId, completed);
+    
+    if (completed && dementiaSettings?.autoReadStepsEnabled) {
+      const stepIndex = task.steps.findIndex(s => s.id === stepId);
+      const nextStep = task.steps.find((s, idx) => idx > stepIndex && !s.completed);
+      if (nextStep && Platform.OS !== 'web') {
+        setTimeout(() => {
+          Speech.speak(nextStep.description, {
+            onDone: () => setSpeakingStepId(null),
+            onStopped: () => setSpeakingStepId(null),
+            onError: () => setSpeakingStepId(null),
+          });
+          setSpeakingStepId(nextStep.id);
+        }, 500);
+      }
+    }
   };
 
   const handleDeleteTask = () => {
@@ -437,7 +482,7 @@ export default function TaskDetailScreen() {
           <View style={styles.titleRow}>
             <Text style={[styles.title, { fontSize: 28 * textSize }]}>{task.title}</Text>
             <View style={styles.headerActions}>
-              {settings.stepByStepMode && task.steps.length > 0 && (
+              {(settings.stepByStepMode || dementiaSettings?.aiStepCoachEnabled) && task.steps.length > 0 && (
                 <TouchableOpacity
                   style={[styles.coachToggle, useCoachMode && styles.coachToggleActive]}
                   onPress={() => {
@@ -493,7 +538,7 @@ export default function TaskDetailScreen() {
           </View>
         )}
 
-        {useCoachMode && settings.stepByStepMode && task.steps.length > 0 ? (
+        {useCoachMode && (settings.stepByStepMode || dementiaSettings?.aiStepCoachEnabled) && task.steps.length > 0 ? (
           (isPremium || isInTrial) ? (
             <AITaskCoach
               task={task}

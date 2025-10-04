@@ -25,7 +25,12 @@ async function loadDementiaSettings(): Promise<DementiaSettings> {
   try {
     const stored = await AsyncStorage.getItem(DEMENTIA_SETTINGS_KEY);
     if (stored) {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      return {
+        ...parsed,
+        autoReadStepsEnabled: parsed.autoReadStepsEnabled ?? false,
+        aiStepCoachEnabled: parsed.aiStepCoachEnabled ?? false,
+      };
     }
     const defaultSettings: DementiaSettings = {
       enabled: false,
@@ -39,6 +44,8 @@ async function loadDementiaSettings(): Promise<DementiaSettings> {
       memoryJournalEnabled: true,
       emergencyContactsEnabled: true,
       photoBasedNavigationEnabled: true,
+      autoReadStepsEnabled: false,
+      aiStepCoachEnabled: false,
     };
     await AsyncStorage.setItem(DEMENTIA_SETTINGS_KEY, JSON.stringify(defaultSettings));
     return defaultSettings;
@@ -56,6 +63,8 @@ async function loadDementiaSettings(): Promise<DementiaSettings> {
       memoryJournalEnabled: true,
       emergencyContactsEnabled: true,
       photoBasedNavigationEnabled: true,
+      autoReadStepsEnabled: false,
+      aiStepCoachEnabled: false,
     };
   }
 }

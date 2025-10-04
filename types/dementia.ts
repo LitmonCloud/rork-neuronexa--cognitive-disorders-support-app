@@ -10,6 +10,8 @@ export interface DementiaSettings {
   memoryJournalEnabled: boolean;
   emergencyContactsEnabled: boolean;
   photoBasedNavigationEnabled: boolean;
+  autoReadStepsEnabled: boolean;
+  aiStepCoachEnabled: boolean;
 }
 
 export interface OrientationInfo {
