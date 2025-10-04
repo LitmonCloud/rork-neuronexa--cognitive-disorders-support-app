@@ -405,6 +405,7 @@ export default function CaregiverDashboardScreen() {
           <View style={{ width: 40 }} />
         </View>
 
+        {/* Code redemption bar - always visible */}
         <EnterCodeBar />
 
         <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>

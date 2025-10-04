@@ -17,13 +17,15 @@ export default function AddPatientModal({
   const redeem = () => {
     const c = code.trim();
     if (!c) return;
-    router.push({ pathname: '/invite-redeem', params: { code: c } });
+    console.log('[AddPatientModal] Redeeming code:', c);
     onClose();
+    router.push({ pathname: '/invite-redeem', params: { code: c } });
   };
 
   const addManual = () => {
     if (!first.trim() || !last.trim()) return;
-    console.log('[ManualAdd]', first.trim(), last.trim());
+    console.log('[AddPatientModal] Manual add:', first.trim(), last.trim());
+    // TODO: Wire to PatientContext.addPatient
     onClose();
   };
 

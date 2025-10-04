@@ -1,35 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 
 export default function EnterCodeBar() {
   const [code, setCode] = useState('');
-  const insets = useSafeAreaInsets();
   const valid = code.trim().length >= 4;
 
   return (
     <View
       testID="enter-code-inline"
-      style={{
-        paddingTop: insets.top + 8,
-        paddingHorizontal: 16,
-        paddingBottom: 8,
-        backgroundColor: '#0b0b0d',
-      }}
+      style={styles.container}
     >
-      <View
-        style={{
-          borderRadius: 14,
-          borderWidth: 1,
-          borderColor: '#2a2b31',
-          backgroundColor: '#121318',
-          padding: 12,
-          gap: 10,
-        }}
-      >
-        <Text style={{ color: '#cfd0d9', fontWeight: '700' }}>Enter Care Code</Text>
-        <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+      <View style={styles.card}>
+        <Text style={styles.title}>Enter Care Code</Text>
+        <View style={styles.inputRow}>
           <TextInput
             testID="enter-code-input"
             value={code}
@@ -37,34 +21,79 @@ export default function EnterCodeBar() {
             placeholder="e.g. NX4F-72KQ"
             placeholderTextColor="#6e7080"
             autoCapitalize="characters"
-            style={{
-              flex: 1,
-              backgroundColor: '#15161b',
-              borderWidth: 1,
-              borderColor: '#2a2b31',
-              color: '#fff',
-              borderRadius: 12,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
-            }}
+            style={styles.input}
           />
           <Pressable
             testID="enter-code-redeem"
-            onPress={() => router.push({ pathname: '/invite-redeem', params: { code: code.trim() } })}
+            onPress={() => {
+              console.log('[EnterCodeBar] Redeeming code:', code.trim());
+              router.push({ pathname: '/invite-redeem', params: { code: code.trim() } });
+            }}
             disabled={!valid}
-            style={({ pressed }) => ({
-              paddingHorizontal: 16,
-              paddingVertical: 12,
-              borderRadius: 12,
-              backgroundColor: valid ? (pressed ? '#2a6f65' : '#2f6c63') : '#3a3b44',
-              borderWidth: 1,
-              borderColor: valid ? '#234a44' : '#2a2b31',
-            })}
+            style={({ pressed }) => ([
+              styles.button,
+              {
+                backgroundColor: valid ? (pressed ? '#2a6f65' : '#2f6c63') : '#3a3b44',
+                borderColor: valid ? '#234a44' : '#2a2b31',
+              }
+            ])}
           >
-            <Text style={{ color: valid ? '#e9fff9' : '#9aa0aa', fontWeight: '800' }}>Redeem</Text>
+            <Text style={[styles.buttonText, { color: valid ? '#e9fff9' : '#9aa0aa' }]}>Redeem</Text>
           </Pressable>
         </View>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#0b0b0d',
+  },
+  card: {
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: '#7b61ff',
+    backgroundColor: '#1a1b24',
+    padding: 16,
+    gap: 12,
+    shadowColor: '#7b61ff',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  title: {
+    color: '#ffffff',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+  },
+  input: {
+    flex: 1,
+    backgroundColor: '#15161b',
+    borderWidth: 1,
+    borderColor: '#2a2b31',
+    color: '#fff',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontSize: 16,
+  },
+  button: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  buttonText: {
+    fontWeight: '800',
+    fontSize: 14,
+  },
+});
