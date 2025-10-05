@@ -300,47 +300,59 @@ export default function OnboardingScreen() {
   };
 
   const handleNext = () => {
-    if (currentIndex < steps.length - 1) {
-      if (!canProceed()) return;
+    if (!canProceed()) return;
 
-      if (currentIndex === 0) {
-        updateProfile({ role: role! });
-        trackStep('onboarding_goals');
-      }
-      if (currentIndex === 1) {
-        updateProfile({ name });
-        trackStep('onboarding_profile');
-        
-        if (role === 'caregiver') {
-          trackStep('onboarding_complete');
-          updateProfile({ onboardingCompleted: true });
-          router.replace('/paywall');
-          return;
-        }
-      }
-      if (currentIndex === 2) {
-        contacts.forEach(contact => {
-          addEmergencyContact({
-            name: contact.name,
-            relationship: contact.relationship,
-            phoneNumber: contact.phone,
-            isPrimary: contacts.indexOf(contact) === 0,
-            order: contacts.indexOf(contact),
-          });
-        });
-        trackStep('onboarding_preferences');
-      }
-
-      setCurrentIndex(currentIndex + 1);
+    if (currentIndex === 0) {
+      console.log('[Onboarding] Step 0 complete - Role selected:', role);
+      updateProfile({ role: role! });
+      trackStep('onboarding_goals');
+      setCurrentIndex(1);
       slideAnim.setValue(0);
-    } else {
+      return;
+    }
+
+    if (currentIndex === 1) {
+      console.log('[Onboarding] Step 1 complete - Name entered:', name, 'Role:', role);
+      updateProfile({ name });
+      trackStep('onboarding_profile');
+      
+      if (role === 'caregiver') {
+        console.log('[Onboarding] Caregiver flow - Completing onboarding');
+        trackStep('onboarding_complete');
+        updateProfile({ onboardingCompleted: true });
+        router.replace('/paywall');
+        return;
+      } else {
+        console.log('[Onboarding] Patient flow - Moving to emergency contacts');
+        setCurrentIndex(2);
+        slideAnim.setValue(0);
+        return;
+      }
+    }
+
+    if (currentIndex === 2) {
+      console.log('[Onboarding] Step 2 complete - Emergency contacts added:', contacts.length);
+      contacts.forEach(contact => {
+        addEmergencyContact({
+          name: contact.name,
+          relationship: contact.relationship,
+          phoneNumber: contact.phone,
+          isPrimary: contacts.indexOf(contact) === 0,
+          order: contacts.indexOf(contact),
+        });
+      });
+      trackStep('onboarding_preferences');
+      setCurrentIndex(3);
+      slideAnim.setValue(0);
+      return;
+    }
+
+    if (currentIndex === 3) {
+      console.log('[Onboarding] Final step - Completing onboarding');
       trackStep('onboarding_complete');
       updateProfile({ onboardingCompleted: true });
-      if (role === 'caregiver') {
-        router.replace('/paywall');
-      } else {
-        router.replace('/(tabs)');
-      }
+      router.replace('/(tabs)');
+      return;
     }
   };
 
