@@ -5,10 +5,12 @@ import { useCallback, useMemo, useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
+import Constants from 'expo-constants';
 import { AppNotification, NotificationPreferences, NotificationStats, NotificationType, NotificationPriority } from '@/types/notification';
 
 const NOTIFICATIONS_KEY = '@neuronexa_notifications';
 const PREFERENCES_KEY = '@neuronexa_notification_preferences';
+const isExpoGo = Constants.appOwnership === 'expo';
 
 const DEFAULT_PREFERENCES: NotificationPreferences = {
   enabled: true,
@@ -24,15 +26,21 @@ const DEFAULT_PREFERENCES: NotificationPreferences = {
   pushNotificationsEnabled: false,
 };
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+if (Platform.OS !== 'web' && !isExpoGo) {
+  try {
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+        shouldShowBanner: true,
+        shouldShowList: true,
+      }),
+    });
+  } catch (error) {
+    console.log('[NotificationContext] Handler setup skipped (Expo Go limitation)');
+  }
+}
 
 async function loadNotifications(): Promise<AppNotification[]> {
   try {
@@ -51,9 +59,15 @@ async function loadNotifications(): Promise<AppNotification[]> {
 async function saveNotifications(notifications: AppNotification[]): Promise<AppNotification[]> {
   try {
     await AsyncStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(notifications));
-    await Notifications.setBadgeCountAsync(
-      notifications.filter(n => !n.read && !n.dismissed).length
-    );
+    if (Platform.OS !== 'web' && !isExpoGo) {
+      try {
+        await Notifications.setBadgeCountAsync(
+          notifications.filter(n => !n.read && !n.dismissed).length
+        );
+      } catch (error) {
+        console.log('[NotificationContext] Badge count update skipped');
+      }
+    }
     return notifications;
   } catch (error) {
     console.error('[NotificationContext] Error saving notifications:', error);
@@ -106,13 +120,17 @@ async function registerForPushNotificationsAsync(): Promise<string | null> {
       return null;
     }
 
-    if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-      });
+    if (Platform.OS === 'android' && !isExpoGo) {
+      try {
+        await Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#FF231F7C',
+        });
+      } catch (error) {
+        console.log('[NotificationContext] Android channel setup skipped');
+      }
     }
 
     console.log('[NotificationContext] Local notifications enabled');
@@ -161,16 +179,20 @@ export const [NotificationProvider, useNotifications] = createContextHook(() => 
   useEffect(() => {
     if (Platform.OS === 'web') return;
 
-    if (preferences.pushNotificationsEnabled) {
+    if (preferences.pushNotificationsEnabled && !isExpoGo) {
       registerForPushNotificationsAsync();
 
-      notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-        console.log('[NotificationContext] Notification received:', notification);
-      });
+      try {
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+          console.log('[NotificationContext] Notification received:', notification);
+        });
 
-      responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-        console.log('[NotificationContext] Notification response:', response);
-      });
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+          console.log('[NotificationContext] Notification response:', response);
+        });
+      } catch (error) {
+        console.log('[NotificationContext] Listener setup skipped (Expo Go limitation)');
+      }
 
       return () => {
         if (notificationListener.current) {
@@ -253,17 +275,21 @@ export const [NotificationProvider, useNotifications] = createContextHook(() => 
     const updated = [newNotification, ...notifications];
     mutateNotifications(updated);
 
-    if (Platform.OS !== 'web' && preferences.pushNotificationsEnabled) {
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: newNotification.title,
-          body: newNotification.message,
-          data: { notificationId: newNotification.id, ...newNotification.metadata },
-          sound: newNotification.sound,
-          priority: newNotification.priority === 'urgent' ? 'high' : 'default',
-        },
-        trigger: null,
-      });
+    if (Platform.OS !== 'web' && preferences.pushNotificationsEnabled && !isExpoGo) {
+      try {
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: newNotification.title,
+            body: newNotification.message,
+            data: { notificationId: newNotification.id, ...newNotification.metadata },
+            sound: newNotification.sound,
+            priority: newNotification.priority === 'urgent' ? 'high' : 'default',
+          },
+          trigger: null,
+        });
+      } catch (error) {
+        console.log('[NotificationContext] Local notification skipped (Expo Go limitation)');
+      }
     }
 
     return newNotification;

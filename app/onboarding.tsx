@@ -271,8 +271,13 @@ export default function OnboardingScreen() {
   });
 
   useEffect(() => {
+    console.log('[Onboarding] Starting onboarding flow - Step 0: Role Selection');
     trackStep('onboarding_start');
   }, [trackStep]);
+
+  useEffect(() => {
+    console.log('[Onboarding] Current step:', currentIndex, 'Role:', role, 'Name:', name);
+  }, [currentIndex, role, name]);
 
   useEffect(() => {
     Animated.spring(slideAnim, {
