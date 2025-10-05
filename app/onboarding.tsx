@@ -17,13 +17,13 @@ interface OnboardingStep {
 const steps: OnboardingStep[] = [
   {
     id: 1,
-    title: 'Welcome!',
-    description: "Let's get to know you better",
+    title: 'Your Role',
+    description: 'How will you be using Nexa?',
   },
   {
     id: 2,
-    title: 'Your Role',
-    description: 'How will you be using Nexa?',
+    title: 'Welcome!',
+    description: "Let's get to know you better",
   },
   {
     id: 3,
@@ -284,8 +284,8 @@ export default function OnboardingScreen() {
   }, [currentIndex, slideAnim]);
 
   const canProceed = () => {
-    if (currentIndex === 0) return name.trim().length > 0;
-    if (currentIndex === 1) return role !== null;
+    if (currentIndex === 0) return role !== null;
+    if (currentIndex === 1) return name.trim().length > 0;
     if (currentIndex === 2) return true;
     return true;
   };
@@ -299,12 +299,12 @@ export default function OnboardingScreen() {
       if (!canProceed()) return;
 
       if (currentIndex === 0) {
-        updateProfile({ name });
-        trackStep('onboarding_profile');
-      }
-      if (currentIndex === 1) {
         updateProfile({ role: role! });
         trackStep('onboarding_goals');
+      }
+      if (currentIndex === 1) {
+        updateProfile({ name });
+        trackStep('onboarding_profile');
         
         if (role === 'caregiver') {
           trackStep('onboarding_complete');
@@ -377,38 +377,9 @@ export default function OnboardingScreen() {
               opacity: slideOpacity,
             }}
           >
-            <View style={[styles.iconContainer, { backgroundColor: lightColors.decorative.lavender + '30' }]}>
-              <User size={40} color={lightColors.decorative.lavender} />
-            </View>
             <View style={styles.textContainer}>
               <Text style={styles.title}>{steps[0].title}</Text>
               <Text style={styles.description}>{steps[0].description}</Text>
-            </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>What&apos;s your name?</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter your name"
-                placeholderTextColor={colors.textLight}
-                value={name}
-                onChangeText={setName}
-                autoFocus
-              />
-            </View>
-          </Animated.View>
-        );
-
-      case 1:
-        return (
-          <Animated.View
-            style={{
-              transform: [{ translateY: slideTranslateY }],
-              opacity: slideOpacity,
-            }}
-          >
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>{steps[1].title}</Text>
-              <Text style={styles.description}>{steps[1].description}</Text>
             </View>
             <View style={styles.roleContainer}>
               <TouchableOpacity
@@ -438,6 +409,35 @@ export default function OnboardingScreen() {
                   <Text style={styles.roleDescription}>I help someone manage their tasks and provide support</Text>
                 </View>
               </TouchableOpacity>
+            </View>
+          </Animated.View>
+        );
+
+      case 1:
+        return (
+          <Animated.View
+            style={{
+              transform: [{ translateY: slideTranslateY }],
+              opacity: slideOpacity,
+            }}
+          >
+            <View style={[styles.iconContainer, { backgroundColor: lightColors.decorative.lavender + '30' }]}>
+              <User size={40} color={lightColors.decorative.lavender} />
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>{steps[1].title}</Text>
+              <Text style={styles.description}>{steps[1].description}</Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>What&apos;s your name?</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your name"
+                placeholderTextColor={colors.textLight}
+                value={name}
+                onChangeText={setName}
+                autoFocus
+              />
             </View>
           </Animated.View>
         );
