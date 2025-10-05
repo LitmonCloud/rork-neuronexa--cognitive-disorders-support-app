@@ -10,7 +10,7 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { Copy, Share2, RefreshCw } from 'lucide-react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { useCaregivers } from '@/contexts/CaregiverContext';
@@ -25,6 +25,7 @@ import * as Clipboard from 'expo-clipboard';
 import { useTheme } from '@/contexts/ThemeContext';
 
 export default function InviteGenerateScreen() {
+  const router = useRouter();
   const { colors } = useTheme();
   const { generateInvite, activeInvite } = useCaregivers();
   const [loading, setLoading] = useState<boolean>(false);
@@ -325,7 +326,26 @@ export default function InviteGenerateScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Stack.Screen options={{ title: 'Invite Caregiver', headerBackVisible: true }} />
+        <Stack.Screen
+          options={{
+            title: 'Invite Caregiver',
+            headerBackVisible: true,
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  if (router.canGoBack()) {
+                    router.back();
+                  } else {
+                    router.replace('/caregiver-dashboard');
+                  }
+                }}
+                style={{ marginLeft: 8, padding: 8 }}
+              >
+                <Text style={{ color: colors.primary, fontSize: 16 }}>Back</Text>
+              </TouchableOpacity>
+            ),
+          }}
+        />
         <ActivityIndicator size="large" color={colors.primary} />
         <Text style={styles.loadingText}>Generating invite code...</Text>
       </View>
@@ -339,6 +359,20 @@ export default function InviteGenerateScreen() {
           title: 'Invite Caregiver',
           headerStyle: { backgroundColor: colors.background },
           headerBackVisible: true,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                if (router.canGoBack()) {
+                  router.back();
+                } else {
+                  router.replace('/caregiver-dashboard');
+                }
+              }}
+              style={{ marginLeft: 8, padding: 8 }}
+            >
+              <Text style={{ color: colors.primary, fontSize: 16 }}>Back</Text>
+            </TouchableOpacity>
+          ),
         }}
       />
 
