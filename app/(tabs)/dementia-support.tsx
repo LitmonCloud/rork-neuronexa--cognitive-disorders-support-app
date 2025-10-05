@@ -506,7 +506,7 @@ export default function DementiaSupportScreen() {
                 activeOpacity={0.7}
               >
                 <View style={styles.contactPhoto}>
-                  {contact.photoUri ? (
+                  {contact.photoUri && contact.photoUri.trim() !== '' ? (
                     <Image source={{ uri: contact.photoUri }} style={styles.contactPhotoImage} />
                   ) : (
                     <User size={30} color={colors.primary} />
@@ -550,7 +550,7 @@ export default function DementiaSupportScreen() {
                 onPress={() => router.push('/memory-journal')}
                 activeOpacity={0.7}
               >
-                {entry.photoUris.length > 0 && (
+                {entry.photoUris.length > 0 && entry.photoUris[0] && entry.photoUris[0].trim() !== '' && (
                   <Image source={{ uri: entry.photoUris[0] }} style={styles.journalImage} />
                 )}
                 <Text style={styles.journalTitle}>{entry.title}</Text>

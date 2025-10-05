@@ -397,7 +397,7 @@ export default function EmergencyContactsScreen() {
                     }}
                     activeOpacity={0.7}
                   >
-                    {formData.photoUri ? (
+                    {formData.photoUri && formData.photoUri.trim() !== '' ? (
                       <Image source={{ uri: formData.photoUri }} style={{ width: 80, height: 80 }} />
                     ) : (
                       <Camera size={32} color={colors.primary} />
@@ -491,7 +491,7 @@ export default function EmergencyContactsScreen() {
               <View key={contact.id} style={styles.contactCard}>
                 <View style={styles.contactCardContent}>
                   <View style={styles.contactPhoto}>
-                    {contact.photoUri ? (
+                    {contact.photoUri && contact.photoUri.trim() !== '' ? (
                       <Image source={{ uri: contact.photoUri }} style={{ width: 60, height: 60, borderRadius: 30 }} />
                     ) : (
                       <User size={30} color={colors.primary} />

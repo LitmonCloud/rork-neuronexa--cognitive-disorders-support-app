@@ -602,7 +602,7 @@ Provide 3-4 gentle prompting questions that could help them remember more detail
           ) : (
             memoryJournal.map(entry => (
               <View key={entry.id} style={styles.journalCard}>
-                {entry.photoUris.length > 0 && (
+                {entry.photoUris.length > 0 && entry.photoUris[0] && entry.photoUris[0].trim() !== '' && (
                   <Image source={{ uri: entry.photoUris[0] }} style={styles.journalImage} />
                 )}
                 
