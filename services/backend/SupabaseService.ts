@@ -6,15 +6,15 @@ class SupabaseService {
   private client: SupabaseClient | null = null;
   private isInitialized = false;
 
-  async initialize() {
-    if (this.isInitialized) return;
+  async initialize(): Promise<void> {
+    if (this.isInitialized) return Promise.resolve();
 
     const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
     const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!url || !anonKey) {
       console.warn('[Supabase] URL or anon key not configured. Cloud sync disabled.');
-      return;
+      return Promise.resolve();
     }
 
     try {
@@ -28,8 +28,10 @@ class SupabaseService {
       });
       this.isInitialized = true;
       console.log('[Supabase] Initialized successfully');
+      return Promise.resolve();
     } catch (error) {
       console.error('[Supabase] Initialization failed:', error);
+      return Promise.resolve();
     }
   }
 

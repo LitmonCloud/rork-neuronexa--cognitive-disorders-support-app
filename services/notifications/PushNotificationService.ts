@@ -25,25 +25,25 @@ class PushNotificationService {
   private expoPushToken: string | null = null;
   private isInitialized = false;
 
-  async initialize() {
-    if (this.isInitialized) return;
+  async initialize(): Promise<void> {
+    if (this.isInitialized) return Promise.resolve();
 
     if (Platform.OS === 'web') {
       console.log('[PushNotifications] Web platform - local notifications only');
       this.isInitialized = true;
-      return;
+      return Promise.resolve();
     }
 
     if (isExpoGo) {
       console.log('[PushNotifications] Expo Go detected - using local notifications only (SDK 53 limitation)');
       this.isInitialized = true;
-      return;
+      return Promise.resolve();
     }
 
     if (!Device.isDevice) {
       console.warn('[PushNotifications] Must use physical device for push notifications');
       this.isInitialized = true;
-      return;
+      return Promise.resolve();
     }
 
     try {
@@ -58,14 +58,14 @@ class PushNotificationService {
       if (finalStatus !== 'granted') {
         console.warn('[PushNotifications] Permission not granted');
         this.isInitialized = true;
-        return;
+        return Promise.resolve();
       }
 
       const projectId = Constants.expoConfig?.extra?.eas?.projectId;
       if (!projectId) {
         console.warn('[PushNotifications] No project ID found - using local notifications only');
         this.isInitialized = true;
-        return;
+        return Promise.resolve();
       }
 
       const token = await Notifications.getExpoPushTokenAsync({ projectId });
@@ -81,9 +81,11 @@ class PushNotificationService {
           lightColor: '#FF231F7C',
         });
       }
+      return Promise.resolve();
     } catch (error) {
       console.error('[PushNotifications] Initialization failed:', error);
       this.isInitialized = true;
+      return Promise.resolve();
     }
   }
 

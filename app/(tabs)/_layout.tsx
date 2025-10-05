@@ -1,4 +1,4 @@
-import { Tabs, Redirect, useSegments } from "expo-router";
+import { Tabs, Redirect } from "expo-router";
 import { CheckSquare, Settings, TrendingUp, Heart, Sparkles, Brain } from "lucide-react-native";
 import React from "react";
 import { ActivityIndicator, Text, View } from "react-native";
@@ -18,7 +18,6 @@ export default function TabLayout() {
   const theme = useTheme();
   const { colors } = theme;
   const { profile, isLoading } = useUserProfile();
-  const segments = useSegments() as string[];
   
   if (isLoading || !profile) {
     return <TabsSkeleton />;
@@ -28,15 +27,9 @@ export default function TabLayout() {
   
   console.log('[TabLayout] Profile role:', profile?.role, 'isCaregiver:', isCaregiver);
   
-  const PATIENT_TABS = new Set(["index", "coach", "progress", "wellness", "dementia-support", "settings"]);
-  const CAREGIVER_TABS = new Set(["settings"]);
-  
-  const allowedTabs = isCaregiver ? CAREGIVER_TABS : PATIENT_TABS;
-  const currentTab = segments[1];
-  
-  if (currentTab && !allowedTabs.has(currentTab)) {
-    console.log('[TabLayout] Redirecting from', currentTab, 'to', isCaregiver ? '/caregiver-dashboard' : '/settings');
-    return <Redirect href={isCaregiver ? "/caregiver-dashboard" : "/settings"} />;
+  if (isCaregiver) {
+    console.log('[TabLayout] Caregiver detected, redirecting to dashboard');
+    return <Redirect href="/caregiver-dashboard" />;
   }
   
   return (

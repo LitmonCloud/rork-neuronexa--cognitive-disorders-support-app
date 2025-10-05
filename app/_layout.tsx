@@ -104,33 +104,55 @@ function RootLayoutNav() {
   useEffect(() => {
     if (!isInitialized || isLoading || termsAccepted === null) return;
 
-    const inTermsAgreement = segments[0] === 'terms-agreement';
-    const inOnboarding = segments[0] === 'onboarding';
-    const inTabs = segments[0] === '(tabs)';
-    const inTask = segments[0] === 'task';
-    const inPaywall = segments[0] === 'paywall';
-    const inCaregiver = segments[0] === 'caregiver-dashboard' || segments[0] === 'caregiver-task-manager' || segments[0] === 'caregiver-patient-tasks' || segments[0] === 'invite-generate' || segments[0] === 'invite-redeem' || segments[0] === 'emergency-contacts' || segments[0] === 'memory-journal';
-    const inNotifications = segments[0] === 'notifications' || segments[0] === 'notification-settings';
-    const inFingerTrace = segments[0] === 'finger-trace';
-    const inAllowedScreen = inTabs || inTask || inPaywall || inCaregiver || inNotifications || inFingerTrace;
+    const currentRoute = segments[0];
+    const publicRoutes = ['terms-agreement', 'onboarding', 'paywall'];
+    const caregiverRoutes = ['caregiver-dashboard', 'caregiver-task-manager', 'caregiver-patient-tasks'];
+    const sharedRoutes = ['(tabs)', 'task', 'notifications', 'notification-settings', 'finger-trace', 'emergency-contacts', 'memory-journal', 'invite-generate', 'invite-redeem'];
+    
+    const isPublicRoute = publicRoutes.includes(currentRoute);
+    const isCaregiverRoute = caregiverRoutes.includes(currentRoute);
+    const isSharedRoute = sharedRoutes.includes(currentRoute);
 
-    console.log('[RootLayout] Navigation check:', { termsAccepted, onboardingCompleted, isCaregiver, requiresSubscription, inTermsAgreement, inOnboarding, inPaywall, inTabs, inTask, inAllowedScreen });
+    console.log('[RootLayout] Navigation check:', { 
+      currentRoute, 
+      termsAccepted, 
+      onboardingCompleted, 
+      isCaregiver, 
+      requiresSubscription,
+      isPublicRoute,
+      isCaregiverRoute,
+      isSharedRoute
+    });
 
-    if (!termsAccepted && !inTermsAgreement) {
-      console.log('[RootLayout] Redirecting to terms-agreement');
+    if (!termsAccepted && currentRoute !== 'terms-agreement') {
+      console.log('[RootLayout] → terms-agreement');
       router.replace('/terms-agreement');
-    } else if (termsAccepted && !onboardingCompleted && !inOnboarding && !inPaywall) {
-      console.log('[RootLayout] Redirecting to onboarding');
+      return;
+    }
+
+    if (termsAccepted && !onboardingCompleted && currentRoute !== 'onboarding') {
+      console.log('[RootLayout] → onboarding');
       router.replace('/onboarding');
-    } else if (termsAccepted && onboardingCompleted && isCaregiver && requiresSubscription && !inPaywall) {
-      console.log('[RootLayout] Caregiver requires subscription, redirecting to paywall');
+      return;
+    }
+
+    if (termsAccepted && onboardingCompleted && isCaregiver && requiresSubscription && currentRoute !== 'paywall') {
+      console.log('[RootLayout] → paywall (caregiver needs subscription)');
       router.replace('/paywall');
-    } else if (termsAccepted && onboardingCompleted && !inAllowedScreen && !requiresSubscription) {
-      console.log('[RootLayout] Redirecting to main screen');
-      if (isCaregiver) {
-        router.replace('/caregiver-dashboard');
-      } else {
+      return;
+    }
+
+    if (termsAccepted && onboardingCompleted && !requiresSubscription) {
+      if (!isCaregiver && isCaregiverRoute) {
+        console.log('[RootLayout] Patient blocked from caregiver route → tabs');
         router.replace('/(tabs)');
+        return;
+      }
+
+      if (!isPublicRoute && !isCaregiverRoute && !isSharedRoute && !currentRoute) {
+        console.log('[RootLayout] → default route');
+        router.replace(isCaregiver ? '/caregiver-dashboard' : '/(tabs)');
+        return;
       }
     }
   }, [isInitialized, termsAccepted, onboardingCompleted, isCaregiver, requiresSubscription, segments, isLoading, router]);
@@ -170,30 +192,24 @@ export default function RootLayout() {
     async function initializeServices() {
       console.log('[RootLayout] Initializing services...');
       
-      const timeout = setTimeout(() => {
-        console.log('[RootLayout] Service initialization timeout, hiding splash');
-        SplashScreen.hideAsync();
-      }, 5000);
-
       try {
         sentry.initialize();
+        
         await Promise.race([
-          Promise.all([
-            posthog.initialize(),
-            supabase.initialize(),
-            pushNotifications.initialize(),
-            realtimeNotificationService.initialize(),
+          Promise.allSettled([
+            posthog.initialize().catch(e => console.log('[RootLayout] PostHog init skipped:', e.message)),
+            supabase.initialize().catch(e => console.log('[RootLayout] Supabase init skipped:', e.message)),
+            pushNotifications.initialize().catch(e => console.log('[RootLayout] Push init skipped:', e.message)),
+            realtimeNotificationService.initialize().catch(e => console.log('[RootLayout] Realtime init skipped:', e.message)),
           ]),
-          new Promise(resolve => setTimeout(resolve, 3000)),
+          new Promise(resolve => setTimeout(resolve, 2000)),
         ]);
         
-        clearTimeout(timeout);
         console.log('[RootLayout] Services initialized');
       } catch (error) {
-        clearTimeout(timeout);
         console.error('[RootLayout] Service initialization error:', error);
       } finally {
-        SplashScreen.hideAsync();
+        await SplashScreen.hideAsync();
       }
     }
     

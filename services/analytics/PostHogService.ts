@@ -5,15 +5,15 @@ class PostHogService {
   private client: PostHog | null = null;
   private isInitialized = false;
 
-  async initialize() {
-    if (this.isInitialized) return;
+  async initialize(): Promise<void> {
+    if (this.isInitialized) return Promise.resolve();
 
     const apiKey = process.env.EXPO_PUBLIC_POSTHOG_KEY;
     const host = process.env.EXPO_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com';
 
     if (!apiKey) {
       console.warn('[PostHog] API key not configured. Analytics disabled.');
-      return;
+      return Promise.resolve();
     }
 
     try {
@@ -23,8 +23,10 @@ class PostHogService {
       });
       this.isInitialized = true;
       console.log('[PostHog] Initialized successfully');
+      return Promise.resolve();
     } catch (error) {
       console.error('[PostHog] Initialization failed:', error);
+      return Promise.resolve();
     }
   }
 

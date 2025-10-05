@@ -20,10 +20,10 @@ class RealtimeNotificationService {
   private notificationSubscription: Notifications.Subscription | null = null;
   private responseSubscription: Notifications.Subscription | null = null;
 
-  async initialize() {
+  async initialize(): Promise<void> {
     if (Platform.OS === 'web') {
       console.log('[RealtimeNotification] Web platform - using local notifications only');
-      return;
+      return Promise.resolve();
     }
 
     if (isExpoGo) {
@@ -40,8 +40,10 @@ class RealtimeNotificationService {
       );
 
       console.log('[RealtimeNotification] Service initialized');
+      return Promise.resolve();
     } catch {
       console.log('[RealtimeNotification] Listener setup skipped (Expo Go limitation)');
+      return Promise.resolve();
     }
   }
 
