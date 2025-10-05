@@ -325,7 +325,7 @@ export default function InviteGenerateScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Stack.Screen options={{ title: 'Invite Caregiver' }} />
+        <Stack.Screen options={{ title: 'Invite Caregiver', headerBackVisible: true }} />
         <ActivityIndicator size="large" color={colors.primary} />
         <Text style={styles.loadingText}>Generating invite code...</Text>
       </View>
@@ -338,6 +338,7 @@ export default function InviteGenerateScreen() {
         options={{
           title: 'Invite Caregiver',
           headerStyle: { backgroundColor: colors.background },
+          headerBackVisible: true,
         }}
       />
 
