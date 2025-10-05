@@ -408,13 +408,7 @@ export default function CaregiverDashboardScreen() {
       <View style={[styles.header, { paddingTop: insets.top + spacing.md }]}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => {
-            if (router.canGoBack()) {
-              router.back();
-            } else {
-              router.replace('/(tabs)');
-            }
-          }}
+          onPress={() => router.push('/(tabs)')}
           activeOpacity={0.7}
         >
           <ArrowLeft size={24} color={colors.text} />

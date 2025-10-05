@@ -320,7 +320,9 @@ export default function OnboardingScreen() {
         console.log('[Onboarding] Caregiver flow - Completing onboarding');
         trackStep('onboarding_complete');
         updateProfile({ onboardingCompleted: true });
-        router.replace('/paywall');
+        setTimeout(() => {
+          router.replace('/paywall');
+        }, 100);
         return;
       } else {
         console.log('[Onboarding] Patient flow - Moving to emergency contacts');
@@ -351,7 +353,9 @@ export default function OnboardingScreen() {
       console.log('[Onboarding] Final step - Completing onboarding');
       trackStep('onboarding_complete');
       updateProfile({ onboardingCompleted: true });
-      router.replace('/(tabs)');
+      setTimeout(() => {
+        router.replace('/(tabs)');
+      }, 100);
       return;
     }
   };
@@ -359,7 +363,9 @@ export default function OnboardingScreen() {
   const handleSkip = () => {
     if (currentIndex === 2) {
       updateProfile({ onboardingCompleted: true });
-      router.replace('/(tabs)');
+      setTimeout(() => {
+        router.replace('/(tabs)');
+      }, 100);
     }
   };
 
