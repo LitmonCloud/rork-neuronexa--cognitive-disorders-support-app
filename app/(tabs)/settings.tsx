@@ -360,6 +360,29 @@ export default function SettingsScreen() {
 
         {!isCaregiver && (
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Caregiver Connection</Text>
+          
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => router.push('/patient-generate-code')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.secondary + '20' }]}>
+                <UserPlus size={20} color={colors.secondary} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Connect Caregiver</Text>
+                <Text style={styles.settingDescription}>Generate a code to share with your caregiver</Text>
+              </View>
+            </View>
+            <ChevronRight size={20} color={colors.textLight} />
+          </TouchableOpacity>
+        </View>
+        )}
+
+        {!isCaregiver && (
+        <View style={styles.section}>
           <Text style={styles.sectionTitle}>Visual Settings</Text>
           
           <TouchableOpacity 
@@ -652,29 +675,6 @@ export default function SettingsScreen() {
               trackColor={{ false: colors.borderLight, true: colors.success }}
               thumbColor={colors.surface}
             />
-          </TouchableOpacity>
-        </View>
-        )}
-
-        {!isCaregiver && (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Caregiver Connection</Text>
-          
-          <TouchableOpacity 
-            style={styles.settingRow}
-            onPress={() => router.push('/invite-generate')}
-            activeOpacity={0.7}
-          >
-            <View style={styles.settingLeft}>
-              <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
-                <UserPlus size={20} color={colors.primary} />
-              </View>
-              <View style={styles.settingText}>
-                <Text style={styles.settingLabel}>Invite Caregiver</Text>
-                <Text style={styles.settingDescription}>Generate a code to connect with a caregiver</Text>
-              </View>
-            </View>
-            <ChevronRight size={20} color={colors.textLight} />
           </TouchableOpacity>
         </View>
         )}
