@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -7,22 +7,17 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { Wind, ArrowLeft, Hand, Brain, Shield, Heart } from 'lucide-react-native';
+import { Wind, Hand, Brain, Shield, Heart } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useDementia } from '@/contexts/DementiaContext';
 import { breathingPatterns } from '@/constants/mentalHealthResources';
-import { BreathingPattern } from '@/types/mentalHealth';
-import BreathingExercise from '@/components/BreathingExercise';
 
 const { width } = Dimensions.get('window');
 
 export default function WellnessScreen() {
   const { colors } = useTheme();
-  const insets = useSafeAreaInsets();
   const { settings } = useDementia();
-  const [selectedPattern, setSelectedPattern] = useState<BreathingPattern | null>(null);
 
   const memorySupportEnabled = settings?.enabled || false;
   const cognitiveExercisesEnabled = settings?.photoBasedNavigationEnabled || false;
@@ -65,31 +60,7 @@ export default function WellnessScreen() {
       lineHeight: 24,
       marginTop: 4,
     },
-    exerciseHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: 20,
-      paddingTop: insets.top + 16,
-      paddingBottom: 16,
-      backgroundColor: colors.surface,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    backButtonLarge: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 6,
-      paddingVertical: 10,
-      paddingHorizontal: 14,
-      borderRadius: 12,
-      backgroundColor: colors.primaryLight,
-      minWidth: 80,
-    },
-    backButtonTextLarge: {
-      fontSize: 18,
-      color: '#000000',
-      fontWeight: '700' as const,
-    },
+
     content: {
       flex: 1,
     },
@@ -273,29 +244,6 @@ export default function WellnessScreen() {
     },
   });
 
-  if (selectedPattern) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.exerciseHeader}>
-          <TouchableOpacity
-            style={styles.backButtonLarge}
-            onPress={() => setSelectedPattern(null)}
-            activeOpacity={0.7}
-          >
-            <ArrowLeft size={24} color="#000000" />
-            <Text style={styles.backButtonTextLarge}>Back</Text>
-          </TouchableOpacity>
-        </View>
-        <BreathingExercise
-          pattern={selectedPattern}
-          onComplete={() => {
-            console.log('Breathing exercise completed');
-          }}
-        />
-      </View>
-    );
-  }
-
   if (!shouldShowWellness) {
     return (
       <View style={styles.container}>
@@ -373,7 +321,7 @@ export default function WellnessScreen() {
               <TouchableOpacity
                 key={pattern.id}
                 style={[styles.breathingCard, { borderColor: pattern.color }]}
-                onPress={() => setSelectedPattern(pattern)}
+                onPress={() => router.push(`/breathing-exercise?patternId=${pattern.id}`)}
                 activeOpacity={0.7}
               >
                 <View style={styles.breathingCardHeader}>
