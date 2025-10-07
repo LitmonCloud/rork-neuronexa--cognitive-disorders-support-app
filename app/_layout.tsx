@@ -18,6 +18,7 @@ import { NotificationProvider } from "@/contexts/NotificationContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { UserProfileProvider, useUserProfile } from "@/contexts/UserProfileContext";
 import { DementiaProvider } from "@/contexts/DementiaContext";
+import { LocationContext } from "@/contexts/LocationContext";
 import { posthog } from "@/services/analytics/PostHogService";
 import { sentry } from "@/services/analytics/SentryService";
 import { supabase } from "@/services/backend/SupabaseService";
@@ -106,8 +107,8 @@ function RootLayoutNav() {
 
     const currentRoute = segments[0];
     const publicRoutes = ['terms-agreement', 'onboarding', 'paywall'];
-    const caregiverRoutes = ['caregiver-dashboard', 'caregiver-task-manager', 'caregiver-patient-tasks'];
-    const sharedRoutes = ['(tabs)', 'task', 'notifications', 'notification-settings', 'finger-trace', 'emergency-contacts', 'memory-journal', 'invite-generate', 'invite-redeem'];
+    const caregiverRoutes = ['caregiver-dashboard', 'caregiver-task-manager', 'caregiver-patient-tasks', 'caregiver-location-monitor'];
+    const sharedRoutes = ['(tabs)', 'task', 'notifications', 'notification-settings', 'finger-trace', 'emergency-contacts', 'memory-journal', 'invite-generate', 'invite-redeem', 'patient-generate-code', 'patient-location'];
     
     const isPublicRoute = publicRoutes.includes(currentRoute);
     const isCaregiverRoute = caregiverRoutes.includes(currentRoute);
@@ -183,6 +184,9 @@ function RootLayoutNav() {
       <Stack.Screen name="finger-trace" options={{ headerShown: false }} />
       <Stack.Screen name="emergency-contacts" options={{ headerShown: true, title: 'Emergency Contacts' }} />
       <Stack.Screen name="memory-journal" options={{ headerShown: true, title: 'Memory Journal' }} />
+      <Stack.Screen name="patient-generate-code" options={{ headerShown: false }} />
+      <Stack.Screen name="patient-location" options={{ headerShown: true, title: 'Location Tracking' }} />
+      <Stack.Screen name="caregiver-location-monitor" options={{ headerShown: true, title: 'Patient Locations' }} />
     </Stack>
   );
 }
@@ -228,16 +232,18 @@ export default function RootLayout() {
                   <NotificationProvider>
                     <UserProfileProvider>
                       <DementiaProvider>
-                        <CaregiverProvider>
-                          <PatientProvider>
-                            <TaskProvider>
+                        <LocationContext>
+                          <CaregiverProvider>
+                            <PatientProvider>
+                              <TaskProvider>
                               <GestureHandlerRootView style={{ flex: 1 }}>
                                 <RealtimeNotificationListener />
                                 <RootLayoutNav />
                               </GestureHandlerRootView>
-                            </TaskProvider>
-                          </PatientProvider>
-                        </CaregiverProvider>
+                              </TaskProvider>
+                            </PatientProvider>
+                          </CaregiverProvider>
+                        </LocationContext>
                       </DementiaProvider>
                     </UserProfileProvider>
                   </NotificationProvider>
