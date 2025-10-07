@@ -1,5 +1,5 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
+import { StyleSheet, View, Animated } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { Canvas, Path, Skia, BlurMask } from '@shopify/react-native-skia';
 import { buildGuidePolyline, GuideKind, guidePathSkia } from '../logic/shapes';
@@ -43,6 +43,7 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
     b: { x: number; y: number };
     lastCrossIndex: number;
   }>({ a: { x: 0, y: 0 }, b: { x: 0, y: 0 }, lastCrossIndex: -1 });
+  const pulseAnim = useRef(new Animated.Value(1)).current;
 
   const corePaint = useMemo(() => {
     const p = Skia.Paint();
@@ -87,6 +88,23 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
       lastCrossIndex: -1,
     };
   }, [canvasWidth, canvasHeight]);
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.4,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [pulseAnim]);
 
   const pathFrom = (pts: { x: number; y: number }[]) => {
     const p = Skia.Path.Make();
@@ -166,6 +184,8 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
       onTracingEnd?.();
     });
 
+  const startPoint = polylineRef.length > 0 ? polylineRef[0] : null;
+
   return (
     <View
       style={styles.wrap}
@@ -182,9 +202,11 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
           {canvasWidth > 0 && canvasHeight > 0 && (
             <Path
               path={guideSkiaPath}
-              color="rgba(255,255,255,0.3)"
+              color="rgba(255,255,255,0.25)"
               style="stroke"
-              strokeWidth={4}
+              strokeWidth={8}
+              strokeCap="round"
+              strokeJoin="round"
             />
           )}
 
@@ -210,6 +232,20 @@ export const TracingCanvas: React.FC<TracingCanvasProps> = ({
           )}
         </Canvas>
       </GestureDetector>
+      {startPoint && strokes.length === 0 && (
+        <Animated.View
+          style={[
+            styles.startIndicator,
+            {
+              left: startPoint.x - 16,
+              top: startPoint.y - 16,
+              transform: [{ scale: pulseAnim }],
+            },
+          ]}
+        >
+          <View style={[styles.startDot, { backgroundColor: strokeColor }]} />
+        </Animated.View>
+      )}
     </View>
   );
 };
@@ -253,7 +289,7 @@ function segmentsCross(
 
 const styles = StyleSheet.create({
   wrap: { 
-    borderRadius: 22, 
+    borderRadius: 24, 
     overflow: 'hidden',
     width: '100%',
     aspectRatio: 1,
@@ -261,6 +297,20 @@ const styles = StyleSheet.create({
   },
   canvas: { 
     flex: 1,
-    backgroundColor: 'rgba(20,20,28,0.9)' 
+    backgroundColor: 'rgba(20,20,28,0.95)' 
+  },
+  startIndicator: {
+    position: 'absolute',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  startDot: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
   },
 });

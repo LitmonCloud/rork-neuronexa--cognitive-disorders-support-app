@@ -74,46 +74,36 @@ export function guidePathSkia(target: SkPath, kind: GuideKind, w: number, h: num
   }
 
   if (kind === 'infinity') {
-    const lobeWidth = Math.min(W, H) * 0.35;
-    const lobeHeight = Math.min(W, H) * 0.25;
+    const scale = Math.min(W, H) / 100;
+    const steps = 200;
+    let firstPoint = true;
     
-    target.moveTo(cx, cy);
-    
-    target.cubicTo(
-      cx - lobeWidth * 0.3, cy - lobeHeight,
-      cx - lobeWidth * 0.7, cy - lobeHeight,
-      cx - lobeWidth, cy
-    );
-    
-    target.cubicTo(
-      cx - lobeWidth * 0.7, cy + lobeHeight,
-      cx - lobeWidth * 0.3, cy + lobeHeight,
-      cx, cy
-    );
-    
-    target.cubicTo(
-      cx + lobeWidth * 0.3, cy + lobeHeight,
-      cx + lobeWidth * 0.7, cy + lobeHeight,
-      cx + lobeWidth, cy
-    );
-    
-    target.cubicTo(
-      cx + lobeWidth * 0.7, cy - lobeHeight,
-      cx + lobeWidth * 0.3, cy - lobeHeight,
-      cx, cy
-    );
+    for (let i = 0; i <= steps; i++) {
+      const t = (i / steps) * 2 * Math.PI;
+      const hx = Math.cos(t) / (1 + Math.pow(Math.sin(t), 2));
+      const hy = Math.sin(t) * Math.cos(t) / (1 + Math.pow(Math.sin(t), 2));
+      const px = cx + hx * 40 * scale;
+      const py = cy + hy * 40 * scale;
+      
+      if (firstPoint) {
+        target.moveTo(px, py);
+        firstPoint = false;
+      } else {
+        target.lineTo(px, py);
+      }
+    }
     
     return;
   }
 
   if (kind === 'spiral') {
-    const turns = 3;
-    const steps = 600;
-    const maxR = Math.min(W, H) / 2.2;
+    const turns = 2.5;
+    const steps = 500;
+    const maxR = Math.min(W, H) / 2.4;
     for (let i = 0; i <= steps; i++) {
       const t = i / steps;
       const theta = 2 * Math.PI * turns * t;
-      const r = t * maxR;
+      const r = (maxR * 0.15) + (t * maxR * 0.85);
       const px = cx + r * Math.cos(theta);
       const py = cy + r * Math.sin(theta);
       if (i === 0) target.moveTo(px, py);
@@ -123,36 +113,35 @@ export function guidePathSkia(target: SkPath, kind: GuideKind, w: number, h: num
   }
 
   if (kind === 'letter-a') {
-    const width = Math.min(W, H) * 0.6;
-    const height = Math.min(W, H) * 0.8;
+    const width = Math.min(W, H) * 0.55;
+    const height = Math.min(W, H) * 0.75;
     const topX = cx;
     const topY = cy - height / 2;
     const bottomLeftX = cx - width / 2;
     const bottomLeftY = cy + height / 2;
     const bottomRightX = cx + width / 2;
     const bottomRightY = cy + height / 2;
-    const crossbarY = cy + height * 0.1;
+    const crossbarY = cy + height * 0.05;
 
-    target.moveTo(topX, topY);
-    target.lineTo(bottomLeftX, bottomLeftY);
-    target.moveTo(topX, topY);
+    target.moveTo(bottomLeftX, bottomLeftY);
+    target.lineTo(topX, topY);
     target.lineTo(bottomRightX, bottomRightY);
-    target.moveTo(cx - width * 0.35, crossbarY);
-    target.lineTo(cx + width * 0.35, crossbarY);
+    target.moveTo(cx - width * 0.38, crossbarY);
+    target.lineTo(cx + width * 0.38, crossbarY);
     return;
   }
 
   if (kind === 'number-8') {
-    const lobeRadius = Math.min(W, H) * 0.22;
-    const topCenterY = cy - lobeRadius * 0.6;
-    const bottomCenterY = cy + lobeRadius * 0.6;
-    const halfSamples = 30;
+    const lobeRadius = Math.min(W, H) * 0.20;
+    const topCenterY = cy - lobeRadius * 0.7;
+    const bottomCenterY = cy + lobeRadius * 0.7;
+    const samples = 40;
     let firstPoint = true;
 
-    for (let i = 0; i <= halfSamples; i++) {
-      const angle = (i / halfSamples) * 2 * Math.PI;
+    for (let i = 0; i <= samples; i++) {
+      const angle = (i / samples) * 2 * Math.PI;
       const px = cx + lobeRadius * Math.cos(angle);
-      const py = topCenterY + lobeRadius * Math.sin(angle);
+      const py = topCenterY + lobeRadius * 0.85 * Math.sin(angle);
       
       if (firstPoint) {
         target.moveTo(px, py);
@@ -162,10 +151,10 @@ export function guidePathSkia(target: SkPath, kind: GuideKind, w: number, h: num
       }
     }
 
-    for (let i = 0; i <= halfSamples; i++) {
-      const angle = (i / halfSamples) * 2 * Math.PI;
+    for (let i = 0; i <= samples; i++) {
+      const angle = (i / samples) * 2 * Math.PI;
       const px = cx + lobeRadius * Math.cos(angle);
-      const py = bottomCenterY + lobeRadius * Math.sin(angle);
+      const py = bottomCenterY + lobeRadius * 0.85 * Math.sin(angle);
       target.lineTo(px, py);
     }
     
@@ -241,73 +230,70 @@ export function buildGuidePolyline(
   }
 
   if (kind === 'infinity') {
-    const lobeWidth = Math.min(W, H) * 0.35;
-    const lobeHeight = Math.min(W, H) * 0.25;
-    const edges = samples;
+    const scale = Math.min(W, H) / 100;
+    const steps = samples;
     
-    for (let i = 0; i <= edges; i++) {
-      let px, py;
-      
-      if (i <= edges / 2) {
-        const angle = (i / (edges / 2)) * 2 * Math.PI;
-        px = cx - lobeWidth + lobeWidth * Math.cos(angle);
-        py = cy + lobeHeight * Math.sin(angle);
-      } else {
-        const angle = ((i - edges / 2) / (edges / 2)) * 2 * Math.PI;
-        px = cx + lobeWidth + lobeWidth * Math.cos(angle + Math.PI);
-        py = cy + lobeHeight * Math.sin(angle + Math.PI);
-      }
-      
-      pts.push({ x: px, y: py });
+    for (let i = 0; i <= steps; i++) {
+      const t = (i / steps) * 2 * Math.PI;
+      const hx = Math.cos(t) / (1 + Math.pow(Math.sin(t), 2));
+      const hy = Math.sin(t) * Math.cos(t) / (1 + Math.pow(Math.sin(t), 2));
+      pts.push({ x: cx + hx * 40 * scale, y: cy + hy * 40 * scale });
     }
     return pts;
   }
 
   if (kind === 'spiral') {
-    const turns = 3;
+    const turns = 2.5;
     const steps = samples;
-    const maxR = Math.min(W, H) / 2.2;
+    const maxR = Math.min(W, H) / 2.4;
     for (let i = 0; i <= steps; i++) {
       const t = i / steps;
       const theta = 2 * Math.PI * turns * t;
-      const r = t * maxR;
+      const r = (maxR * 0.15) + (t * maxR * 0.85);
       pts.push({ x: cx + r * Math.cos(theta), y: cy + r * Math.sin(theta) });
     }
     return pts;
   }
 
   if (kind === 'letter-a') {
-    const width = Math.min(W, H) * 0.6;
-    const height = Math.min(W, H) * 0.8;
+    const width = Math.min(W, H) * 0.55;
+    const height = Math.min(W, H) * 0.75;
     const topX = cx;
     const topY = cy - height / 2;
     const bottomLeftX = cx - width / 2;
     const bottomLeftY = cy + height / 2;
     const bottomRightX = cx + width / 2;
     const bottomRightY = cy + height / 2;
-    const crossbarY = cy + height * 0.1;
+    const crossbarY = cy + height * 0.05;
 
-    const leftSide = sampleEdges([{ x: topX, y: topY }, { x: bottomLeftX, y: bottomLeftY }], samples / 3);
-    const rightSide = sampleEdges([{ x: topX, y: topY }, { x: bottomRightX, y: bottomRightY }], samples / 3);
-    const crossbar = sampleEdges([{ x: cx - width * 0.35, y: crossbarY }, { x: cx + width * 0.35, y: crossbarY }], samples / 3);
+    const outline = sampleEdges([
+      { x: bottomLeftX, y: bottomLeftY },
+      { x: topX, y: topY },
+      { x: bottomRightX, y: bottomRightY }
+    ], Math.floor(samples * 0.7));
     
-    return [...leftSide, ...rightSide, ...crossbar];
+    const crossbar = sampleEdges([
+      { x: cx - width * 0.38, y: crossbarY },
+      { x: cx + width * 0.38, y: crossbarY }
+    ], Math.floor(samples * 0.3));
+    
+    return [...outline, ...crossbar];
   }
 
   if (kind === 'number-8') {
-    const lobeRadius = Math.min(W, H) * 0.22;
-    const topCenterY = cy - lobeRadius * 0.6;
-    const bottomCenterY = cy + lobeRadius * 0.6;
+    const lobeRadius = Math.min(W, H) * 0.20;
+    const topCenterY = cy - lobeRadius * 0.7;
+    const bottomCenterY = cy + lobeRadius * 0.7;
     const halfSamples = Math.floor(samples / 2);
 
     for (let i = 0; i <= halfSamples; i++) {
       const angle = (i / halfSamples) * 2 * Math.PI;
-      pts.push({ x: cx + lobeRadius * Math.cos(angle), y: topCenterY + lobeRadius * Math.sin(angle) });
+      pts.push({ x: cx + lobeRadius * Math.cos(angle), y: topCenterY + lobeRadius * 0.85 * Math.sin(angle) });
     }
 
     for (let i = 0; i <= halfSamples; i++) {
       const angle = (i / halfSamples) * 2 * Math.PI;
-      pts.push({ x: cx + lobeRadius * Math.cos(angle), y: bottomCenterY + lobeRadius * Math.sin(angle) });
+      pts.push({ x: cx + lobeRadius * Math.cos(angle), y: bottomCenterY + lobeRadius * 0.85 * Math.sin(angle) });
     }
 
     return pts;

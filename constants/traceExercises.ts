@@ -66,18 +66,18 @@ export const traceExercises: TraceExercise[] = [
   },
   {
     id: 'infinity-medium',
-    name: 'Infinity Loop',
+    name: 'Infinity Symbol',
     type: 'shape',
     shape: 'infinity',
-    description: 'Trace the infinity symbol for continuous flow',
+    description: 'Trace the infinity symbol (∞) for continuous flow',
     difficulty: 'medium',
     duration: 45,
     color: '#9B59B6',
     instructions: [
-      'Start at the center crossing point',
-      'Trace a smooth figure-8 pattern',
+      'Start at the center point',
+      'Trace a smooth sideways figure-8',
       'Keep the motion fluid and continuous',
-      'Complete 5 full loops'
+      'Complete 4 full loops'
     ],
     benefits: [
       'Bilateral brain stimulation',
@@ -132,15 +132,15 @@ export const traceExercises: TraceExercise[] = [
     name: 'Spiral Trace',
     type: 'shape',
     shape: 'spiral',
-    description: 'Trace an expanding spiral outward',
+    description: 'Trace an expanding spiral from center outward',
     difficulty: 'hard',
-    duration: 60,
+    duration: 50,
     color: '#1ABC9C',
     instructions: [
-      'Start at the center point',
-      'Slowly spiral outward',
-      'Maintain consistent spacing',
-      'Complete 2 full spirals'
+      'Start near the center',
+      'Slowly spiral outward in circular motion',
+      'Maintain smooth, consistent spacing',
+      'Follow the path to the outer edge'
     ],
     benefits: [
       'Deep concentration',
@@ -153,15 +153,15 @@ export const traceExercises: TraceExercise[] = [
     name: 'Letter A',
     type: 'letter',
     character: 'A',
-    description: 'Trace the letter A',
+    description: 'Trace the uppercase letter A',
     difficulty: 'easy',
     duration: 25,
     color: '#3498DB',
     instructions: [
-      'Start at the top point',
-      'Trace down the left side',
-      'Trace down the right side',
-      'Add the horizontal bar'
+      'Start at bottom-left',
+      'Trace up to the peak',
+      'Trace down to bottom-right',
+      'Add the horizontal crossbar'
     ],
     benefits: [
       'Letter recognition',
@@ -174,15 +174,15 @@ export const traceExercises: TraceExercise[] = [
     name: 'Number 8',
     type: 'number',
     character: '8',
-    description: 'Trace the number 8',
+    description: 'Trace the number 8 with two connected loops',
     difficulty: 'medium',
-    duration: 30,
+    duration: 35,
     color: '#E67E22',
     instructions: [
-      'Start at the top',
-      'Trace the upper loop',
-      'Continue to lower loop',
-      'Complete the figure'
+      'Start at the top center',
+      'Trace the upper oval clockwise',
+      'Continue smoothly to lower oval',
+      'Complete both loops continuously'
     ],
     benefits: [
       'Number familiarity',
