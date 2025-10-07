@@ -25,21 +25,24 @@ export function guidePathSkia(target: SkPath, kind: GuideKind, w: number, h: num
 
   if (kind === 'heart') {
     const scale = Math.min(W, H) / 200;
-    const startY = cy + 60 * scale;
-    target.moveTo(cx, startY);
+    const edges = 60;
+    let firstPoint = true;
     
-    target.cubicTo(
-      cx - 75 * scale, cy + 30 * scale,
-      cx - 75 * scale, cy - 30 * scale,
-      cx, cy - 50 * scale
-    );
-    
-    target.cubicTo(
-      cx + 75 * scale, cy - 30 * scale,
-      cx + 75 * scale, cy + 30 * scale,
-      cx, startY
-    );
-    
+    for (let i = 0; i <= edges; i++) {
+      const t = (i / edges) * 2 * Math.PI;
+      const hx = 16 * Math.pow(Math.sin(t), 3);
+      const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+      const px = cx + hx * scale * 5;
+      const py = cy + hy * scale * 5;
+      
+      if (firstPoint) {
+        target.moveTo(px, py);
+        firstPoint = false;
+      } else {
+        target.lineTo(px, py);
+      }
+    }
+    target.close();
     return;
   }
 
@@ -143,9 +146,30 @@ export function guidePathSkia(target: SkPath, kind: GuideKind, w: number, h: num
     const lobeRadius = Math.min(W, H) * 0.22;
     const topCenterY = cy - lobeRadius * 0.6;
     const bottomCenterY = cy + lobeRadius * 0.6;
+    const halfSamples = 30;
+    let firstPoint = true;
 
-    target.addCircle(cx, topCenterY, lobeRadius);
-    target.addCircle(cx, bottomCenterY, lobeRadius);
+    for (let i = 0; i <= halfSamples; i++) {
+      const angle = (i / halfSamples) * 2 * Math.PI;
+      const px = cx + lobeRadius * Math.cos(angle);
+      const py = topCenterY + lobeRadius * Math.sin(angle);
+      
+      if (firstPoint) {
+        target.moveTo(px, py);
+        firstPoint = false;
+      } else {
+        target.lineTo(px, py);
+      }
+    }
+
+    for (let i = 0; i <= halfSamples; i++) {
+      const angle = (i / halfSamples) * 2 * Math.PI;
+      const px = cx + lobeRadius * Math.cos(angle);
+      const py = bottomCenterY + lobeRadius * Math.sin(angle);
+      target.lineTo(px, py);
+    }
+    
+    target.close();
     return;
   }
 }
