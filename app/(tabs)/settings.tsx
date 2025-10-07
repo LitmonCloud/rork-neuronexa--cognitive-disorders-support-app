@@ -6,7 +6,7 @@ import { useTheme, ThemeMode } from '@/contexts/ThemeContext';
 import { useDementia } from '@/contexts/DementiaContext';
 import { useUserProfile } from '@/contexts/UserProfileContext';
 import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database, Clock, MapPin, Search, UserPlus } from 'lucide-react-native';
-import { mentalHealthResources, caregiverResources } from '@/constants/mentalHealthResources';
+import { caregiverResources, cognitiveResources, memoryResources } from '@/constants/mentalHealthResources';
 import { MentalHealthResource } from '@/types/mentalHealth';
 
 export default function SettingsScreen() {
@@ -691,35 +691,44 @@ export default function SettingsScreen() {
 
         {!isCaregiver && isCognitiveSupport && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Mental Health Resources</Text>
+          <Text style={styles.sectionTitle}>Cognitive Support Resources</Text>
           
           <View style={styles.resourcesSection}>
             <Text style={styles.resourcesSectionTitle}>Crisis Support</Text>
             <Text style={styles.resourcesSectionDescription}>
               Immediate help available 24/7
             </Text>
-            {mentalHealthResources
+            {cognitiveResources
               .filter((r) => r.category === 'crisis')
               .map(renderResourceCard)}
           </View>
 
           <View style={styles.resourcesSection}>
             <Text style={styles.resourcesSectionTitle}>Support & Community</Text>
-            {mentalHealthResources
+            <Text style={styles.resourcesSectionDescription}>
+              Connect with others who understand your journey
+            </Text>
+            {cognitiveResources
               .filter((r) => r.category === 'support')
               .map(renderResourceCard)}
           </View>
 
           <View style={styles.resourcesSection}>
             <Text style={styles.resourcesSectionTitle}>Education & Resources</Text>
-            {mentalHealthResources
+            <Text style={styles.resourcesSectionDescription}>
+              Learn about ADHD, autism, anxiety, and cognitive differences
+            </Text>
+            {cognitiveResources
               .filter((r) => r.category === 'education')
               .map(renderResourceCard)}
           </View>
 
           <View style={styles.resourcesSection}>
             <Text style={styles.resourcesSectionTitle}>Therapy Services</Text>
-            {mentalHealthResources
+            <Text style={styles.resourcesSectionDescription}>
+              Professional support tailored to your needs
+            </Text>
+            {cognitiveResources
               .filter((r) => r.category === 'therapy')
               .map(renderResourceCard)}
           </View>
@@ -727,6 +736,48 @@ export default function SettingsScreen() {
           <View style={styles.crisisFooter}>
             <Text style={styles.crisisFooterText}>
               If you&apos;re in crisis, please call 988 or go to your nearest emergency room.
+            </Text>
+          </View>
+        </View>
+        )}
+
+        {!isCaregiver && isMemorySupport && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Memory Support Resources</Text>
+          
+          <View style={styles.resourcesSection}>
+            <Text style={styles.resourcesSectionTitle}>24/7 Helplines</Text>
+            <Text style={styles.resourcesSectionDescription}>
+              Immediate support for Alzheimer&apos;s and dementia
+            </Text>
+            {memoryResources
+              .filter((r) => r.category === 'crisis')
+              .map(renderResourceCard)}
+          </View>
+
+          <View style={styles.resourcesSection}>
+            <Text style={styles.resourcesSectionTitle}>Support Organizations</Text>
+            <Text style={styles.resourcesSectionDescription}>
+              Connect with specialized dementia support services
+            </Text>
+            {memoryResources
+              .filter((r) => r.category === 'support')
+              .map(renderResourceCard)}
+          </View>
+
+          <View style={styles.resourcesSection}>
+            <Text style={styles.resourcesSectionTitle}>Education & Research</Text>
+            <Text style={styles.resourcesSectionDescription}>
+              Learn about memory conditions and latest research
+            </Text>
+            {memoryResources
+              .filter((r) => r.category === 'education')
+              .map(renderResourceCard)}
+          </View>
+
+          <View style={styles.crisisFooter}>
+            <Text style={styles.crisisFooterText}>
+              For urgent medical concerns, please call 911 or visit your nearest emergency room.
             </Text>
           </View>
         </View>
