@@ -24,13 +24,18 @@ const REPETITIVE_QUESTIONS_KEY = '@neuronexa_repetitive_questions';
 async function loadDementiaSettings(): Promise<DementiaSettings> {
   try {
     const stored = await AsyncStorage.getItem(DEMENTIA_SETTINGS_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      return {
-        ...parsed,
-        autoReadStepsEnabled: parsed.autoReadStepsEnabled ?? false,
-        aiStepCoachEnabled: parsed.aiStepCoachEnabled ?? false,
-      };
+    if (stored && stored !== 'undefined' && stored !== 'null') {
+      try {
+        const parsed = JSON.parse(stored);
+        return {
+          ...parsed,
+          autoReadStepsEnabled: parsed.autoReadStepsEnabled ?? false,
+          aiStepCoachEnabled: parsed.aiStepCoachEnabled ?? false,
+        };
+      } catch (parseError) {
+        console.error('[DementiaContext] Error parsing settings:', parseError);
+        await AsyncStorage.removeItem(DEMENTIA_SETTINGS_KEY);
+      }
     }
     const defaultSettings: DementiaSettings = {
       enabled: false,
@@ -72,7 +77,15 @@ async function loadDementiaSettings(): Promise<DementiaSettings> {
 async function loadEmergencyContacts(): Promise<EmergencyContact[]> {
   try {
     const stored = await AsyncStorage.getItem(EMERGENCY_CONTACTS_KEY);
-    return stored ? JSON.parse(stored) : [];
+    if (stored && stored !== 'undefined' && stored !== 'null') {
+      try {
+        return JSON.parse(stored);
+      } catch (parseError) {
+        console.error('[DementiaContext] Error parsing emergency contacts:', parseError);
+        await AsyncStorage.removeItem(EMERGENCY_CONTACTS_KEY);
+      }
+    }
+    return [];
   } catch (error) {
     console.error('[DementiaContext] Error loading emergency contacts:', error);
     return [];
@@ -82,7 +95,15 @@ async function loadEmergencyContacts(): Promise<EmergencyContact[]> {
 async function loadMedications(): Promise<MedicationReminder[]> {
   try {
     const stored = await AsyncStorage.getItem(MEDICATIONS_KEY);
-    return stored ? JSON.parse(stored) : [];
+    if (stored && stored !== 'undefined' && stored !== 'null') {
+      try {
+        return JSON.parse(stored);
+      } catch (parseError) {
+        console.error('[DementiaContext] Error parsing medications:', parseError);
+        await AsyncStorage.removeItem(MEDICATIONS_KEY);
+      }
+    }
+    return [];
   } catch (error) {
     console.error('[DementiaContext] Error loading medications:', error);
     return [];
@@ -92,7 +113,21 @@ async function loadMedications(): Promise<MedicationReminder[]> {
 async function loadMemoryJournal(): Promise<MemoryJournalEntry[]> {
   try {
     const stored = await AsyncStorage.getItem(MEMORY_JOURNAL_KEY);
-    return stored ? JSON.parse(stored) : [];
+    if (stored && stored !== 'undefined' && stored !== 'null') {
+      try {
+        const parsed = JSON.parse(stored);
+        return parsed.map((entry: any) => ({
+          ...entry,
+          photoUris: Array.isArray(entry.photoUris) ? entry.photoUris : [],
+          people: Array.isArray(entry.people) ? entry.people : [],
+          tags: Array.isArray(entry.tags) ? entry.tags : [],
+        }));
+      } catch (parseError) {
+        console.error('[DementiaContext] Error parsing memory journal:', parseError);
+        await AsyncStorage.removeItem(MEMORY_JOURNAL_KEY);
+      }
+    }
+    return [];
   } catch (error) {
     console.error('[DementiaContext] Error loading memory journal:', error);
     return [];
@@ -102,7 +137,15 @@ async function loadMemoryJournal(): Promise<MemoryJournalEntry[]> {
 async function loadSafeZones(): Promise<SafeZone[]> {
   try {
     const stored = await AsyncStorage.getItem(SAFE_ZONES_KEY);
-    return stored ? JSON.parse(stored) : [];
+    if (stored && stored !== 'undefined' && stored !== 'null') {
+      try {
+        return JSON.parse(stored);
+      } catch (parseError) {
+        console.error('[DementiaContext] Error parsing safe zones:', parseError);
+        await AsyncStorage.removeItem(SAFE_ZONES_KEY);
+      }
+    }
+    return [];
   } catch (error) {
     console.error('[DementiaContext] Error loading safe zones:', error);
     return [];
@@ -112,7 +155,15 @@ async function loadSafeZones(): Promise<SafeZone[]> {
 async function loadRoutineAnchors(): Promise<DailyRoutineAnchor[]> {
   try {
     const stored = await AsyncStorage.getItem(ROUTINE_ANCHORS_KEY);
-    return stored ? JSON.parse(stored) : [];
+    if (stored && stored !== 'undefined' && stored !== 'null') {
+      try {
+        return JSON.parse(stored);
+      } catch (parseError) {
+        console.error('[DementiaContext] Error parsing routine anchors:', parseError);
+        await AsyncStorage.removeItem(ROUTINE_ANCHORS_KEY);
+      }
+    }
+    return [];
   } catch (error) {
     console.error('[DementiaContext] Error loading routine anchors:', error);
     return [];
@@ -122,7 +173,15 @@ async function loadRoutineAnchors(): Promise<DailyRoutineAnchor[]> {
 async function loadRepetitiveQuestions(): Promise<RepetitiveQuestion[]> {
   try {
     const stored = await AsyncStorage.getItem(REPETITIVE_QUESTIONS_KEY);
-    return stored ? JSON.parse(stored) : [];
+    if (stored && stored !== 'undefined' && stored !== 'null') {
+      try {
+        return JSON.parse(stored);
+      } catch (parseError) {
+        console.error('[DementiaContext] Error parsing repetitive questions:', parseError);
+        await AsyncStorage.removeItem(REPETITIVE_QUESTIONS_KEY);
+      }
+    }
+    return [];
   } catch (error) {
     console.error('[DementiaContext] Error loading repetitive questions:', error);
     return [];

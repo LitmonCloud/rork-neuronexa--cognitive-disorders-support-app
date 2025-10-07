@@ -873,7 +873,7 @@ Provide 3-4 gentle prompting questions that could help them remember more detail
           ) : (
             memoryJournal.map(entry => (
               <View key={entry.id} style={styles.journalCard}>
-                {entry.photoUris.length > 0 && entry.photoUris[0] && entry.photoUris[0].trim() !== '' && (
+                {entry.photoUris && Array.isArray(entry.photoUris) && entry.photoUris.length > 0 && entry.photoUris[0] && entry.photoUris[0].trim() !== '' && (
                   <Image source={{ uri: entry.photoUris[0] }} style={styles.journalImage} />
                 )}
                 
@@ -902,7 +902,7 @@ Provide 3-4 gentle prompting questions that could help them remember more detail
                       <Text style={styles.metaChipText}>{entry.location}</Text>
                     </View>
                   )}
-                  {entry.people && entry.people.length > 0 && (
+                  {entry.people && Array.isArray(entry.people) && entry.people.length > 0 && (
                     <View style={styles.metaChip}>
                       <Users size={12} color={colors.text} />
                       <Text style={styles.metaChipText}>{entry.people.join(', ')}</Text>
