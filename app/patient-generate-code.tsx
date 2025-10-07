@@ -384,7 +384,7 @@ export default function PatientGenerateCodeScreen() {
 
         <View style={styles.qrContainer}>
           {Platform.OS !== 'web' && code && code.trim().length > 0 ? (
-            <QRCode value={code} size={200} backgroundColor="white" />
+            <QRCode value={code || 'LOADING'} size={200} backgroundColor="white" />
           ) : (
             <View style={styles.qrPlaceholder}>
               <Text style={styles.qrPlaceholderText}>QR Code</Text>

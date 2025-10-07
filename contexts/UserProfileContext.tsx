@@ -1,7 +1,7 @@
 import createContextHook from '@nkzw/create-context-hook';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { UserProfile, UserPreference, UserHabit, UserInteraction } from '@/types/userProfile';
 
 const USER_PROFILE_KEY = '@nexa_user_profile';
@@ -72,6 +72,8 @@ export const [UserProfileProvider, useUserProfile] = createContextHook(() => {
   const profileQuery = useQuery({
     queryKey: ['userProfile'],
     queryFn: loadUserProfile,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   const saveMutation = useMutation({
@@ -82,7 +84,7 @@ export const [UserProfileProvider, useUserProfile] = createContextHook(() => {
   });
 
   const { mutate: mutateProfile } = saveMutation;
-  const profile = useMemo(() => profileQuery.data, [profileQuery.data]);
+  const profile = profileQuery.data;
 
   const updateProfile = useCallback((updates: Partial<UserProfile>) => {
     if (!profile) return;
@@ -227,7 +229,7 @@ export const [UserProfileProvider, useUserProfile] = createContextHook(() => {
     }
   }, [profile, updateProfile]);
 
-  return useMemo(() => ({
+  return {
     profile,
     isLoading: profileQuery.isLoading,
     updateProfile,
@@ -239,17 +241,5 @@ export const [UserProfileProvider, useUserProfile] = createContextHook(() => {
     setCommunicationStyle,
     addFavoriteEncouragement,
     addAvoidTopic,
-  }), [
-    profile,
-    profileQuery.isLoading,
-    updateProfile,
-    learnPreference,
-    recordHabit,
-    recordInteraction,
-    getPreferencesByCategory,
-    getStrongHabits,
-    setCommunicationStyle,
-    addFavoriteEncouragement,
-    addAvoidTopic,
-  ]);
+  } as const;
 });
