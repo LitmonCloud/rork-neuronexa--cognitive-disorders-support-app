@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -45,32 +45,7 @@ export default function PatientGenerateCodeScreen() {
   const [code, setCode] = useState<string>('');
   const [connectionCode, setConnectionCode] = useState<PatientConnectionCode | null>(null);
 
-  useEffect(() => {
-    handleGenerateCode();
-  }, []);
-
-  useEffect(() => {
-    if (remainingTime <= 0) return;
-
-    const interval = setInterval(() => {
-      const newRemaining = connectionCode
-        ? getRemainingTime(connectionCode.expiresAt)
-        : 0;
-      setRemainingTime(newRemaining);
-
-      if (newRemaining <= 0) {
-        Alert.alert(
-          'Code Expired',
-          'This connection code has expired. Please generate a new one.',
-          [{ text: 'Generate New Code', onPress: handleGenerateCode }]
-        );
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [remainingTime, connectionCode]);
-
-  const handleGenerateCode = async () => {
+  const handleGenerateCode = useCallback(async () => {
     setLoading(true);
     console.log('[PatientGenerateCode] Generating new connection code');
 
@@ -97,7 +72,36 @@ export default function PatientGenerateCodeScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [profile?.userId, profile?.name]);
+
+  useEffect(() => {
+    if (!code) {
+      handleGenerateCode();
+    }
+  }, [code, handleGenerateCode]);
+
+  useEffect(() => {
+    if (remainingTime <= 0) return;
+
+    const interval = setInterval(() => {
+      const newRemaining = connectionCode
+        ? getRemainingTime(connectionCode.expiresAt)
+        : 0;
+      setRemainingTime(newRemaining);
+
+      if (newRemaining <= 0) {
+        Alert.alert(
+          'Code Expired',
+          'This connection code has expired. Please generate a new one.',
+          [{ text: 'Generate New Code', onPress: handleGenerateCode }]
+        );
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [remainingTime, connectionCode, handleGenerateCode]);
+
+
 
   const handleCopyCode = async () => {
     await Clipboard.setStringAsync(code);
@@ -321,7 +325,7 @@ export default function PatientGenerateCodeScreen() {
     },
   });
 
-  if (loading && !code) {
+  if (!code || (loading && !code)) {
     return (
       <View style={styles.loadingContainer}>
         <Stack.Screen
@@ -384,7 +388,7 @@ export default function PatientGenerateCodeScreen() {
 
         <View style={styles.qrContainer}>
           {Platform.OS !== 'web' && code && code.trim().length > 0 ? (
-            <QRCode value={code || 'LOADING'} size={200} backgroundColor="white" />
+            <QRCode value={code} size={200} backgroundColor="white" />
           ) : (
             <View style={styles.qrPlaceholder}>
               <Text style={styles.qrPlaceholderText}>QR Code</Text>
