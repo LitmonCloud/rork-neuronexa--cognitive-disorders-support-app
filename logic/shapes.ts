@@ -1,6 +1,6 @@
 import { SkPath } from '@shopify/react-native-skia';
 
-export type GuideKind = 'circle' | 'triangle' | 'heart' | 'spiral' | 'square' | 'star' | 'infinity';
+export type GuideKind = 'circle' | 'triangle' | 'heart' | 'spiral' | 'square' | 'star' | 'infinity' | 'letter-a' | 'number-8';
 
 export function guidePathSkia(target: SkPath, kind: GuideKind, w: number, h: number, inset: number) {
   const x = inset;
@@ -24,29 +24,22 @@ export function guidePathSkia(target: SkPath, kind: GuideKind, w: number, h: num
   }
 
   if (kind === 'heart') {
-    const scale = Math.min(W, H) / 160;
-    target.moveTo(cx, cy + 50 * scale);
+    const scale = Math.min(W, H) / 200;
+    const startY = cy + 60 * scale;
+    target.moveTo(cx, startY);
+    
     target.cubicTo(
-      cx, cy + 20 * scale,
-      cx - 50 * scale, cy - 20 * scale,
-      cx - 50 * scale, cy - 10 * scale
+      cx - 75 * scale, cy + 30 * scale,
+      cx - 75 * scale, cy - 30 * scale,
+      cx, cy - 50 * scale
     );
+    
     target.cubicTo(
-      cx - 50 * scale, cy - 40 * scale,
-      cx - 30 * scale, cy - 50 * scale,
-      cx, cy - 30 * scale
+      cx + 75 * scale, cy - 30 * scale,
+      cx + 75 * scale, cy + 30 * scale,
+      cx, startY
     );
-    target.cubicTo(
-      cx + 30 * scale, cy - 50 * scale,
-      cx + 50 * scale, cy - 40 * scale,
-      cx + 50 * scale, cy - 10 * scale
-    );
-    target.cubicTo(
-      cx + 50 * scale, cy - 20 * scale,
-      cx, cy + 20 * scale,
-      cx, cy + 50 * scale
-    );
-    target.close();
+    
     return;
   }
 
@@ -78,20 +71,42 @@ export function guidePathSkia(target: SkPath, kind: GuideKind, w: number, h: num
   }
 
   if (kind === 'infinity') {
-    const w2 = Math.min(W, H) * 0.6;
-    const h2 = Math.min(W, H) * 0.3;
-    target.moveTo(cx - w2, cy);
-    target.cubicTo(cx - w2, cy - h2, cx - w2 / 3, cy - h2, cx, cy);
-    target.cubicTo(cx + w2 / 3, cy + h2, cx + w2, cy + h2, cx + w2, cy);
-    target.cubicTo(cx + w2, cy - h2, cx + w2 / 3, cy - h2, cx, cy);
-    target.cubicTo(cx - w2 / 3, cy + h2, cx - w2, cy + h2, cx - w2, cy);
+    const lobeWidth = Math.min(W, H) * 0.35;
+    const lobeHeight = Math.min(W, H) * 0.25;
+    
+    target.moveTo(cx, cy);
+    
+    target.cubicTo(
+      cx - lobeWidth * 0.3, cy - lobeHeight,
+      cx - lobeWidth * 0.7, cy - lobeHeight,
+      cx - lobeWidth, cy
+    );
+    
+    target.cubicTo(
+      cx - lobeWidth * 0.7, cy + lobeHeight,
+      cx - lobeWidth * 0.3, cy + lobeHeight,
+      cx, cy
+    );
+    
+    target.cubicTo(
+      cx + lobeWidth * 0.3, cy + lobeHeight,
+      cx + lobeWidth * 0.7, cy + lobeHeight,
+      cx + lobeWidth, cy
+    );
+    
+    target.cubicTo(
+      cx + lobeWidth * 0.7, cy - lobeHeight,
+      cx + lobeWidth * 0.3, cy - lobeHeight,
+      cx, cy
+    );
+    
     return;
   }
 
   if (kind === 'spiral') {
-    const turns = 1.5;
-    const steps = 420;
-    const maxR = Math.min(W, H) / 2;
+    const turns = 3;
+    const steps = 600;
+    const maxR = Math.min(W, H) / 2.2;
     for (let i = 0; i <= steps; i++) {
       const t = i / steps;
       const theta = 2 * Math.PI * turns * t;
@@ -101,6 +116,36 @@ export function guidePathSkia(target: SkPath, kind: GuideKind, w: number, h: num
       if (i === 0) target.moveTo(px, py);
       else target.lineTo(px, py);
     }
+    return;
+  }
+
+  if (kind === 'letter-a') {
+    const width = Math.min(W, H) * 0.6;
+    const height = Math.min(W, H) * 0.8;
+    const topX = cx;
+    const topY = cy - height / 2;
+    const bottomLeftX = cx - width / 2;
+    const bottomLeftY = cy + height / 2;
+    const bottomRightX = cx + width / 2;
+    const bottomRightY = cy + height / 2;
+    const crossbarY = cy + height * 0.1;
+
+    target.moveTo(topX, topY);
+    target.lineTo(bottomLeftX, bottomLeftY);
+    target.moveTo(topX, topY);
+    target.lineTo(bottomRightX, bottomRightY);
+    target.moveTo(cx - width * 0.35, crossbarY);
+    target.lineTo(cx + width * 0.35, crossbarY);
+    return;
+  }
+
+  if (kind === 'number-8') {
+    const lobeRadius = Math.min(W, H) * 0.22;
+    const topCenterY = cy - lobeRadius * 0.6;
+    const bottomCenterY = cy + lobeRadius * 0.6;
+
+    target.addCircle(cx, topCenterY, lobeRadius);
+    target.addCircle(cx, bottomCenterY, lobeRadius);
     return;
   }
 }
@@ -160,8 +205,8 @@ export function buildGuidePolyline(
   }
 
   if (kind === 'heart') {
-    const scale = Math.min(W, H) / 160;
-    const edges = 40;
+    const scale = Math.min(W, H) / 200;
+    const edges = 60;
     for (let i = 0; i <= edges; i++) {
       const t = (i / edges) * 2 * Math.PI;
       const hx = 16 * Math.pow(Math.sin(t), 3);
@@ -172,27 +217,75 @@ export function buildGuidePolyline(
   }
 
   if (kind === 'infinity') {
-    const w2 = Math.min(W, H) * 0.6;
-    const h2 = Math.min(W, H) * 0.3;
-    for (let i = 0; i <= samples; i++) {
-      const t = (i / samples) * 2 * Math.PI;
-      const px = cx + w2 * Math.cos(t);
-      const py = cy + (h2 * Math.sin(2 * t)) / 2;
+    const lobeWidth = Math.min(W, H) * 0.35;
+    const lobeHeight = Math.min(W, H) * 0.25;
+    const edges = samples;
+    
+    for (let i = 0; i <= edges; i++) {
+      let px, py;
+      
+      if (i <= edges / 2) {
+        const angle = (i / (edges / 2)) * 2 * Math.PI;
+        px = cx - lobeWidth + lobeWidth * Math.cos(angle);
+        py = cy + lobeHeight * Math.sin(angle);
+      } else {
+        const angle = ((i - edges / 2) / (edges / 2)) * 2 * Math.PI;
+        px = cx + lobeWidth + lobeWidth * Math.cos(angle + Math.PI);
+        py = cy + lobeHeight * Math.sin(angle + Math.PI);
+      }
+      
       pts.push({ x: px, y: py });
     }
     return pts;
   }
 
   if (kind === 'spiral') {
-    const turns = 1.5;
+    const turns = 3;
     const steps = samples;
-    const maxR = Math.min(W, H) / 2;
+    const maxR = Math.min(W, H) / 2.2;
     for (let i = 0; i <= steps; i++) {
       const t = i / steps;
       const theta = 2 * Math.PI * turns * t;
       const r = t * maxR;
       pts.push({ x: cx + r * Math.cos(theta), y: cy + r * Math.sin(theta) });
     }
+    return pts;
+  }
+
+  if (kind === 'letter-a') {
+    const width = Math.min(W, H) * 0.6;
+    const height = Math.min(W, H) * 0.8;
+    const topX = cx;
+    const topY = cy - height / 2;
+    const bottomLeftX = cx - width / 2;
+    const bottomLeftY = cy + height / 2;
+    const bottomRightX = cx + width / 2;
+    const bottomRightY = cy + height / 2;
+    const crossbarY = cy + height * 0.1;
+
+    const leftSide = sampleEdges([{ x: topX, y: topY }, { x: bottomLeftX, y: bottomLeftY }], samples / 3);
+    const rightSide = sampleEdges([{ x: topX, y: topY }, { x: bottomRightX, y: bottomRightY }], samples / 3);
+    const crossbar = sampleEdges([{ x: cx - width * 0.35, y: crossbarY }, { x: cx + width * 0.35, y: crossbarY }], samples / 3);
+    
+    return [...leftSide, ...rightSide, ...crossbar];
+  }
+
+  if (kind === 'number-8') {
+    const lobeRadius = Math.min(W, H) * 0.22;
+    const topCenterY = cy - lobeRadius * 0.6;
+    const bottomCenterY = cy + lobeRadius * 0.6;
+    const halfSamples = Math.floor(samples / 2);
+
+    for (let i = 0; i <= halfSamples; i++) {
+      const angle = (i / halfSamples) * 2 * Math.PI;
+      pts.push({ x: cx + lobeRadius * Math.cos(angle), y: topCenterY + lobeRadius * Math.sin(angle) });
+    }
+
+    for (let i = 0; i <= halfSamples; i++) {
+      const angle = (i / halfSamples) * 2 * Math.PI;
+      pts.push({ x: cx + lobeRadius * Math.cos(angle), y: bottomCenterY + lobeRadius * Math.sin(angle) });
+    }
+
     return pts;
   }
 

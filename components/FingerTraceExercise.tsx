@@ -51,7 +51,10 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
     }
   }, []);
 
-  const mapShapeToGuide = (shape?: string): GuideKind => {
+  const mapShapeToGuide = (shape?: string, character?: string): GuideKind => {
+    if (character === 'A') return 'letter-a';
+    if (character === '8') return 'number-8';
+    
     switch (shape) {
       case 'circle':
         return 'circle';
@@ -189,7 +192,7 @@ export default function FingerTraceExercise({ exercise, onComplete }: FingerTrac
           {isActive && (
             <TracingCanvas
               key={key}
-              guide={mapShapeToGuide(exercise.shape)}
+              guide={mapShapeToGuide(exercise.shape, exercise.character)}
               targetLoops={requiredLoops}
               strokeColor={exercise.color}
               tolerancePx={18}
