@@ -383,13 +383,13 @@ export default function PatientGenerateCodeScreen() {
         </View>
 
         <View style={styles.qrContainer}>
-          {Platform.OS !== 'web' ? (
+          {Platform.OS !== 'web' && code ? (
             <QRCode value={code} size={200} backgroundColor="white" />
           ) : (
             <View style={styles.qrPlaceholder}>
               <Text style={styles.qrPlaceholderText}>QR Code</Text>
               <Text style={styles.qrPlaceholderSubtext}>
-                (Not available on web)
+                {Platform.OS === 'web' ? '(Not available on web)' : 'Generating...'}
               </Text>
             </View>
           )}
