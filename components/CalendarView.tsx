@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { Calendar, ChevronLeft, ChevronRight, CheckCircle2, Circle, Clock } from 'lucide-react-native';
 import { useState, useMemo } from 'react';
 import { Task } from '@/types/task';
 import { useTheme } from '@/contexts/ThemeContext';
+import { router } from 'expo-router';
 
 interface CalendarViewProps {
   tasks: Task[];
@@ -13,6 +14,7 @@ interface CalendarViewProps {
 export default function CalendarView({ tasks, selectedDate, onDateSelect }: CalendarViewProps) {
   const { colors } = useTheme();
   const [currentDate, setCurrentDate] = useState(selectedDate || new Date());
+  const [viewSelectedDate, setViewSelectedDate] = useState<Date | null>(null);
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
@@ -106,6 +108,22 @@ export default function CalendarView({ tasks, selectedDate, onDateSelect }: Cale
   const hasTasksOnDay = (day: number) => {
     const date = new Date(year, month, day);
     return getTasksForDate(date).length > 0;
+  };
+
+  const selectedDateTasks = useMemo(() => {
+    if (!viewSelectedDate) return [];
+    return getTasksForDate(viewSelectedDate);
+  }, [viewSelectedDate, tasks]);
+
+  const getStatusIcon = (task: Task) => {
+    switch (task.status) {
+      case 'completed':
+        return <CheckCircle2 size={18} color={colors.success} />;
+      case 'in-progress':
+        return <Clock size={18} color={colors.warning} />;
+      default:
+        return <Circle size={18} color={colors.textLight} />;
+    }
   };
 
   const styles = StyleSheet.create({
@@ -246,6 +264,49 @@ export default function CalendarView({ tasks, selectedDate, onDateSelect }: Cale
     taskDotToday: {
       backgroundColor: colors.surface,
     },
+    selectedDateSection: {
+      marginTop: 16,
+      paddingTop: 16,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+    },
+    selectedDateHeader: {
+      fontSize: 14,
+      fontWeight: '600' as const,
+      color: colors.text,
+      marginBottom: 12,
+    },
+    tasksList: {
+      gap: 8,
+    },
+    taskItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      backgroundColor: colors.surfaceTint,
+      padding: 12,
+      borderRadius: 12,
+    },
+    taskItemContent: {
+      flex: 1,
+    },
+    taskItemTitle: {
+      fontSize: 14,
+      fontWeight: '600' as const,
+      color: colors.text,
+      marginBottom: 2,
+    },
+    taskItemSteps: {
+      fontSize: 12,
+      color: colors.textSecondary,
+    },
+    emptyTasksText: {
+      fontSize: 13,
+      color: colors.textSecondary,
+      textAlign: 'center' as const,
+      fontStyle: 'italic' as const,
+      paddingVertical: 12,
+    },
   });
 
   return (
@@ -306,8 +367,9 @@ export default function CalendarView({ tasks, selectedDate, onDateSelect }: Cale
                     !isToday(day) && !isSelectedDate(day) && hasTasksOnDay(day) && styles.dayButtonHasTasks,
                   ]}
                   onPress={() => {
-                    const selectedDate = new Date(year, month, day);
-                    onDateSelect?.(selectedDate);
+                    const date = new Date(year, month, day);
+                    setViewSelectedDate(date);
+                    onDateSelect?.(date);
                   }}
                   activeOpacity={0.7}
                 >
@@ -332,6 +394,46 @@ export default function CalendarView({ tasks, selectedDate, onDateSelect }: Cale
           })}
         </View>
       </View>
+
+      {viewSelectedDate && (
+        <View style={styles.selectedDateSection}>
+          <Text style={styles.selectedDateHeader}>
+            Tasks for {viewSelectedDate.toLocaleDateString('en-US', { 
+              weekday: 'short', 
+              month: 'short', 
+              day: 'numeric' 
+            })}
+          </Text>
+          {selectedDateTasks.length > 0 ? (
+            <ScrollView style={{ maxHeight: 200 }} showsVerticalScrollIndicator={false}>
+              <View style={styles.tasksList}>
+                {selectedDateTasks.map((task) => (
+                  <TouchableOpacity
+                    key={task.id}
+                    style={styles.taskItem}
+                    onPress={() => router.push(`/task/${task.id}`)}
+                    activeOpacity={0.7}
+                  >
+                    {getStatusIcon(task)}
+                    <View style={styles.taskItemContent}>
+                      <Text style={styles.taskItemTitle} numberOfLines={1}>
+                        {task.title}
+                      </Text>
+                      {task.steps.length > 0 && (
+                        <Text style={styles.taskItemSteps}>
+                          {task.steps.filter(s => s.completed).length}/{task.steps.length} steps
+                        </Text>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+          ) : (
+            <Text style={styles.emptyTasksText}>No tasks for this date</Text>
+          )}
+        </View>
+      )}
     </View>
   );
 }
