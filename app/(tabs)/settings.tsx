@@ -18,8 +18,8 @@ export default function SettingsScreen() {
   const router = useRouter();
 
   const isCaregiver = profile?.role === 'caregiver';
-  const isMemorySupport = profile?.patientType === 'memory';
-  const isCognitiveSupport = profile?.patientType === 'cognitive';
+  const isMemorySupport = profile?.role === 'patient' && profile?.patientType === 'memory';
+  const isCognitiveSupport = profile?.role === 'patient' && profile?.patientType === 'cognitive';
 
   const styles = StyleSheet.create({
     container: {
@@ -318,22 +318,20 @@ export default function SettingsScreen() {
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={[styles.content, { paddingTop: insets.top + 20 }]}>
         <View style={styles.header}>
-          <Text style={styles.title}>
-            {isCaregiver ? 'Settings' : isMemorySupport ? 'Memory Support' : isCognitiveSupport ? 'Cognitive Support' : 'Accessibility'}
-          </Text>
+          <Text style={styles.title}>Settings</Text>
           <Text style={styles.subtitle}>
             {isCaregiver 
-              ? 'Manage your preferences' 
+              ? 'Manage caregiver preferences and resources' 
               : isMemorySupport 
-              ? 'Customize memory assistance features'
+              ? 'Memory support settings and resources'
               : isCognitiveSupport
-              ? 'Customize cognitive support features'
+              ? 'Cognitive support settings and resources'
               : 'Customize your experience'}
           </Text>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>App Settings</Text>
+          <Text style={styles.sectionTitle}>General</Text>
           
           <TouchableOpacity 
             style={styles.settingRow}
