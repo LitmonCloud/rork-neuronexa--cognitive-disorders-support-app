@@ -13,7 +13,6 @@ import {
 import { Stack, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  ArrowLeft,
   Plus,
   Users,
   Edit2,
@@ -25,7 +24,6 @@ import {
   GripVertical,
   Bell,
   Settings,
-  Heart,
 } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { spacing, borderRadius } from '@/theme/spacing';
@@ -148,12 +146,7 @@ export default function CaregiverHubScreen() {
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
     },
-    backButton: {
-      width: 40,
-      height: 40,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
+
     headerTitle: {
       fontSize: fontSizes.xl,
       fontWeight: fontWeights.bold,
@@ -932,14 +925,7 @@ export default function CaregiverHubScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       
       <View style={[styles.header, { paddingTop: insets.top + spacing.md }]}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.push('/(tabs)')}
-          activeOpacity={0.7}
-          testID="back-button"
-        >
-          <ArrowLeft size={24} color={colors.text} />
-        </TouchableOpacity>
+        <View style={{ width: 40 }} />
         <Text style={styles.headerTitle}>Caregiver Hub</Text>
         <View style={{ width: 40 }} />
       </View>
@@ -1543,16 +1529,7 @@ export default function CaregiverHubScreen() {
 
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => router.push('/(tabs)/wellness')}
-          activeOpacity={0.7}
-        >
-          <Heart size={24} color={colors.textSecondary} />
-          <Text style={styles.navLabel}>Wellness</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => router.push('/(tabs)/settings')}
+          onPress={() => router.replace('/(tabs)/settings')}
           activeOpacity={0.7}
         >
           <Settings size={24} color={colors.textSecondary} />
