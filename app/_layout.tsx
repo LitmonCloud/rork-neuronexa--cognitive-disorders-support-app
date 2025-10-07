@@ -18,7 +18,7 @@ import { NotificationProvider } from "@/contexts/NotificationContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { UserProfileProvider, useUserProfile } from "@/contexts/UserProfileContext";
 import { DementiaProvider } from "@/contexts/DementiaContext";
-import { LocationContext } from "@/contexts/LocationContext";
+import { LocationProvider } from "@/contexts/LocationContext";
 import { posthog } from "@/services/analytics/PostHogService";
 import { sentry } from "@/services/analytics/SentryService";
 import { supabase } from "@/services/backend/SupabaseService";
@@ -232,7 +232,7 @@ export default function RootLayout() {
                   <NotificationProvider>
                     <UserProfileProvider>
                       <DementiaProvider>
-                        <LocationContext>
+                        <LocationProvider>
                           <CaregiverProvider>
                             <PatientProvider>
                               <TaskProvider>
@@ -243,7 +243,7 @@ export default function RootLayout() {
                               </TaskProvider>
                             </PatientProvider>
                           </CaregiverProvider>
-                        </LocationContext>
+                        </LocationProvider>
                       </DementiaProvider>
                     </UserProfileProvider>
                   </NotificationProvider>
