@@ -7,7 +7,9 @@ import { useSubscription } from '@/contexts/SubscriptionContext';
 import { ArrowLeft, BookOpen, Plus, Trash2, Edit2, Sparkles, MapPin, Users, Heart, Frown, Meh, Smile, HelpCircle } from 'lucide-react-native';
 import { useState } from 'react';
 import { MemoryJournalEntry } from '@/types/dementia';
-import { generateText } from '@rork/toolkit-sdk';
+import { generateText, generateObject } from '@rork/toolkit-sdk';
+import * as ImagePicker from 'expo-image-picker';
+import { z } from 'zod';
 
 export default function MemoryJournalScreen() {
   const { colors } = useTheme();
@@ -27,8 +29,133 @@ export default function MemoryJournalScreen() {
   const [selectedMood, setSelectedMood] = useState<'happy' | 'sad' | 'neutral' | 'confused' | 'anxious' | undefined>(undefined);
   const [aiSuggestion, setAiSuggestion] = useState<string>('');
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+  const [photoUris, setPhotoUris] = useState<string[]>([]);
+  const [aiAnalysis, setAiAnalysis] = useState<{
+    sentiment?: string;
+    themes?: string[];
+    connections?: string[];
+    suggestions?: string;
+  }>({});
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const hasAIAccess = isPremium || canAccessFeature('aiMemoryJournal');
+
+  const handlePickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Required', 'Please grant camera roll permissions to add photos');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      quality: 0.8,
+      base64: true,
+    });
+
+    if (!result.canceled && result.assets) {
+      const newUris = result.assets.map(asset => asset.uri);
+      setPhotoUris([...photoUris, ...newUris]);
+      
+      if (hasAIAccess && result.assets[0].base64) {
+        await analyzePhoto(result.assets[0].base64);
+      }
+    }
+  };
+
+  const analyzePhoto = async (base64: string) => {
+    if (!hasAIAccess) return;
+    
+    setIsGeneratingAI(true);
+    try {
+      const description = await generateText({
+        messages: [
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: 'Describe this photo in detail. Focus on people, places, activities, and emotions visible in the image. Keep it warm and memory-focused.' },
+              { type: 'image', image: `data:image/jpeg;base64,${base64}` }
+            ]
+          }
+        ]
+      });
+      
+      setFormData(prev => ({
+        ...prev,
+        description: prev.description ? `${prev.description}\n\n${description}` : description
+      }));
+    } catch (error) {
+      console.error('Error analyzing photo:', error);
+    } finally {
+      setIsGeneratingAI(false);
+    }
+  };
+
+  const handleAnalyzeMemory = async () => {
+    if (!hasAIAccess) {
+      router.push('/paywall');
+      return;
+    }
+
+    if (!formData.title && !formData.description) {
+      Alert.alert('Need More Information', 'Please add some details first');
+      return;
+    }
+
+    setIsAnalyzing(true);
+    try {
+      const analysisSchema = z.object({
+        sentiment: z.string().describe('Overall emotional tone of the memory'),
+        themes: z.array(z.string()).describe('Key themes present in this memory'),
+        connections: z.array(z.string()).describe('Potential connections to other life events or memories'),
+        suggestions: z.string().describe('Gentle suggestions for enriching this memory entry')
+      });
+
+      const analysis = await generateObject({
+        messages: [
+          {
+            role: 'user',
+            content: `Analyze this memory journal entry and provide insights:\n\nTitle: ${formData.title}\nDescription: ${formData.description}\nLocation: ${formData.location}\nPeople: ${formData.people}\nMood: ${selectedMood || 'not specified'}`
+          }
+        ],
+        schema: analysisSchema
+      });
+
+      setAiAnalysis(analysis);
+    } catch (error) {
+      console.error('Error analyzing memory:', error);
+      Alert.alert('Error', 'Failed to analyze memory. Please try again.');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const handleEnhanceMemory = async () => {
+    if (!hasAIAccess) {
+      router.push('/paywall');
+      return;
+    }
+
+    if (!formData.description) {
+      Alert.alert('Need Description', 'Please add a description first');
+      return;
+    }
+
+    setIsGeneratingAI(true);
+    try {
+      const enhanced = await generateText(
+        `Take this memory description and enhance it with more vivid details, sensory information, and emotional depth. Keep the core facts but make it more engaging and memorable:\n\n${formData.description}\n\nEnhanced version:`
+      );
+      
+      setFormData(prev => ({ ...prev, description: enhanced }));
+    } catch (error) {
+      console.error('Error enhancing memory:', error);
+      Alert.alert('Error', 'Failed to enhance memory. Please try again.');
+    } finally {
+      setIsGeneratingAI(false);
+    }
+  };
 
   const handleGenerateAISuggestion = async () => {
     if (!hasAIAccess) {
@@ -74,7 +201,7 @@ Provide 3-4 gentle prompting questions that could help them remember more detail
       location: formData.location,
       people: formData.people ? formData.people.split(',').map(p => p.trim()) : [],
       mood: selectedMood,
-      photoUris: [],
+      photoUris: photoUris,
       date: new Date().toISOString(),
       tags: [],
     };
@@ -90,6 +217,8 @@ Provide 3-4 gentle prompting questions that could help them remember more detail
     setFormData({ title: '', description: '', location: '', people: '' });
     setSelectedMood(undefined);
     setAiSuggestion('');
+    setPhotoUris([]);
+    setAiAnalysis({});
   };
 
   const handleEdit = (entry: MemoryJournalEntry) => {
@@ -101,6 +230,7 @@ Provide 3-4 gentle prompting questions that could help them remember more detail
       people: entry.people?.join(', ') || '',
     });
     setSelectedMood(entry.mood);
+    setPhotoUris(entry.photoUris || []);
     setIsAdding(true);
   };
 
@@ -373,6 +503,70 @@ Provide 3-4 gentle prompting questions that could help them remember more detail
       lineHeight: 20,
       marginTop: 8,
     },
+    aiButtonRow: {
+      flexDirection: 'row',
+      gap: 8,
+      marginBottom: 12,
+    },
+    aiResult: {
+      marginTop: 12,
+      padding: 12,
+      backgroundColor: colors.background,
+      borderRadius: 8,
+    },
+    aiResultTitle: {
+      fontSize: 14,
+      fontWeight: '700' as const,
+      color: colors.primary,
+      marginBottom: 8,
+    },
+    photoButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      padding: 14,
+      borderRadius: 12,
+      borderWidth: 2,
+      borderColor: colors.primary,
+      borderStyle: 'dashed' as const,
+      backgroundColor: colors.primaryLight,
+    },
+    photoButtonText: {
+      fontSize: 14,
+      fontWeight: '600' as const,
+      color: colors.primary,
+    },
+    photoPreview: {
+      marginTop: 12,
+    },
+    photoContainer: {
+      position: 'relative' as const,
+      marginRight: 12,
+    },
+    photoThumb: {
+      width: 80,
+      height: 80,
+      borderRadius: 8,
+      backgroundColor: colors.borderLight,
+    },
+    removePhoto: {
+      position: 'absolute' as const,
+      top: -8,
+      right: -8,
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: colors.error,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    removePhotoText: {
+      fontSize: 18,
+      fontWeight: '700' as const,
+      color: colors.surface,
+      lineHeight: 20,
+    },
     premiumBadge: {
       backgroundColor: colors.warning,
       paddingHorizontal: 8,
@@ -539,30 +733,105 @@ Provide 3-4 gentle prompting questions that could help them remember more detail
                 </View>
               </View>
 
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Photos</Text>
+                <TouchableOpacity
+                  style={styles.photoButton}
+                  onPress={handlePickImage}
+                  activeOpacity={0.7}
+                >
+                  <Plus size={20} color={colors.primary} />
+                  <Text style={styles.photoButtonText}>Add Photos</Text>
+                </TouchableOpacity>
+                {photoUris.length > 0 && (
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photoPreview}>
+                    {photoUris.map((uri, index) => (
+                      <View key={index} style={styles.photoContainer}>
+                        <Image source={{ uri }} style={styles.photoThumb} />
+                        <TouchableOpacity
+                          style={styles.removePhoto}
+                          onPress={() => setPhotoUris(photoUris.filter((_, i) => i !== index))}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={styles.removePhotoText}>×</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+                  </ScrollView>
+                )}
+              </View>
+
               <View style={styles.aiSection}>
                 <View style={styles.aiHeader}>
                   <Sparkles size={20} color={colors.primary} />
                   <Text style={styles.aiTitle}>AI Memory Assistant</Text>
                 </View>
-                <TouchableOpacity
-                  style={styles.aiButton}
-                  onPress={handleGenerateAISuggestion}
-                  activeOpacity={0.7}
-                  disabled={isGeneratingAI}
-                >
-                  {isGeneratingAI ? (
-                    <ActivityIndicator size="small" color={colors.surface} />
-                  ) : (
-                    <>
-                      <Sparkles size={16} color={colors.surface} />
-                      <Text style={styles.aiButtonText}>
-                        {hasAIAccess ? 'Get Memory Prompts' : 'Unlock AI Prompts (Premium)'}
-                      </Text>
-                    </>
-                  )}
-                </TouchableOpacity>
+                
+                <View style={styles.aiButtonRow}>
+                  <TouchableOpacity
+                    style={[styles.aiButton, { flex: 1 }]}
+                    onPress={handleGenerateAISuggestion}
+                    activeOpacity={0.7}
+                    disabled={isGeneratingAI}
+                  >
+                    {isGeneratingAI ? (
+                      <ActivityIndicator size="small" color={colors.surface} />
+                    ) : (
+                      <Text style={styles.aiButtonText}>Prompts</Text>
+                    )}
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[styles.aiButton, { flex: 1 }]}
+                    onPress={handleEnhanceMemory}
+                    activeOpacity={0.7}
+                    disabled={isGeneratingAI || !formData.description}
+                  >
+                    {isGeneratingAI ? (
+                      <ActivityIndicator size="small" color={colors.surface} />
+                    ) : (
+                      <Text style={styles.aiButtonText}>Enhance</Text>
+                    )}
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[styles.aiButton, { flex: 1 }]}
+                    onPress={handleAnalyzeMemory}
+                    activeOpacity={0.7}
+                    disabled={isAnalyzing}
+                  >
+                    {isAnalyzing ? (
+                      <ActivityIndicator size="small" color={colors.surface} />
+                    ) : (
+                      <Text style={styles.aiButtonText}>Analyze</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
+                
                 {aiSuggestion && (
-                  <Text style={styles.aiSuggestion}>{aiSuggestion}</Text>
+                  <View style={styles.aiResult}>
+                    <Text style={styles.aiResultTitle}>Memory Prompts:</Text>
+                    <Text style={styles.aiSuggestion}>{aiSuggestion}</Text>
+                  </View>
+                )}
+                
+                {aiAnalysis.sentiment && (
+                  <View style={styles.aiResult}>
+                    <Text style={styles.aiResultTitle}>AI Analysis:</Text>
+                    <Text style={styles.aiSuggestion}>
+                      <Text style={{ fontWeight: '700' as const }}>Sentiment:</Text> {aiAnalysis.sentiment}
+                    </Text>
+                    {aiAnalysis.themes && aiAnalysis.themes.length > 0 && (
+                      <Text style={styles.aiSuggestion}>
+                        <Text style={{ fontWeight: '700' as const }}>Themes:</Text> {aiAnalysis.themes.join(', ')}
+                      </Text>
+                    )}
+                    {aiAnalysis.suggestions && (
+                      <Text style={styles.aiSuggestion}>
+                        <Text style={{ fontWeight: '700' as const }}>Suggestions:</Text> {aiAnalysis.suggestions}
+                      </Text>
+                    )}
+                  </View>
                 )}
               </View>
 
@@ -575,6 +844,8 @@ Provide 3-4 gentle prompting questions that could help them remember more detail
                     setFormData({ title: '', description: '', location: '', people: '' });
                     setSelectedMood(undefined);
                     setAiSuggestion('');
+                    setPhotoUris([]);
+                    setAiAnalysis({});
                   }}
                   activeOpacity={0.7}
                 >
