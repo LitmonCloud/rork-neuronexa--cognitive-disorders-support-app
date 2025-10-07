@@ -2,11 +2,9 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
 import { NotificationCenter } from '@/components/NotificationCenter';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '@/contexts/ThemeContext';
 
 export default function NotificationsScreen() {
-  const insets = useSafeAreaInsets();
   const { colors } = useTheme();
 
   const styles = StyleSheet.create({
@@ -17,11 +15,15 @@ export default function NotificationsScreen() {
   });
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={styles.container}>
       <Stack.Screen 
         options={{ 
           title: 'Notifications',
-          headerShown: false,
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTintColor: colors.text,
         }} 
       />
       <NotificationCenter />
