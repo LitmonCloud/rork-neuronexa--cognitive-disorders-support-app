@@ -5,15 +5,18 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { Wind, ArrowLeft, Hand, Sparkles, Brain, Shield } from 'lucide-react-native';
+import { Wind, ArrowLeft, Hand, Brain, Shield, Heart } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useDementia } from '@/contexts/DementiaContext';
 import { breathingPatterns } from '@/constants/mentalHealthResources';
 import { BreathingPattern } from '@/types/mentalHealth';
 import BreathingExercise from '@/components/BreathingExercise';
+
+const { width } = Dimensions.get('window');
 
 export default function WellnessScreen() {
   const { colors } = useTheme();
@@ -31,28 +34,36 @@ export default function WellnessScreen() {
       backgroundColor: colors.background,
     },
     header: {
+      paddingHorizontal: 24,
+      paddingTop: 20,
+      paddingBottom: 24,
+      backgroundColor: colors.surface,
+    },
+    headerTop: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'center',
       gap: 12,
-      paddingHorizontal: 20,
-      paddingVertical: 16,
-      backgroundColor: colors.surface,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
+      marginBottom: 8,
+    },
+    headerIcon: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      backgroundColor: `${colors.primary}15`,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     headerTitle: {
-      fontSize: 24,
-      fontWeight: '700' as const,
+      fontSize: 32,
+      fontWeight: '800' as const,
       color: colors.text,
+      flex: 1,
     },
-    backButton: {
-      width: 60,
-    },
-    backButtonText: {
+    headerSubtitle: {
       fontSize: 16,
-      color: colors.primary,
-      fontWeight: '600' as const,
+      color: colors.textSecondary,
+      lineHeight: 24,
+      marginTop: 4,
     },
     exerciseHeader: {
       flexDirection: 'row',
@@ -79,88 +90,131 @@ export default function WellnessScreen() {
       color: '#000000',
       fontWeight: '700' as const,
     },
-
     content: {
       flex: 1,
     },
     section: {
       paddingHorizontal: 20,
-      paddingTop: 24,
-      paddingBottom: 16,
+      paddingTop: 8,
+      paddingBottom: 24,
     },
-
-    sectionDescription: {
-      fontSize: 15,
-      color: colors.textSecondary,
+    sectionTitle: {
+      fontSize: 20,
+      fontWeight: '700' as const,
+      color: colors.text,
+      marginBottom: 16,
+      marginTop: 16,
+    },
+    heroCard: {
+      backgroundColor: colors.primary,
+      borderRadius: 24,
+      padding: 28,
       marginBottom: 24,
+      overflow: 'hidden',
+    },
+    heroCardContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 20,
+    },
+    heroCardIcon: {
+      width: 72,
+      height: 72,
+      borderRadius: 36,
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    heroCardText: {
+      flex: 1,
+    },
+    heroCardTitle: {
+      fontSize: 22,
+      fontWeight: '800' as const,
+      color: '#FFFFFF',
+      marginBottom: 6,
+    },
+    heroCardDescription: {
+      fontSize: 15,
+      color: 'rgba(255, 255, 255, 0.9)',
       lineHeight: 22,
+    },
+    breathingGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 12,
+      marginTop: 8,
     },
     breathingCard: {
       backgroundColor: colors.surface,
       borderRadius: 20,
-      padding: 24,
-      marginBottom: 16,
-      borderWidth: 1,
+      padding: 20,
+      width: (width - 52) / 2,
+      borderWidth: 2,
       borderColor: colors.border,
-      borderLeftWidth: 5,
+      minHeight: 180,
     },
-    breathingCardContent: {
+    breathingCardHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
       marginBottom: 12,
     },
+    breathingCardIconSmall: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
     breathingCardTitle: {
-      fontSize: 18,
+      fontSize: 17,
       fontWeight: '700' as const,
       color: colors.text,
       marginBottom: 6,
     },
     breathingCardDescription: {
-      fontSize: 14,
+      fontSize: 13,
       color: colors.textSecondary,
       marginBottom: 12,
-      lineHeight: 20,
+      lineHeight: 18,
+      flex: 1,
     },
     breathingCardMeta: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      paddingTop: 12,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
     },
     breathingCardMetaText: {
-      fontSize: 13,
+      fontSize: 12,
       color: colors.textLight,
-      fontWeight: '500' as const,
-    },
-    breathingCardIndicator: {
-      position: 'absolute' as const,
-      right: 24,
-      top: 24,
-      width: 16,
-      height: 16,
-      borderRadius: 8,
+      fontWeight: '600' as const,
     },
     featureCard: {
       backgroundColor: colors.surface,
       borderRadius: 20,
       padding: 24,
-      marginBottom: 24,
-      borderWidth: 1,
+      marginBottom: 16,
+      borderWidth: 2,
       borderColor: colors.border,
-      borderLeftWidth: 5,
+    },
+    featureCardContent: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 16,
     },
     featureCardIcon: {
-      width: 56,
-      height: 56,
-      borderRadius: 28,
-      backgroundColor: '#9B59B620',
+      width: 64,
+      height: 64,
+      borderRadius: 32,
       alignItems: 'center',
       justifyContent: 'center',
     },
-    featureCardContent: {
+    featureCardText: {
       flex: 1,
     },
     featureCardTitle: {
-      fontSize: 18,
+      fontSize: 19,
       fontWeight: '700' as const,
       color: colors.text,
       marginBottom: 6,
@@ -169,6 +223,14 @@ export default function WellnessScreen() {
       fontSize: 14,
       color: colors.textSecondary,
       lineHeight: 20,
+    },
+    featureCardArrow: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      backgroundColor: colors.primaryLight,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     aiButton: {
       backgroundColor: colors.primary,
@@ -183,6 +245,31 @@ export default function WellnessScreen() {
       fontSize: 14,
       fontWeight: '600' as const,
       color: colors.surface,
+    },
+    statsRow: {
+      flexDirection: 'row',
+      gap: 12,
+      marginBottom: 24,
+    },
+    statCard: {
+      flex: 1,
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      padding: 16,
+      borderWidth: 1,
+      borderColor: colors.border,
+      alignItems: 'center',
+    },
+    statValue: {
+      fontSize: 28,
+      fontWeight: '800' as const,
+      color: colors.primary,
+      marginBottom: 4,
+    },
+    statLabel: {
+      fontSize: 12,
+      color: colors.textSecondary,
+      fontWeight: '600' as const,
     },
   });
 
@@ -248,52 +335,62 @@ export default function WellnessScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Wind size={28} color={colors.primary} />
-        <Text style={styles.headerTitle}>Breathing Exercises</Text>
+        <View style={styles.headerTop}>
+          <View style={styles.headerIcon}>
+            <Heart size={28} color={colors.primary} />
+          </View>
+          <Text style={styles.headerTitle}>Wellness</Text>
+        </View>
+        <Text style={styles.headerSubtitle}>
+          Mindfulness exercises to reduce stress and improve focus
+        </Text>
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
-          <Text style={styles.sectionDescription}>
-            Guided breathing exercises to reduce stress, calm anxiety, and improve focus. 
-            Choose an exercise below to begin.
-          </Text>
-          
           <TouchableOpacity
-            style={[styles.featureCard, { borderLeftColor: '#9B59B6' }]}
+            style={styles.heroCard}
             onPress={() => router.push('/finger-trace')}
-            activeOpacity={0.7}
+            activeOpacity={0.85}
           >
-            <View style={styles.featureCardIcon}>
-              <Sparkles size={32} color="#9B59B6" />
+            <View style={styles.heroCardContent}>
+              <View style={styles.heroCardIcon}>
+                <Hand size={40} color="#FFFFFF" />
+              </View>
+              <View style={styles.heroCardText}>
+                <Text style={styles.heroCardTitle}>Finger Tracing</Text>
+                <Text style={styles.heroCardDescription}>
+                  Interactive exercises for mindfulness and focus
+                </Text>
+              </View>
             </View>
-            <View style={styles.featureCardContent}>
-              <Text style={styles.featureCardTitle}>Finger Tracing Exercises</Text>
-              <Text style={styles.featureCardDescription}>
-                Interactive tracing exercises for mindfulness and focus. Trace shapes, letters, and patterns.
-              </Text>
-            </View>
-            <Hand size={24} color={colors.textLight} />
           </TouchableOpacity>
-          {breathingPatterns.map((pattern) => (
-            <TouchableOpacity
-              key={pattern.id}
-              style={[styles.breathingCard, { borderLeftColor: pattern.color }]}
-              onPress={() => setSelectedPattern(pattern)}
-              activeOpacity={0.7}
-            >
-              <View style={styles.breathingCardContent}>
+
+          <Text style={styles.sectionTitle}>Breathing Exercises</Text>
+          
+          <View style={styles.breathingGrid}>
+            {breathingPatterns.map((pattern) => (
+              <TouchableOpacity
+                key={pattern.id}
+                style={[styles.breathingCard, { borderColor: pattern.color }]}
+                onPress={() => setSelectedPattern(pattern)}
+                activeOpacity={0.7}
+              >
+                <View style={styles.breathingCardHeader}>
+                  <View style={[styles.breathingCardIconSmall, { backgroundColor: `${pattern.color}20` }]}>
+                    <Wind size={20} color={pattern.color} />
+                  </View>
+                </View>
                 <Text style={styles.breathingCardTitle}>{pattern.name}</Text>
                 <Text style={styles.breathingCardDescription}>{pattern.description}</Text>
                 <View style={styles.breathingCardMeta}>
                   <Text style={styles.breathingCardMetaText}>
-                    {pattern.inhale}s in • {pattern.exhale}s out • {pattern.cycles} cycles
+                    {pattern.inhale}s • {pattern.exhale}s • {pattern.cycles}x
                   </Text>
                 </View>
-              </View>
-              <View style={[styles.breathingCardIndicator, { backgroundColor: pattern.color }]} />
-            </TouchableOpacity>
-          ))}
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
       </ScrollView>
     </View>
