@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Copy, Share2, RefreshCw, ArrowLeft } from 'lucide-react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { useUserProfile } from '@/contexts/UserProfileContext';
+import { useCaregivers } from '@/contexts/CaregiverContext';
 import {
   generateInviteCode,
   getExpirationTime,
@@ -40,6 +41,7 @@ export default function PatientGenerateCodeScreen() {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const { profile } = useUserProfile();
+  const { generateInvite } = useCaregivers();
   const [loading, setLoading] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState<number>(0);
   const [code, setCode] = useState<string>('');
@@ -62,17 +64,25 @@ export default function PatientGenerateCodeScreen() {
         createdAt: new Date(),
       };
 
+      const result = await generateInvite(newCode, expiresAt);
+      
+      if (!result.success) {
+        console.error('[PatientGenerateCode] Failed to save invite:', result.error);
+        Alert.alert('Error', 'Failed to generate connection code. Please try again.');
+        return;
+      }
+
       setConnectionCode(newConnectionCode);
       setCode(newCode);
       setRemainingTime(getRemainingTime(expiresAt));
-      console.log('[PatientGenerateCode] Code generated successfully:', newCode);
+      console.log('[PatientGenerateCode] Code generated and saved successfully:', newCode);
     } catch (error) {
       console.error('[PatientGenerateCode] Error generating code:', error);
       Alert.alert('Error', 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }
-  }, [profile?.userId, profile?.name]);
+  }, [profile?.userId, profile?.name, generateInvite]);
 
   useEffect(() => {
     if (!code) {
