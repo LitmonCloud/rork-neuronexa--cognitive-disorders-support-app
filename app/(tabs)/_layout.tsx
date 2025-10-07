@@ -19,15 +19,20 @@ export default function TabLayout() {
   const { colors } = theme;
   const { profile, isLoading } = useUserProfile();
   
-  if (isLoading || !profile) {
+  if (isLoading) {
     return <TabsSkeleton />;
   }
   
-  const isCaregiver = profile?.role === 'caregiver';
-  const isCognitivePatient = profile?.role === 'patient' && profile?.patientType === 'cognitive';
-  const isMemoryPatient = profile?.role === 'patient' && profile?.patientType === 'memory';
+  if (!profile) {
+    console.error('[TabLayout] Profile is undefined after loading');
+    return <TabsSkeleton />;
+  }
   
-  console.log('[TabLayout] Profile role:', profile?.role, 'patientType:', profile?.patientType);
+  const isCaregiver = profile.role === 'caregiver';
+  const isCognitivePatient = profile.role === 'patient' && profile.patientType === 'cognitive';
+  const isMemoryPatient = profile.role === 'patient' && profile.patientType === 'memory';
+  
+  console.log('[TabLayout] Profile role:', profile.role, 'patientType:', profile.patientType);
   
   if (isCaregiver) {
     console.log('[TabLayout] Caregiver detected, redirecting to dashboard');
