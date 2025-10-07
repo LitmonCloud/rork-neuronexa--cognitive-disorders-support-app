@@ -18,6 +18,8 @@ export default function SettingsScreen() {
   const router = useRouter();
 
   const isCaregiver = profile?.role === 'caregiver';
+  const isMemorySupport = profile?.patientType === 'memory';
+  const isCognitiveSupport = profile?.patientType === 'cognitive';
 
   const styles = StyleSheet.create({
     container: {
@@ -316,8 +318,18 @@ export default function SettingsScreen() {
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={[styles.content, { paddingTop: insets.top + 20 }]}>
         <View style={styles.header}>
-          <Text style={styles.title}>{isCaregiver ? 'Settings' : 'Accessibility'}</Text>
-          <Text style={styles.subtitle}>{isCaregiver ? 'Manage your preferences' : 'Customize your experience'}</Text>
+          <Text style={styles.title}>
+            {isCaregiver ? 'Settings' : isMemorySupport ? 'Memory Support' : isCognitiveSupport ? 'Cognitive Support' : 'Accessibility'}
+          </Text>
+          <Text style={styles.subtitle}>
+            {isCaregiver 
+              ? 'Manage your preferences' 
+              : isMemorySupport 
+              ? 'Customize memory assistance features'
+              : isCognitiveSupport
+              ? 'Customize cognitive support features'
+              : 'Customize your experience'}
+          </Text>
         </View>
 
         <View style={styles.section}>
@@ -381,7 +393,7 @@ export default function SettingsScreen() {
         </View>
         )}
 
-        {!isCaregiver && (
+        {!isCaregiver && isCognitiveSupport && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Visual Settings</Text>
           
@@ -431,7 +443,7 @@ export default function SettingsScreen() {
         </View>
         )}
 
-        {!isCaregiver && (
+        {!isCaregiver && isCognitiveSupport && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Motion & Interaction</Text>
           
@@ -459,7 +471,7 @@ export default function SettingsScreen() {
         </View>
         )}
 
-        {!isCaregiver && (
+        {!isCaregiver && isCognitiveSupport && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Audio Assistance</Text>
           
@@ -487,9 +499,9 @@ export default function SettingsScreen() {
         </View>
         )}
 
-        {!isCaregiver && (
+        {!isCaregiver && isMemorySupport && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Memory Support</Text>
+          <Text style={styles.sectionTitle}>Memory Support Features</Text>
           
           <TouchableOpacity 
             style={styles.settingRow}
@@ -563,9 +575,9 @@ export default function SettingsScreen() {
         </View>
         )}
 
-        {!isCaregiver && (
+        {!isCaregiver && isCognitiveSupport && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Cognitive Support</Text>
+          <Text style={styles.sectionTitle}>Cognitive Support Features</Text>
           
           <TouchableOpacity 
             style={styles.settingRow}
@@ -679,7 +691,7 @@ export default function SettingsScreen() {
         </View>
         )}
 
-        {!isCaregiver && (
+        {!isCaregiver && isCognitiveSupport && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Mental Health Resources</Text>
           
@@ -868,7 +880,11 @@ export default function SettingsScreen() {
           <Text style={styles.infoText}>
             {isCaregiver 
               ? 'Supporting caregivers in providing compassionate care through real-time monitoring and communication tools.'
-              : 'Designed with neurodiversity in mind. We support individuals with ADHD, Autism, Anxiety, and cognitive challenges through compassionate, AI-powered task guidance.'}
+              : isMemorySupport
+              ? 'Specialized support for individuals with Alzheimer\'s disease and memory challenges through gentle reminders, memory aids, and caregiver coordination.'
+              : isCognitiveSupport
+              ? 'Designed with neurodiversity in mind. We support individuals with ADHD, Autism, Anxiety, and cognitive challenges through compassionate, AI-powered task guidance.'
+              : 'Empowering you with personalized support and guidance.'}
           </Text>
           <Text style={[styles.infoText, { marginTop: 12, fontSize: 13, fontStyle: 'italic' as const }]}>
             Version {process.env.EXPO_PUBLIC_APP_VERSION || '1.0.0'}
@@ -884,6 +900,7 @@ export default function SettingsScreen() {
           <Text style={[styles.infoText, { color: colors.text }]}>
             Nexa is not a medical device and does not provide medical advice, diagnosis, or treatment. 
             Always consult with a qualified healthcare professional for medical concerns.
+            {isMemorySupport && ' This app is designed to complement, not replace, professional medical care and caregiver support.'}
           </Text>
         </View>
         )}
