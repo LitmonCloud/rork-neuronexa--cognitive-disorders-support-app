@@ -21,7 +21,7 @@ export default function NotificationsScreen() {
           title: 'Notifications',
           headerShown: true,
           headerStyle: {
-            backgroundColor: colors.background,
+            backgroundColor: colors.surface,
           },
           headerTintColor: colors.text,
         }} 

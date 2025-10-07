@@ -3,11 +3,9 @@ import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity } from 're
 import { Stack } from 'expo-router';
 import { Bell, Volume2, Vibrate, Moon, Smartphone } from 'lucide-react-native';
 import { useNotifications } from '@/contexts/NotificationContext';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '@/contexts/ThemeContext';
 
 export default function NotificationSettingsScreen() {
-  const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const { preferences, updatePreferences, enablePushNotifications } = useNotifications();
 
@@ -102,11 +100,15 @@ export default function NotificationSettingsScreen() {
   });
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={styles.container}>
       <Stack.Screen 
         options={{ 
           title: 'Notification Settings',
           headerShown: true,
+          headerStyle: {
+            backgroundColor: colors.surface,
+          },
+          headerTintColor: colors.text,
         }} 
       />
       

@@ -1529,7 +1529,7 @@ export default function CaregiverHubScreen() {
 
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => router.replace('/(tabs)/settings')}
+          onPress={() => router.push('/notification-settings')}
           activeOpacity={0.7}
         >
           <Settings size={24} color={colors.textSecondary} />
