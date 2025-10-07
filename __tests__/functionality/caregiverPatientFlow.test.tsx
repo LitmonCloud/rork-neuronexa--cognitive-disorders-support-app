@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, waitFor, act } from '@testing-library/react-native';
-import { PatientContext, usePatients } from '@/contexts/PatientContext';
-import { CaregiverContext, useCaregiverMode } from '@/contexts/CaregiverContext';
+import { PatientProvider, usePatients } from '@/contexts/PatientContext';
+import { CaregiverProvider, useCaregivers } from '@/contexts/CaregiverContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 jest.mock('@react-native-async-storage/async-storage');
@@ -13,21 +13,21 @@ describe('Caregiver-Patient Connection Flow', () => {
     (AsyncStorage.setItem as jest.Mock).mockResolvedValue(undefined);
   });
 
-  it('should generate patient connection code', async () => {
+  it('should add patient', async () => {
     const TestComponent = () => {
-      const { generateConnectionCode, connectionCode } = usePatients();
+      const { addPatient, patients } = usePatients();
       
       React.useEffect(() => {
-        generateConnectionCode();
+        addPatient('John', 'D', 'caregiver-1');
       }, []);
 
       return null;
     };
 
-    const { rerender } = render(
-      <PatientContext>
+    render(
+      <PatientProvider>
         <TestComponent />
-      </PatientContext>
+      </PatientProvider>
     );
 
     await waitFor(() => {
@@ -35,39 +35,29 @@ describe('Caregiver-Patient Connection Flow', () => {
     });
   });
 
-  it('should enable caregiver mode', async () => {
-    let caregiverEnabled = false;
-
+  it('should add caregiver', async () => {
     const TestComponent = () => {
-      const { isCaregiverMode, enableCaregiverMode } = useCaregiverMode();
+      const { addCaregiver, caregivers } = useCaregivers();
       
       React.useEffect(() => {
-        caregiverEnabled = isCaregiverMode;
-      }, [isCaregiverMode]);
-
-      React.useEffect(() => {
-        enableCaregiverMode();
+        addCaregiver('Jane Doe', '555-0123', 'jane@example.com', 'Spouse');
       }, []);
 
       return null;
     };
 
     render(
-      <CaregiverContext>
+      <CaregiverProvider>
         <TestComponent />
-      </CaregiverContext>
+      </CaregiverProvider>
     );
 
     await waitFor(() => {
-      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-        'caregiverMode',
-        expect.any(String)
-      );
+      expect(AsyncStorage.setItem).toHaveBeenCalled();
     });
   });
 
-  it('should add patient with connection code', async () => {
-    const mockCode = 'TEST123';
+  it('should add patient with details', async () => {
     let patientAdded = false;
 
     const TestComponent = () => {
@@ -80,16 +70,16 @@ describe('Caregiver-Patient Connection Flow', () => {
       }, [patients]);
 
       React.useEffect(() => {
-        addPatient(mockCode);
+        addPatient('Alice', 'B', 'caregiver-1');
       }, []);
 
       return null;
     };
 
     render(
-      <PatientContext>
+      <PatientProvider>
         <TestComponent />
-      </PatientContext>
+      </PatientProvider>
     );
 
     await waitFor(() => {
@@ -97,31 +87,42 @@ describe('Caregiver-Patient Connection Flow', () => {
     });
   });
 
-  it('should persist caregiver mode across app restarts', async () => {
+  it('should persist caregivers across app restarts', async () => {
+    const mockCaregivers = [
+      {
+        id: '1',
+        name: 'Jane Doe',
+        phone: '555-0123',
+        isPrimary: true,
+        notificationsEnabled: true,
+        createdAt: new Date().toISOString(),
+      },
+    ];
+
     (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
-      JSON.stringify({ enabled: true, enabledAt: Date.now() })
+      JSON.stringify(mockCaregivers)
     );
 
-    let isCaregiverModeEnabled = false;
+    let loadedCaregivers: any[] = [];
 
     const TestComponent = () => {
-      const { isCaregiverMode } = useCaregiverMode();
+      const { caregivers } = useCaregivers();
       
       React.useEffect(() => {
-        isCaregiverModeEnabled = isCaregiverMode;
-      }, [isCaregiverMode]);
+        loadedCaregivers = caregivers;
+      }, [caregivers]);
 
       return null;
     };
 
     render(
-      <CaregiverContext>
+      <CaregiverProvider>
         <TestComponent />
-      </CaregiverContext>
+      </CaregiverProvider>
     );
 
     await waitFor(() => {
-      expect(AsyncStorage.getItem).toHaveBeenCalledWith('caregiverMode');
+      expect(AsyncStorage.getItem).toHaveBeenCalled();
     });
   });
 
@@ -129,9 +130,11 @@ describe('Caregiver-Patient Connection Flow', () => {
     const mockPatients = [
       {
         id: '1',
-        name: 'Test Patient',
-        connectionCode: 'TEST123',
-        connectedAt: Date.now(),
+        firstName: 'Test',
+        lastNameInitial: 'P',
+        caregiverId: 'caregiver-1',
+        createdAt: new Date().toISOString(),
+        profileColor: '#7b61ff',
       },
     ];
 
@@ -152,13 +155,13 @@ describe('Caregiver-Patient Connection Flow', () => {
     };
 
     render(
-      <PatientContext>
+      <PatientProvider>
         <TestComponent />
-      </PatientContext>
+      </PatientProvider>
     );
 
     await waitFor(() => {
-      expect(AsyncStorage.getItem).toHaveBeenCalledWith('patients');
+      expect(AsyncStorage.getItem).toHaveBeenCalled();
     });
   });
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
-import { TaskContext, useTasks } from '@/contexts/TaskContext';
+import { TaskProvider, useTasks } from '@/contexts/TaskContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Task, TaskStatus } from '@/types/task';
 
@@ -24,21 +24,16 @@ describe('Task Management Functionality', () => {
       }, [tasks]);
 
       React.useEffect(() => {
-        addTask({
-          title: 'Test Task',
-          description: 'Test description',
-          priority: 'medium',
-          category: 'personal',
-        });
+        addTask('Test Task', 'Test description', 'medium');
       }, []);
 
       return null;
     };
 
     render(
-      <TaskContext>
+      <TaskProvider>
         <TestComponent />
-      </TaskContext>
+      </TaskProvider>
     );
 
     await waitFor(() => {
@@ -46,7 +41,7 @@ describe('Task Management Functionality', () => {
     });
   });
 
-  it('should update task status', async () => {
+  it('should update task', async () => {
     const mockTasks: Task[] = [
       {
         id: '1',
@@ -54,10 +49,9 @@ describe('Task Management Functionality', () => {
         description: 'Test description',
         status: 'pending' as TaskStatus,
         priority: 'medium',
-        category: 'personal',
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        createdAt: new Date().toISOString(),
         steps: [],
+        reminderEnabled: false,
       },
     ];
 
@@ -66,19 +60,19 @@ describe('Task Management Functionality', () => {
     );
 
     const TestComponent = () => {
-      const { updateTaskStatus } = useTasks();
+      const { updateTask } = useTasks();
       
       React.useEffect(() => {
-        updateTaskStatus('1', 'in_progress');
+        updateTask('1', { status: 'in-progress' });
       }, []);
 
       return null;
     };
 
     render(
-      <TaskContext>
+      <TaskProvider>
         <TestComponent />
-      </TaskContext>
+      </TaskProvider>
     );
 
     await waitFor(() => {
@@ -94,10 +88,9 @@ describe('Task Management Functionality', () => {
         description: 'Test description',
         status: 'pending' as TaskStatus,
         priority: 'medium',
-        category: 'personal',
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        createdAt: new Date().toISOString(),
         steps: [],
+        reminderEnabled: false,
       },
     ];
 
@@ -116,9 +109,9 @@ describe('Task Management Functionality', () => {
     };
 
     render(
-      <TaskContext>
+      <TaskProvider>
         <TestComponent />
-      </TaskContext>
+      </TaskProvider>
     );
 
     await waitFor(() => {
@@ -134,10 +127,9 @@ describe('Task Management Functionality', () => {
         description: 'Test',
         status: 'pending' as TaskStatus,
         priority: 'medium',
-        category: 'personal',
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        createdAt: new Date().toISOString(),
         steps: [],
+        reminderEnabled: false,
       },
       {
         id: '2',
@@ -145,10 +137,9 @@ describe('Task Management Functionality', () => {
         description: 'Test',
         status: 'completed' as TaskStatus,
         priority: 'medium',
-        category: 'personal',
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        createdAt: new Date().toISOString(),
         steps: [],
+        reminderEnabled: false,
       },
     ];
 
@@ -173,9 +164,9 @@ describe('Task Management Functionality', () => {
     };
 
     render(
-      <TaskContext>
+      <TaskProvider>
         <TestComponent />
-      </TaskContext>
+      </TaskProvider>
     );
 
     await waitFor(() => {
@@ -189,20 +180,18 @@ describe('Task Management Functionality', () => {
         id: '1',
         title: 'Test Task',
         description: 'Test',
-        status: 'in_progress' as TaskStatus,
+        status: 'in-progress' as TaskStatus,
         priority: 'medium',
-        category: 'personal',
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        createdAt: new Date().toISOString(),
         steps: [
           {
             id: 'step1',
-            title: 'Step 1',
             description: 'First step',
             completed: false,
             order: 0,
           },
         ],
+        reminderEnabled: false,
       },
     ];
 
@@ -211,19 +200,19 @@ describe('Task Management Functionality', () => {
     );
 
     const TestComponent = () => {
-      const { completeStep } = useTasks();
+      const { updateStep } = useTasks();
       
       React.useEffect(() => {
-        completeStep('1', 'step1');
+        updateStep('1', 'step1', true);
       }, []);
 
       return null;
     };
 
     render(
-      <TaskContext>
+      <TaskProvider>
         <TestComponent />
-      </TaskContext>
+      </TaskProvider>
     );
 
     await waitFor(() => {
@@ -239,10 +228,9 @@ describe('Task Management Functionality', () => {
         description: 'Test',
         status: 'pending' as TaskStatus,
         priority: 'high',
-        category: 'work',
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        createdAt: new Date().toISOString(),
         steps: [],
+        reminderEnabled: false,
       },
     ];
 
@@ -263,9 +251,9 @@ describe('Task Management Functionality', () => {
     };
 
     render(
-      <TaskContext>
+      <TaskProvider>
         <TestComponent />
-      </TaskContext>
+      </TaskProvider>
     );
 
     await waitFor(() => {

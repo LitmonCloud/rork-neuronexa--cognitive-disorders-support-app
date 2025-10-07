@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
-import { DementiaContext, useDementia } from '@/contexts/DementiaContext';
+import { DementiaProvider, useDementia } from '@/contexts/DementiaContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 jest.mock('@react-native-async-storage/async-storage');
@@ -16,17 +16,18 @@ describe('Dementia Support Functionality', () => {
     let entryCount = 0;
 
     const TestComponent = () => {
-      const { memoryJournal, addMemoryEntry } = useDementia();
+      const { memoryJournal, addJournalEntry } = useDementia();
       
       React.useEffect(() => {
         entryCount = memoryJournal.length;
       }, [memoryJournal]);
 
       React.useEffect(() => {
-        addMemoryEntry({
+        addJournalEntry({
+          date: new Date().toISOString(),
           title: 'Test Memory',
-          content: 'Test content',
-          photos: [],
+          description: 'Test content',
+          photoUris: [],
         });
       }, []);
 
@@ -34,9 +35,9 @@ describe('Dementia Support Functionality', () => {
     };
 
     render(
-      <DementiaContext>
+      <DementiaProvider>
         <TestComponent />
-      </DementiaContext>
+      </DementiaProvider>
     );
 
     await waitFor(() => {
@@ -58,7 +59,9 @@ describe('Dementia Support Functionality', () => {
         addEmergencyContact({
           name: 'John Doe',
           relationship: 'Family',
-          phone: '555-0123',
+          phoneNumber: '555-0123',
+          isPrimary: true,
+          order: 0,
         });
       }, []);
 
@@ -66,9 +69,9 @@ describe('Dementia Support Functionality', () => {
     };
 
     render(
-      <DementiaContext>
+      <DementiaProvider>
         <TestComponent />
-      </DementiaContext>
+      </DementiaProvider>
     );
 
     await waitFor(() => {
@@ -76,15 +79,14 @@ describe('Dementia Support Functionality', () => {
     });
   });
 
-  it('should update dementia profile', async () => {
+  it('should update dementia settings', async () => {
     const TestComponent = () => {
-      const { updateProfile } = useDementia();
+      const { updateSettings } = useDementia();
       
       React.useEffect(() => {
-        updateProfile({
-          stage: 'mild',
-          diagnosis: 'Alzheimer\'s',
-          medications: ['Med1', 'Med2'],
+        updateSettings({
+          enabled: true,
+          orientationRemindersEnabled: true,
         });
       }, []);
 
@@ -92,9 +94,9 @@ describe('Dementia Support Functionality', () => {
     };
 
     render(
-      <DementiaContext>
+      <DementiaProvider>
         <TestComponent />
-      </DementiaContext>
+      </DementiaProvider>
     );
 
     await waitFor(() => {
@@ -104,13 +106,16 @@ describe('Dementia Support Functionality', () => {
 
   it('should track daily routine', async () => {
     const TestComponent = () => {
-      const { addRoutineActivity } = useDementia();
+      const { addRoutineAnchor } = useDementia();
       
       React.useEffect(() => {
-        addRoutineActivity({
+        addRoutineAnchor({
           time: '08:00',
-          activity: 'Breakfast',
-          reminder: true,
+          title: 'Breakfast',
+          description: 'Morning meal',
+          isRecurring: true,
+          daysOfWeek: [1, 2, 3, 4, 5],
+          reminderMinutesBefore: 15,
         });
       }, []);
 
@@ -118,9 +123,9 @@ describe('Dementia Support Functionality', () => {
     };
 
     render(
-      <DementiaContext>
+      <DementiaProvider>
         <TestComponent />
-      </DementiaContext>
+      </DementiaProvider>
     );
 
     await waitFor(() => {
@@ -129,39 +134,44 @@ describe('Dementia Support Functionality', () => {
   });
 
   it('should load dementia data from storage', async () => {
-    const mockData = {
-      profile: {
-        stage: 'moderate',
-        diagnosis: 'Vascular Dementia',
-        medications: ['Med1'],
-      },
-      memoryJournal: [],
-      emergencyContacts: [],
-      routineActivities: [],
+    const mockSettings = {
+      enabled: true,
+      orientationRemindersEnabled: true,
+      orientationFrequency: 60,
+      locationTrackingEnabled: false,
+      geofenceEnabled: false,
+      safeZoneRadius: 500,
+      medicationRemindersEnabled: true,
+      repetitionToleranceEnabled: true,
+      memoryJournalEnabled: true,
+      emergencyContactsEnabled: true,
+      photoBasedNavigationEnabled: true,
+      autoReadStepsEnabled: false,
+      aiStepCoachEnabled: false,
     };
 
     (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
-      JSON.stringify(mockData)
+      JSON.stringify(mockSettings)
     );
 
-    let profileLoaded = false;
+    let settingsLoaded = false;
 
     const TestComponent = () => {
-      const { profile } = useDementia();
+      const { settings } = useDementia();
       
       React.useEffect(() => {
-        if (profile) {
-          profileLoaded = true;
+        if (settings) {
+          settingsLoaded = true;
         }
-      }, [profile]);
+      }, [settings]);
 
       return null;
     };
 
     render(
-      <DementiaContext>
+      <DementiaProvider>
         <TestComponent />
-      </DementiaContext>
+      </DementiaProvider>
     );
 
     await waitFor(() => {
@@ -175,28 +185,30 @@ describe('Dementia Support Functionality', () => {
         id: '1',
         name: 'John Doe',
         relationship: 'Family',
-        phone: '555-0123',
+        phoneNumber: '555-0123',
+        isPrimary: true,
+        order: 0,
       },
     ];
 
     (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
-      JSON.stringify({ emergencyContacts: mockContacts })
+      JSON.stringify(mockContacts)
     );
 
     const TestComponent = () => {
-      const { removeEmergencyContact } = useDementia();
+      const { deleteEmergencyContact } = useDementia();
       
       React.useEffect(() => {
-        removeEmergencyContact('1');
+        deleteEmergencyContact('1');
       }, []);
 
       return null;
     };
 
     render(
-      <DementiaContext>
+      <DementiaProvider>
         <TestComponent />
-      </DementiaContext>
+      </DementiaProvider>
     );
 
     await waitFor(() => {

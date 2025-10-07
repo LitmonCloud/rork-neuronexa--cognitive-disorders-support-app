@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
-import { SubscriptionContext, useSubscription } from '@/contexts/SubscriptionContext';
+import { SubscriptionProvider, useSubscription } from '@/contexts/SubscriptionContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 jest.mock('@react-native-async-storage/async-storage');
@@ -26,9 +26,9 @@ describe('Subscription Functionality', () => {
     };
 
     render(
-      <SubscriptionContext>
+      <SubscriptionProvider>
         <TestComponent />
-      </SubscriptionContext>
+      </SubscriptionProvider>
     );
 
     await waitFor(() => {
@@ -59,9 +59,9 @@ describe('Subscription Functionality', () => {
     };
 
     render(
-      <SubscriptionContext>
+      <SubscriptionProvider>
         <TestComponent />
-      </SubscriptionContext>
+      </SubscriptionProvider>
     );
 
     await waitFor(() => {
@@ -69,21 +69,21 @@ describe('Subscription Functionality', () => {
     });
   });
 
-  it('should track feature usage', async () => {
+  it('should track task usage', async () => {
     const TestComponent = () => {
-      const { trackFeatureUsage } = useSubscription();
+      const { incrementTaskUsage } = useSubscription();
       
       React.useEffect(() => {
-        trackFeatureUsage('ai_coach');
+        incrementTaskUsage();
       }, []);
 
       return null;
     };
 
     render(
-      <SubscriptionContext>
+      <SubscriptionProvider>
         <TestComponent />
-      </SubscriptionContext>
+      </SubscriptionProvider>
     );
 
     await waitFor(() => {
@@ -91,32 +91,23 @@ describe('Subscription Functionality', () => {
     });
   });
 
-  it('should check feature limits', async () => {
-    const mockUsage = {
-      ai_coach: 5,
-      tasks: 10,
-    };
-
-    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
-      JSON.stringify({ usage: mockUsage })
-    );
-
-    let canUseFeature = false;
+  it('should check if can create task', async () => {
+    let canCreate = false;
 
     const TestComponent = () => {
-      const { canUseFeature: checkFeature } = useSubscription();
+      const { canCreateTask } = useSubscription();
       
       React.useEffect(() => {
-        canUseFeature = checkFeature('ai_coach');
-      }, [checkFeature]);
+        canCreate = canCreateTask();
+      }, [canCreateTask]);
 
       return null;
     };
 
     render(
-      <SubscriptionContext>
+      <SubscriptionProvider>
         <TestComponent />
-      </SubscriptionContext>
+      </SubscriptionProvider>
     );
 
     await waitFor(() => {
@@ -136,9 +127,9 @@ describe('Subscription Functionality', () => {
     };
 
     render(
-      <SubscriptionContext>
+      <SubscriptionProvider>
         <TestComponent />
-      </SubscriptionContext>
+      </SubscriptionProvider>
     );
 
     await waitFor(() => {
@@ -175,9 +166,9 @@ describe('Subscription Functionality', () => {
     };
 
     render(
-      <SubscriptionContext>
+      <SubscriptionProvider>
         <TestComponent />
-      </SubscriptionContext>
+      </SubscriptionProvider>
     );
 
     await waitFor(() => {

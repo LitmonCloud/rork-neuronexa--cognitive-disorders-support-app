@@ -23,7 +23,7 @@ const defaultSettings: LocationSettings = {
   shareLocationWithCaregiver: true,
 };
 
-export const [LocationContext, useLocation] = createContextHook(() => {
+export const [LocationProvider, useLocation] = createContextHook(() => {
   const { profile } = useUserProfile();
   const [currentLocation, setCurrentLocation] = useState<Location | null>(null);
   const [locationHistory, setLocationHistory] = useState<Location[]>([]);
