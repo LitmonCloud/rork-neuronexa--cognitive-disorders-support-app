@@ -107,7 +107,7 @@ function RootLayoutNav() {
 
     const currentRoute = segments[0];
     const publicRoutes = ['terms-agreement', 'onboarding', 'paywall'];
-    const caregiverRoutes = ['caregiver-dashboard', 'caregiver-task-manager', 'caregiver-patient-tasks', 'caregiver-location-monitor'];
+    const caregiverRoutes = ['caregiver-dashboard', 'caregiver-hub', 'caregiver-task-manager', 'caregiver-patient-tasks', 'caregiver-location-monitor'];
     const sharedRoutes = ['(tabs)', 'task', 'notifications', 'notification-settings', 'finger-trace', 'emergency-contacts', 'memory-journal', 'invite-generate', 'invite-redeem', 'patient-generate-code', 'patient-location'];
     
     const isPublicRoute = publicRoutes.includes(currentRoute);
@@ -175,6 +175,7 @@ function RootLayoutNav() {
       <Stack.Screen name="task/[id]" options={{ headerShown: false }} />
       <Stack.Screen name="task/test-dummy" options={{ headerShown: false }} />
       <Stack.Screen name="caregiver-dashboard" options={{ headerShown: false }} />
+      <Stack.Screen name="caregiver-hub" options={{ headerShown: false }} />
       <Stack.Screen name="caregiver-task-manager" options={{ headerShown: false }} />
       <Stack.Screen name="caregiver-patient-tasks" options={{ headerShown: false }} />
       <Stack.Screen name="invite-generate" options={{ headerShown: true, title: 'Invite Caregiver' }} />

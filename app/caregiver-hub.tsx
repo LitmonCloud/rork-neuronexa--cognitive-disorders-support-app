@@ -23,6 +23,9 @@ import {
   Phone,
   Calendar as CalendarIcon,
   GripVertical,
+  Bell,
+  Settings,
+  Heart,
 } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { spacing, borderRadius } from '@/theme/spacing';
@@ -103,6 +106,37 @@ export default function CaregiverHubScreen() {
     container: {
       flex: 1,
       backgroundColor: colors.background,
+    },
+    bottomNav: {
+      flexDirection: 'row',
+      backgroundColor: colors.surface,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      paddingBottom: insets.bottom,
+      elevation: 8,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: -2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    navItem: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: spacing.md,
+      gap: 4,
+    },
+    navItemActive: {
+      backgroundColor: colors.primary + '10',
+    },
+    navLabel: {
+      fontSize: fontSizes.xs,
+      fontWeight: fontWeights.medium,
+      color: colors.textSecondary,
+    },
+    navLabelActive: {
+      color: colors.primary,
+      fontWeight: fontWeights.bold,
     },
     header: {
       flexDirection: 'row',
@@ -1493,6 +1527,43 @@ export default function CaregiverHubScreen() {
           </ScrollView>
         </View>
       </Modal>
+
+      <View style={styles.bottomNav}>
+        <TouchableOpacity
+          style={[styles.navItem, styles.navItemActive]}
+          activeOpacity={0.7}
+        >
+          <Users size={24} color={colors.primary} />
+          <Text style={[styles.navLabel, styles.navLabelActive]}>Hub</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => router.push('/notifications')}
+          activeOpacity={0.7}
+        >
+          <Bell size={24} color={colors.textSecondary} />
+          <Text style={styles.navLabel}>Alerts</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => router.push('/(tabs)/wellness')}
+          activeOpacity={0.7}
+        >
+          <Heart size={24} color={colors.textSecondary} />
+          <Text style={styles.navLabel}>Wellness</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => router.push('/(tabs)/settings')}
+          activeOpacity={0.7}
+        >
+          <Settings size={24} color={colors.textSecondary} />
+          <Text style={styles.navLabel}>Settings</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
