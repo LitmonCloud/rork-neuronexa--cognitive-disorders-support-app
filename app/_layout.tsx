@@ -183,6 +183,7 @@ function RootLayoutNav() {
       <Stack.Screen name="notifications" options={{ headerShown: false }} />
       <Stack.Screen name="notification-settings" options={{ headerShown: true, title: 'Notification Settings' }} />
       <Stack.Screen name="finger-trace" options={{ headerShown: false }} />
+      <Stack.Screen name="breathing-exercise" options={{ headerShown: false }} />
       <Stack.Screen name="emergency-contacts" options={{ headerShown: true, title: 'Emergency Contacts' }} />
       <Stack.Screen name="memory-journal" options={{ headerShown: true, title: 'Memory Journal' }} />
       <Stack.Screen name="patient-generate-code" options={{ headerShown: false }} />

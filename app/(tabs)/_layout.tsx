@@ -204,17 +204,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="dementia-support"
-        options={{
-          title: "Memory",
-          tabBarIcon: ({ color }) => <Brain size={24} color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="settings"
         options={{
           title: "Settings",
           tabBarIcon: ({ color }) => <Settings size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="dementia-support"
+        options={{
+          href: null,
         }}
       />
     </Tabs>

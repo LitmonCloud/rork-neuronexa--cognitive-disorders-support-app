@@ -8,20 +8,14 @@ import {
   Dimensions,
 } from 'react-native';
 import { router } from 'expo-router';
-import { Wind, Hand, Brain, Shield, Heart } from 'lucide-react-native';
+import { Wind, Hand, Heart } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
-import { useDementia } from '@/contexts/DementiaContext';
 import { breathingPatterns } from '@/constants/mentalHealthResources';
 
 const { width } = Dimensions.get('window');
 
 export default function WellnessScreen() {
   const { colors } = useTheme();
-  const { settings } = useDementia();
-
-  const memorySupportEnabled = settings?.enabled || false;
-  const cognitiveExercisesEnabled = settings?.photoBasedNavigationEnabled || false;
-  const shouldShowWellness = !memorySupportEnabled || (memorySupportEnabled && cognitiveExercisesEnabled);
 
   const styles = StyleSheet.create({
     container: {
@@ -243,42 +237,6 @@ export default function WellnessScreen() {
       fontWeight: '600' as const,
     },
   });
-
-  if (!shouldShowWellness) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Brain size={28} color={colors.primary} />
-          <Text style={styles.headerTitle}>Wellness</Text>
-        </View>
-
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <View style={styles.section}>
-            <View style={[styles.featureCard, { borderLeftColor: colors.primary, flexDirection: 'column', alignItems: 'flex-start' }]}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, marginBottom: 16 }}>
-                <View style={styles.featureCardIcon}>
-                  <Shield size={32} color={colors.primary} />
-                </View>
-                <Text style={styles.featureCardTitle}>Memory Support Active</Text>
-              </View>
-              <Text style={styles.featureCardDescription}>
-                Wellness exercises are currently hidden because Memory Support is enabled. 
-                To access breathing exercises and other wellness features, please enable 
-                Cognitive Exercises in your Memory Support settings.
-              </Text>
-              <TouchableOpacity
-                style={[styles.aiButton, { marginTop: 16, width: '100%' }]}
-                onPress={() => router.push('/settings')}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.aiButtonText}>Go to Settings</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ScrollView>
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>
