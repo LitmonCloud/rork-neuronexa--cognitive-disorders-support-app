@@ -6,7 +6,7 @@ import { useUserProfile } from '@/contexts/UserProfileContext';
 import { useDementia } from '@/contexts/DementiaContext';
 import { useFunnel } from '@/contexts/FunnelContext';
 import { useTheme, lightColors } from '@/contexts/ThemeContext';
-import { Brain, Users, ChevronRight, Check, User, Trash2 } from 'lucide-react-native';
+import { Brain, Users, ChevronRight, Check, User, Trash2, Puzzle, BookHeart } from 'lucide-react-native';
 
 interface OnboardingStep {
   id: number;
@@ -22,16 +22,21 @@ const steps: OnboardingStep[] = [
   },
   {
     id: 2,
+    title: 'Support Type',
+    description: 'What kind of support do you need?',
+  },
+  {
+    id: 3,
     title: 'Welcome!',
     description: "Let's get to know you better",
   },
   {
-    id: 3,
+    id: 4,
     title: 'Emergency Contacts',
     description: 'Add people who can help in case of emergency',
   },
   {
-    id: 4,
+    id: 5,
     title: 'All Set!',
     description: "You're ready to start your journey",
   },
@@ -48,6 +53,7 @@ export default function OnboardingScreen() {
 
   const [name, setName] = useState('');
   const [role, setRole] = useState<'patient' | 'caregiver' | null>(null);
+  const [patientType, setPatientType] = useState<'cognitive' | 'memory' | null>(null);
   const [contacts, setContacts] = useState<{ name: string; phone: string; relationship: string }[]>([]);
   const [currentContact, setCurrentContact] = useState({ name: '', phone: '', relationship: '' });
 
@@ -290,12 +296,17 @@ export default function OnboardingScreen() {
 
   const canProceed = () => {
     if (currentIndex === 0) return role !== null;
-    if (currentIndex === 1) return name.trim().length > 0;
-    if (currentIndex === 2) return true;
+    if (currentIndex === 1) return role === 'caregiver' || patientType !== null;
+    if (currentIndex === 2) return name.trim().length > 0;
+    if (currentIndex === 3) return true;
     return true;
   };
 
   const shouldShowEmergencyContacts = () => {
+    return role === 'patient';
+  };
+
+  const shouldShowPatientType = () => {
     return role === 'patient';
   };
 
@@ -306,13 +317,29 @@ export default function OnboardingScreen() {
       console.log('[Onboarding] Step 0 complete - Role selected:', role);
       updateProfile({ role: role! });
       trackStep('onboarding_goals');
-      setCurrentIndex(1);
+      
+      if (role === 'caregiver') {
+        console.log('[Onboarding] Caregiver flow - Skipping patient type');
+        setCurrentIndex(2);
+      } else {
+        console.log('[Onboarding] Patient flow - Moving to patient type');
+        setCurrentIndex(1);
+      }
       slideAnim.setValue(0);
       return;
     }
 
     if (currentIndex === 1) {
-      console.log('[Onboarding] Step 1 complete - Name entered:', name, 'Role:', role);
+      console.log('[Onboarding] Step 1 complete - Patient type selected:', patientType);
+      updateProfile({ patientType: patientType! });
+      trackStep('onboarding_patient_type');
+      setCurrentIndex(2);
+      slideAnim.setValue(0);
+      return;
+    }
+
+    if (currentIndex === 2) {
+      console.log('[Onboarding] Step 2 complete - Name entered:', name, 'Role:', role);
       updateProfile({ name });
       trackStep('onboarding_profile');
       
@@ -326,14 +353,14 @@ export default function OnboardingScreen() {
         return;
       } else {
         console.log('[Onboarding] Patient flow - Moving to emergency contacts');
-        setCurrentIndex(2);
+        setCurrentIndex(3);
         slideAnim.setValue(0);
         return;
       }
     }
 
-    if (currentIndex === 2) {
-      console.log('[Onboarding] Step 2 complete - Emergency contacts added:', contacts.length);
+    if (currentIndex === 3) {
+      console.log('[Onboarding] Step 3 complete - Emergency contacts added:', contacts.length);
       contacts.forEach(contact => {
         addEmergencyContact({
           name: contact.name,
@@ -344,12 +371,12 @@ export default function OnboardingScreen() {
         });
       });
       trackStep('onboarding_preferences');
-      setCurrentIndex(3);
+      setCurrentIndex(4);
       slideAnim.setValue(0);
       return;
     }
 
-    if (currentIndex === 3) {
+    if (currentIndex === 4) {
       console.log('[Onboarding] Final step - Completing onboarding');
       trackStep('onboarding_complete');
       updateProfile({ onboardingCompleted: true });
@@ -361,7 +388,7 @@ export default function OnboardingScreen() {
   };
 
   const handleSkip = () => {
-    if (currentIndex === 2) {
+    if (currentIndex === 3) {
       updateProfile({ onboardingCompleted: true });
       setTimeout(() => {
         router.replace('/(tabs)');
@@ -437,6 +464,53 @@ export default function OnboardingScreen() {
         );
 
       case 1:
+        if (!shouldShowPatientType()) {
+          return null;
+        }
+        return (
+          <Animated.View
+            style={{
+              transform: [{ translateY: slideTranslateY }],
+              opacity: slideOpacity,
+            }}
+          >
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>{steps[1].title}</Text>
+              <Text style={styles.description}>{steps[1].description}</Text>
+            </View>
+            <View style={styles.roleContainer}>
+              <TouchableOpacity
+                style={[styles.roleButton, patientType === 'cognitive' && styles.roleButtonSelected]}
+                onPress={() => setPatientType('cognitive')}
+                activeOpacity={0.7}
+              >
+                <View style={[styles.roleIconContainer, { backgroundColor: lightColors.decorative.lavender + '30' }]}>
+                  <Puzzle size={28} color={lightColors.decorative.lavender} />
+                </View>
+                <View style={styles.roleTextContainer}>
+                  <Text style={styles.roleTitle}>Cognitive Disorders</Text>
+                  <Text style={styles.roleDescription}>ADHD, executive function, task management support</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.roleButton, patientType === 'memory' && styles.roleButtonSelected]}
+                onPress={() => setPatientType('memory')}
+                activeOpacity={0.7}
+              >
+                <View style={[styles.roleIconContainer, { backgroundColor: lightColors.decorative.mint + '30' }]}>
+                  <BookHeart size={28} color={lightColors.decorative.mint} />
+                </View>
+                <View style={styles.roleTextContainer}>
+                  <Text style={styles.roleTitle}>Memory Support</Text>
+                  <Text style={styles.roleDescription}>Alzheimer&apos;s, dementia, memory care assistance</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        );
+
+      case 2:
         return (
           <Animated.View
             style={{
@@ -448,8 +522,8 @@ export default function OnboardingScreen() {
               <User size={40} color={lightColors.decorative.lavender} />
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.title}>{steps[1].title}</Text>
-              <Text style={styles.description}>{steps[1].description}</Text>
+              <Text style={styles.title}>{steps[2].title}</Text>
+              <Text style={styles.description}>{steps[2].description}</Text>
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>What&apos;s your name?</Text>
@@ -465,7 +539,7 @@ export default function OnboardingScreen() {
           </Animated.View>
         );
 
-      case 2:
+      case 3:
         if (!shouldShowEmergencyContacts()) {
           return null;
         }
@@ -482,7 +556,7 @@ export default function OnboardingScreen() {
                 }}
               >
                 <View style={styles.textContainer}>
-                  <Text style={styles.title}>{steps[2].title}</Text>
+                  <Text style={styles.title}>{steps[3].title}</Text>
                   <Text style={styles.description}>Add people who can help you in case of emergency</Text>
                 </View>
 
@@ -553,7 +627,7 @@ export default function OnboardingScreen() {
           </KeyboardAvoidingView>
         );
 
-      case 3:
+      case 4:
         return (
           <Animated.View
             style={{
@@ -569,7 +643,9 @@ export default function OnboardingScreen() {
               <Text style={styles.completionDescription}>
                 {role === 'caregiver'
                   ? "You can now manage tasks and provide support to your patients."
-                  : "Let&apos;s start breaking down tasks and achieving your goals together."}
+                  : patientType === 'cognitive'
+                  ? "Let&apos;s start breaking down tasks and achieving your goals together."
+                  : "We&apos;re here to support your memory and daily routines."}
               </Text>
             </View>
           </Animated.View>
@@ -583,7 +659,7 @@ export default function OnboardingScreen() {
   return (
     <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       <View style={styles.header}>
-        {currentIndex === 2 && (
+        {currentIndex === 3 && (
           <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
             <Text style={styles.skipText}>Skip</Text>
           </TouchableOpacity>

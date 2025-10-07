@@ -3,6 +3,7 @@ export type FunnelStep =
   | 'onboarding_start'
   | 'onboarding_profile'
   | 'onboarding_goals'
+  | 'onboarding_patient_type'
   | 'onboarding_preferences'
   | 'onboarding_complete'
   | 'first_task_view'

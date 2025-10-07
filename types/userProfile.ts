@@ -28,6 +28,7 @@ export interface UserProfile {
   userId: string;
   name?: string;
   role?: 'patient' | 'caregiver';
+  patientType?: 'cognitive' | 'memory';
   onboardingCompleted?: boolean;
   preferences: UserPreference[];
   habits: UserHabit[];
