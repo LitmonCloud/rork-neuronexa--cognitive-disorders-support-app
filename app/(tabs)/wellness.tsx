@@ -8,10 +8,11 @@ import {
   Dimensions,
 } from 'react-native';
 import { router } from 'expo-router';
-import { Wind, Hand, Heart } from 'lucide-react-native';
+import { Wind, Hand, Heart, Calendar, Eye, Move, Music, Image as ImageIcon } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useUserProfile } from '@/contexts/UserProfileContext';
 import { breathingPatterns } from '@/constants/mentalHealthResources';
+import { memoryExercises } from '@/constants/memoryExercises';
 
 const { width } = Dimensions.get('window');
 
@@ -19,6 +20,19 @@ export default function WellnessScreen() {
   const { colors } = useTheme();
   const { profile } = useUserProfile();
   const isMemoryUser = profile?.role === 'patient' && profile?.patientType === 'memory';
+
+  const getExerciseIcon = (iconName: string) => {
+    const iconProps = { size: 20, color: colors.surface };
+    switch (iconName) {
+      case 'calendar': return <Calendar {...iconProps} />;
+      case 'eye': return <Eye {...iconProps} />;
+      case 'wind': return <Wind {...iconProps} />;
+      case 'move': return <Move {...iconProps} />;
+      case 'music': return <Music {...iconProps} />;
+      case 'image': return <ImageIcon {...iconProps} />;
+      default: return <Heart {...iconProps} />;
+    }
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -239,6 +253,52 @@ export default function WellnessScreen() {
       color: colors.textSecondary,
       fontWeight: '600' as const,
     },
+    exerciseList: {
+      gap: 16,
+    },
+    memoryExerciseCard: {
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      padding: 20,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 16,
+      borderWidth: 2,
+      borderColor: colors.border,
+      borderLeftWidth: 6,
+    },
+    memoryExerciseIcon: {
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    memoryExerciseContent: {
+      flex: 1,
+    },
+    memoryExerciseTitle: {
+      fontSize: 18,
+      fontWeight: '700' as const,
+      color: colors.text,
+      marginBottom: 4,
+    },
+    memoryExerciseDescription: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginBottom: 8,
+      lineHeight: 20,
+    },
+    memoryExerciseMeta: {
+      flexDirection: 'row',
+      gap: 8,
+      alignItems: 'center',
+    },
+    memoryExerciseMetaText: {
+      fontSize: 12,
+      color: colors.textLight,
+      fontWeight: '600' as const,
+    },
   });
 
   return (
@@ -251,60 +311,89 @@ export default function WellnessScreen() {
           <Text style={styles.headerTitle}>Wellness</Text>
         </View>
         <Text style={styles.headerSubtitle}>
-          Mindfulness exercises to reduce stress and improve focus
+          {isMemoryUser 
+            ? 'Simple exercises to help you feel calm and present'
+            : 'Mindfulness exercises to reduce stress and improve focus'
+          }
         </Text>
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
-          <TouchableOpacity
-            style={styles.heroCard}
-            onPress={() => router.push('/finger-trace')}
-            activeOpacity={0.85}
-          >
-            <View style={styles.heroCardContent}>
-              <View style={styles.heroCardIcon}>
-                <Hand size={40} color="#FFFFFF" />
+          {isMemoryUser ? (
+            <>
+              <Text style={styles.sectionTitle}>Exercises for You</Text>
+              <View style={styles.exerciseList}>
+                {memoryExercises.map((exercise) => (
+                  <TouchableOpacity
+                    key={exercise.id}
+                    style={[styles.memoryExerciseCard, { borderLeftColor: exercise.color }]}
+                    onPress={() => router.push({ pathname: '/memory-exercise', params: { id: exercise.id } })}
+                    activeOpacity={0.7}
+                  >
+                    <View style={[styles.memoryExerciseIcon, { backgroundColor: `${exercise.color}20` }]}>
+                      {getExerciseIcon(exercise.icon)}
+                    </View>
+                    <View style={styles.memoryExerciseContent}>
+                      <Text style={styles.memoryExerciseTitle}>{exercise.title}</Text>
+                      <Text style={styles.memoryExerciseDescription}>{exercise.description}</Text>
+                      <View style={styles.memoryExerciseMeta}>
+                        <Text style={styles.memoryExerciseMetaText}>{exercise.duration} min</Text>
+                        <Text style={styles.memoryExerciseMetaText}>•</Text>
+                        <Text style={styles.memoryExerciseMetaText}>{exercise.difficulty}</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ))}
               </View>
-              <View style={styles.heroCardText}>
-                <Text style={styles.heroCardTitle}>Finger Tracing</Text>
-                <Text style={styles.heroCardDescription}>
-                  Interactive exercises for mindfulness and focus
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-
-          <Text style={styles.sectionTitle}>Breathing Exercises</Text>
-          
-          <View style={styles.breathingGrid}>
-            {breathingPatterns
-              .filter(pattern => {
-                if (!isMemoryUser) return true;
-                return ['1', '3'].includes(pattern.id);
-              })
-              .map((pattern) => (
+            </>
+          ) : (
+            <>
               <TouchableOpacity
-                key={pattern.id}
-                style={[styles.breathingCard, { borderColor: pattern.color }]}
-                onPress={() => router.push(`/breathing-exercise?patternId=${pattern.id}`)}
-                activeOpacity={0.7}
+                style={styles.heroCard}
+                onPress={() => router.push('/finger-trace')}
+                activeOpacity={0.85}
               >
-                <View style={styles.breathingCardHeader}>
-                  <View style={[styles.breathingCardIconSmall, { backgroundColor: `${pattern.color}20` }]}>
-                    <Wind size={20} color={pattern.color} />
+                <View style={styles.heroCardContent}>
+                  <View style={styles.heroCardIcon}>
+                    <Hand size={40} color="#FFFFFF" />
+                  </View>
+                  <View style={styles.heroCardText}>
+                    <Text style={styles.heroCardTitle}>Finger Tracing</Text>
+                    <Text style={styles.heroCardDescription}>
+                      Interactive exercises for mindfulness and focus
+                    </Text>
                   </View>
                 </View>
-                <Text style={styles.breathingCardTitle}>{pattern.name}</Text>
-                <Text style={styles.breathingCardDescription}>{pattern.description}</Text>
-                <View style={styles.breathingCardMeta}>
-                  <Text style={styles.breathingCardMetaText}>
-                    {pattern.inhale}s • {pattern.exhale}s • {pattern.cycles}x
-                  </Text>
-                </View>
               </TouchableOpacity>
-            ))}
-          </View>
+
+              <Text style={styles.sectionTitle}>Breathing Exercises</Text>
+              
+              <View style={styles.breathingGrid}>
+                {breathingPatterns.map((pattern) => (
+                  <TouchableOpacity
+                    key={pattern.id}
+                    style={[styles.breathingCard, { borderColor: pattern.color }]}
+                    onPress={() => router.push(`/breathing-exercise?patternId=${pattern.id}`)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.breathingCardHeader}>
+                      <View style={[styles.breathingCardIconSmall, { backgroundColor: `${pattern.color}20` }]}>
+                        <Wind size={20} color={pattern.color} />
+                      </View>
+                    </View>
+                    <Text style={styles.breathingCardTitle}>{pattern.name}</Text>
+                    <Text style={styles.breathingCardDescription}>{pattern.description}</Text>
+                    <View style={styles.breathingCardMeta}>
+                      <Text style={styles.breathingCardMetaText}>
+                        {pattern.inhale}s • {pattern.exhale}s • {pattern.cycles}x
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </>
+          )}
         </View>
       </ScrollView>
     </View>
