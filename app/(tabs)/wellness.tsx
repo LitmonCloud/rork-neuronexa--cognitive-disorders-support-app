@@ -22,7 +22,6 @@ export default function WellnessScreen() {
   const { colors } = useTheme();
   const { profile } = useUserProfile();
   const { isPremium, canAccessFeature } = useSubscription();
-  const router = useRouter();
   const isMemoryUser = profile?.role === 'patient' && profile?.patientType === 'memory';
   const hasAIAccess = isPremium || canAccessFeature('aiCoaching');
 
