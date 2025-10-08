@@ -27,6 +27,7 @@ import { pushNotifications } from "@/services/notifications/PushNotificationServ
 import { realtimeNotificationService } from "@/services/notifications/RealtimeNotificationService";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { RealtimeNotificationListener } from "@/components/RealtimeNotificationListener";
+import { logger } from "@/utils/logger";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -63,16 +64,16 @@ function RootLayoutNav() {
       if (stored) {
         const data = JSON.parse(stored);
         const accepted = data.accepted === true;
-        console.log('[RootLayout] Terms acceptance status:', accepted);
+        logger.info('Terms acceptance status', { accepted });
         setTermsAccepted(accepted);
         return accepted;
       } else {
-        console.log('[RootLayout] No terms acceptance found');
+        logger.info('No terms acceptance found');
         setTermsAccepted(false);
         return false;
       }
     } catch (error) {
-      console.error('[RootLayout] Error checking terms acceptance:', error);
+      logger.error('Error checking terms acceptance', error as Error);
       setTermsAccepted(false);
       return false;
     }
@@ -81,7 +82,7 @@ function RootLayoutNav() {
   useEffect(() => {
     async function initialize() {
       const timeout = setTimeout(() => {
-        console.warn('[RootLayout] Terms check timeout, using default');
+        logger.warn('Terms check timeout, using default');
         setTermsAccepted(false);
         setIsInitialized(true);
       }, 3000);
@@ -115,7 +116,7 @@ function RootLayoutNav() {
     const isCaregiverRoute = caregiverRoutes.includes(currentRoute);
     const isSharedRoute = sharedRoutes.includes(currentRoute);
 
-    console.log('[RootLayout] Navigation check:', { 
+    logger.debug('Navigation check', { 
       currentRoute, 
       termsAccepted, 
       onboardingCompleted, 
@@ -127,32 +128,32 @@ function RootLayoutNav() {
     });
 
     if (!termsAccepted && currentRoute !== 'terms-agreement') {
-      console.log('[RootLayout] → terms-agreement');
+      logger.info('Navigating to terms-agreement');
       router.replace('/terms-agreement');
       return;
     }
 
     if (termsAccepted && !onboardingCompleted && currentRoute !== 'onboarding') {
-      console.log('[RootLayout] → onboarding');
+      logger.info('Navigating to onboarding');
       router.replace('/onboarding');
       return;
     }
 
     if (termsAccepted && onboardingCompleted && isCaregiver && requiresSubscription && currentRoute !== 'paywall') {
-      console.log('[RootLayout] → paywall (caregiver needs subscription)');
+      logger.info('Navigating to paywall', { reason: 'caregiver needs subscription' });
       router.replace('/paywall');
       return;
     }
 
     if (termsAccepted && onboardingCompleted && !requiresSubscription) {
       if (!isCaregiver && isCaregiverRoute) {
-        console.log('[RootLayout] Patient blocked from caregiver route → tabs');
+        logger.info('Patient blocked from caregiver route, redirecting to tabs');
         router.replace('/(tabs)');
         return;
       }
 
       if (!isPublicRoute && !isCaregiverRoute && !isSharedRoute && !currentRoute) {
-        console.log('[RootLayout] → default route');
+        logger.info('Navigating to default route', { isCaregiver });
         router.replace(isCaregiver ? '/caregiver-dashboard' : '/(tabs)');
         return;
       }
@@ -198,24 +199,24 @@ function RootLayoutNav() {
 export default function RootLayout() {
   useEffect(() => {
     async function initializeServices() {
-      console.log('[RootLayout] Initializing services...');
+      logger.info('Initializing services...');
       
       try {
         sentry.initialize();
         
         await Promise.race([
           Promise.allSettled([
-            posthog.initialize().catch(e => console.log('[RootLayout] PostHog init skipped:', e.message)),
-            supabase.initialize().catch(e => console.log('[RootLayout] Supabase init skipped:', e.message)),
-            pushNotifications.initialize().catch(e => console.log('[RootLayout] Push init skipped:', e.message)),
-            realtimeNotificationService.initialize().catch(e => console.log('[RootLayout] Realtime init skipped:', e.message)),
+            posthog.initialize().catch(e => logger.info('PostHog init skipped', { message: e.message })),
+            supabase.initialize().catch(e => logger.info('Supabase init skipped', { message: e.message })),
+            pushNotifications.initialize().catch(e => logger.info('Push init skipped', { message: e.message })),
+            realtimeNotificationService.initialize().catch(e => logger.info('Realtime init skipped', { message: e.message })),
           ]),
           new Promise(resolve => setTimeout(resolve, 2000)),
         ]);
         
-        console.log('[RootLayout] Services initialized');
+        logger.info('Services initialized');
       } catch (error) {
-        console.error('[RootLayout] Service initialization error:', error);
+        logger.error('Service initialization error', error as Error);
       } finally {
         await SplashScreen.hideAsync();
       }
