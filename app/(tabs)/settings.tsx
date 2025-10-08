@@ -585,6 +585,188 @@ export default function SettingsScreen() {
 
 
 
+        {!isCaregiver && isMemorySupport && (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Memory Support Accessibility</Text>
+          
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => toggleSetting('memoryMode')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+                <Brain size={20} color={colors.primary} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Memory Support Mode</Text>
+                <Text style={styles.settingDescription}>Enhanced features for memory challenges</Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.memoryMode}
+              onValueChange={() => toggleSetting('memoryMode')}
+              trackColor={{ false: colors.borderLight, true: colors.primary }}
+              thumbColor={colors.surface}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => toggleSetting('extraLargeText')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.secondary + '20' }]}>
+                <Type size={20} color={colors.secondary} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Extra Large Text</Text>
+                <Text style={styles.settingDescription}>Maximum text size for better readability</Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.extraLargeText}
+              onValueChange={() => toggleSetting('extraLargeText')}
+              trackColor={{ false: colors.borderLight, true: colors.secondary }}
+              thumbColor={colors.surface}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => toggleSetting('photoBasedReminders')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.accent + '20' }]}>
+                <ImageIcon size={20} color={colors.accent} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Photo-Based Reminders</Text>
+                <Text style={styles.settingDescription}>Use photos to help remember tasks</Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.photoBasedReminders}
+              onValueChange={() => toggleSetting('photoBasedReminders')}
+              trackColor={{ false: colors.borderLight, true: colors.accent }}
+              thumbColor={colors.surface}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => toggleSetting('audioConfirmation')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.warning + '20' }]}>
+                <Volume2 size={20} color={colors.warning} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Audio Confirmation</Text>
+                <Text style={styles.settingDescription}>Hear confirmations for actions</Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.audioConfirmation}
+              onValueChange={() => toggleSetting('audioConfirmation')}
+              trackColor={{ false: colors.borderLight, true: colors.warning }}
+              thumbColor={colors.surface}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => toggleSetting('repetitionTolerance')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.success + '20' }]}>
+                <Heart size={20} color={colors.success} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Repetition Tolerance</Text>
+                <Text style={styles.settingDescription}>Patient responses to repeated questions</Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.repetitionTolerance}
+              onValueChange={() => toggleSetting('repetitionTolerance')}
+              trackColor={{ false: colors.borderLight, true: colors.success }}
+              thumbColor={colors.surface}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => toggleSetting('slowAnimations')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.primaryDark + '20' }]}>
+                <Zap size={20} color={colors.primaryDark} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Slow Animations</Text>
+                <Text style={styles.settingDescription}>Slower transitions for easier tracking</Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.slowAnimations}
+              onValueChange={() => toggleSetting('slowAnimations')}
+              trackColor={{ false: colors.borderLight, true: colors.primaryDark }}
+              thumbColor={colors.surface}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => toggleSetting('voiceGuidance')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+                <Volume2 size={20} color={colors.primary} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Voice Guidance</Text>
+                <Text style={styles.settingDescription}>Spoken instructions for tasks</Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.voiceGuidance}
+              onValueChange={() => toggleSetting('voiceGuidance')}
+              trackColor={{ false: colors.borderLight, true: colors.primary }}
+              thumbColor={colors.surface}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => toggleSetting('hapticFeedback')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.secondary + '20' }]}>
+                <Vibrate size={20} color={colors.secondary} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Haptic Feedback</Text>
+                <Text style={styles.settingDescription}>Gentle vibrations for confirmations</Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.hapticFeedback}
+              onValueChange={() => toggleSetting('hapticFeedback')}
+              trackColor={{ false: colors.borderLight, true: colors.secondary }}
+              thumbColor={colors.surface}
+            />
+          </TouchableOpacity>
+        </View>
+        )}
+
         {!isCaregiver && isCognitiveSupport && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Cognitive Support Features</Text>

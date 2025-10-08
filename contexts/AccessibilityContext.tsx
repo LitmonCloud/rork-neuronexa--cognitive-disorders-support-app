@@ -19,6 +19,12 @@ const defaultSettings: AccessibilitySettings = {
   hapticFeedback: true,
   colorBlindMode: 'none',
   focusIndicators: true,
+  memoryMode: false,
+  photoBasedReminders: true,
+  repetitionTolerance: true,
+  extraLargeText: false,
+  audioConfirmation: false,
+  slowAnimations: false,
 };
 
 export const [AccessibilityProvider, useAccessibility] = createContextHook(() => {

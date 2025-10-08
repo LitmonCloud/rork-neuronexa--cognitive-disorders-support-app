@@ -48,6 +48,12 @@ export interface AccessibilitySettings {
   hapticFeedback: boolean;
   colorBlindMode: ColorBlindMode;
   focusIndicators: boolean;
+  memoryMode: boolean;
+  photoBasedReminders: boolean;
+  repetitionTolerance: boolean;
+  extraLargeText: boolean;
+  audioConfirmation: boolean;
+  slowAnimations: boolean;
 }
 
 export interface CaregiverSettings {
