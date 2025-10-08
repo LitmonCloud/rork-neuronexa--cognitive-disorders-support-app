@@ -8,18 +8,23 @@ import {
   Dimensions,
 } from 'react-native';
 import { router } from 'expo-router';
-import { Wind, Hand, Heart, Calendar, Eye, Move, Music, Image as ImageIcon } from 'lucide-react-native';
+import { Wind, Hand, Heart, Calendar, Eye, Move, Music, Image as ImageIcon, Sparkles } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useUserProfile } from '@/contexts/UserProfileContext';
+import { useSubscription } from '@/contexts/SubscriptionContext';
 import { breathingPatterns } from '@/constants/mentalHealthResources';
 import { memoryExercises } from '@/constants/memoryExercises';
+import { Lock } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 
 export default function WellnessScreen() {
   const { colors } = useTheme();
   const { profile } = useUserProfile();
+  const { isPremium, canAccessFeature } = useSubscription();
+  const router = useRouter();
   const isMemoryUser = profile?.role === 'patient' && profile?.patientType === 'memory';
+  const hasAIAccess = isPremium || canAccessFeature('aiCoaching');
 
   const getExerciseIcon = (iconName: string, iconColor: string) => {
     const iconProps = { size: 24, color: iconColor };
@@ -324,28 +329,70 @@ export default function WellnessScreen() {
             <>
               <Text style={styles.sectionTitle}>Exercises for You</Text>
               <View style={styles.exerciseList}>
-                {memoryExercises.map((exercise) => (
-                  <TouchableOpacity
-                    key={exercise.id}
-                    style={[styles.memoryExerciseCard, { borderLeftColor: exercise.color }]}
-                    onPress={() => router.push({ pathname: '/memory-exercise', params: { id: exercise.id } })}
-                    activeOpacity={0.7}
-                  >
-                    <View style={[styles.memoryExerciseIcon, { backgroundColor: `${exercise.color}20` }]}>
-                      {getExerciseIcon(exercise.icon, exercise.color)}
-                    </View>
-                    <View style={styles.memoryExerciseContent}>
-                      <Text style={styles.memoryExerciseTitle}>{exercise.title}</Text>
-                      <Text style={styles.memoryExerciseDescription}>{exercise.description}</Text>
-                      <View style={styles.memoryExerciseMeta}>
-                        <Text style={styles.memoryExerciseMetaText}>{exercise.duration} min</Text>
-                        <Text style={styles.memoryExerciseMetaText}>•</Text>
-                        <Text style={styles.memoryExerciseMetaText}>{exercise.difficulty}</Text>
+                {memoryExercises.map((exercise, index) => {
+                  const isAIPowered = index >= 3;
+                  const isLocked = isAIPowered && !hasAIAccess;
+                  
+                  return (
+                    <TouchableOpacity
+                      key={exercise.id}
+                      style={[styles.memoryExerciseCard, { borderLeftColor: exercise.color }, isLocked && { opacity: 0.6 }]}
+                      onPress={() => {
+                        if (isLocked) {
+                          router.push('/paywall');
+                        } else {
+                          router.push({ pathname: '/memory-exercise', params: { id: exercise.id } });
+                        }
+                      }}
+                      activeOpacity={0.7}
+                    >
+                      <View style={[styles.memoryExerciseIcon, { backgroundColor: `${exercise.color}20` }]}>
+                        {isLocked ? <Lock size={24} color={exercise.color} /> : getExerciseIcon(exercise.icon, exercise.color)}
                       </View>
-                    </View>
-                  </TouchableOpacity>
-                ))}
+                      <View style={styles.memoryExerciseContent}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                          <Text style={styles.memoryExerciseTitle}>{exercise.title}</Text>
+                          {isAIPowered && (
+                            <View style={{ backgroundColor: colors.primary, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 }}>
+                              <Text style={{ fontSize: 10, fontWeight: '700' as const, color: colors.surface }}>AI</Text>
+                            </View>
+                          )}
+                        </View>
+                        <Text style={styles.memoryExerciseDescription}>
+                          {isLocked ? 'Unlock with Premium for AI-powered guidance' : exercise.description}
+                        </Text>
+                        <View style={styles.memoryExerciseMeta}>
+                          <Text style={styles.memoryExerciseMetaText}>{exercise.duration} min</Text>
+                          <Text style={styles.memoryExerciseMetaText}>•</Text>
+                          <Text style={styles.memoryExerciseMetaText}>{exercise.difficulty}</Text>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
+              
+              {!hasAIAccess && (
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: colors.primary,
+                    borderRadius: 16,
+                    padding: 20,
+                    marginTop: 16,
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    gap: 8,
+                  }}
+                  onPress={() => router.push('/paywall')}
+                  activeOpacity={0.8}
+                >
+                  <Sparkles size={20} color={colors.surface} />
+                  <Text style={{ fontSize: 16, fontWeight: '700' as const, color: colors.surface }}>
+                    Unlock AI-Powered Memory Support
+                  </Text>
+                </TouchableOpacity>
+              )}
             </>
           ) : (
             <>

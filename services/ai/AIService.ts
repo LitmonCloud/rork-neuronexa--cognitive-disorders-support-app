@@ -437,6 +437,165 @@ Be warm, empathetic, and genuinely supportive.`;
     return `Remember: progress isn't always linear, and that's okay. Every step forward, no matter how small, is worth celebrating. You're doing better than you think! ✨`;
   }
 
+  async generateMemoryPrompt(context: {
+    userProfile?: UserProfile;
+    recentMemories?: string[];
+    timeOfDay?: 'morning' | 'afternoon' | 'evening';
+    emotionalState?: string;
+  }): Promise<string> {
+    const userContext = this.buildUserContext(context.userProfile);
+    const name = context.userProfile?.name || 'friend';
+
+    const timeGreeting = {
+      morning: 'Good morning',
+      afternoon: 'Good afternoon',
+      evening: 'Good evening',
+    };
+
+    const greeting = context.timeOfDay ? timeGreeting[context.timeOfDay] : 'Hello';
+
+    const prompt = `You are Nexa, a gentle AI companion for someone with memory challenges. Generate a warm, simple memory prompt (2-3 sentences) for ${name}.
+
+${userContext}
+
+Time: ${greeting}
+${context.recentMemories ? `Recent memories they've shared: ${context.recentMemories.join(', ')}` : ''}
+${context.emotionalState ? `Current mood: ${context.emotionalState}` : ''}
+
+Your memory prompt should:
+1. Be very simple and clear (5th grade reading level)
+2. Ask about something familiar and comforting
+3. Be gentle and non-threatening
+4. Help them feel oriented and safe
+5. Use present tense and concrete language
+
+Examples:
+- "${greeting}, ${name}. Can you tell me about your favorite room in your home? What do you like about it?"
+- "${greeting}. What's something that makes you smile today? It can be anything - big or small."
+- "${greeting}, ${name}. Who is someone special to you? What do you remember about them?"
+
+Generate a similar prompt that feels personal and comforting.`;
+
+    try {
+      const response = await generateText(prompt);
+      const message = response.trim();
+      console.log('[Nexa] Generated memory prompt:', message);
+      return message;
+    } catch (error) {
+      console.error('[AIService] Error generating memory prompt:', error);
+      return this.getFallbackMemoryPrompt(name, greeting);
+    }
+  }
+
+  private getFallbackMemoryPrompt(name: string, greeting: string): string {
+    const prompts = [
+      `${greeting}, ${name}. What's your favorite thing to do today?`,
+      `${greeting}. Can you tell me about someone you care about?`,
+      `${greeting}, ${name}. What makes you feel happy?`,
+      `${greeting}. What's something you're good at?`,
+      `${greeting}, ${name}. What's your favorite memory?`,
+    ];
+    return prompts[Math.floor(Math.random() * prompts.length)];
+  }
+
+  async generateOrientationReminder(context: {
+    userProfile?: UserProfile;
+    currentDate: string;
+    currentTime: string;
+    location?: string;
+  }): Promise<string> {
+    const name = context.userProfile?.name || 'friend';
+
+    const prompt = `You are Nexa, providing a gentle orientation reminder for someone with memory challenges.
+
+Generate a warm, simple reminder (1-2 sentences) that includes:
+- Today is ${context.currentDate}
+- The time is ${context.currentTime}
+${context.location ? `- You are at ${context.location}` : ''}
+
+Make it:
+1. Very simple and clear
+2. Warm and reassuring
+3. Not condescending
+4. Helpful and grounding
+
+Example: "${name}, today is ${context.currentDate}. It's ${context.currentTime} right now. You're safe and everything is okay."`;
+
+    try {
+      const response = await generateText(prompt);
+      return response.trim();
+    } catch (error) {
+      console.error('[AIService] Error generating orientation reminder:', error);
+      return `${name}, today is ${context.currentDate}. It's ${context.currentTime}. You're doing great.`;
+    }
+  }
+
+  async generateMedicationReminder(context: {
+    userProfile?: UserProfile;
+    medicationName: string;
+    dosage: string;
+    instructions?: string;
+  }): Promise<string> {
+    const name = context.userProfile?.name || 'friend';
+
+    const prompt = `You are Nexa, providing a gentle medication reminder for someone with memory challenges.
+
+Medication: ${context.medicationName}
+Dosage: ${context.dosage}
+${context.instructions ? `Instructions: ${context.instructions}` : ''}
+
+Generate a simple, clear reminder (2-3 sentences) that:
+1. Is warm and encouraging
+2. Uses very simple language
+3. Includes the medication name and dosage
+4. Provides clear instructions
+5. Is reassuring
+
+Example: "${name}, it's time for your ${context.medicationName}. Take ${context.dosage} with water. You're doing a great job taking care of yourself."`;
+
+    try {
+      const response = await generateText(prompt);
+      return response.trim();
+    } catch (error) {
+      console.error('[AIService] Error generating medication reminder:', error);
+      return `${name}, it's time for your ${context.medicationName}. Take ${context.dosage}. You're doing great.`;
+    }
+  }
+
+  async generateJournalPrompt(context: {
+    userProfile?: UserProfile;
+    recentEntries?: string[];
+    timeOfDay?: 'morning' | 'afternoon' | 'evening';
+  }): Promise<string> {
+    const name = context.userProfile?.name || 'friend';
+
+    const prompt = `You are Nexa, helping someone with memory challenges create a journal entry.
+
+${context.recentEntries ? `Recent entries: ${context.recentEntries.join(', ')}` : ''}
+
+Generate a simple, comforting journal prompt (1-2 sentences) that:
+1. Is very easy to understand
+2. Asks about something concrete and familiar
+3. Encourages positive memories
+4. Is not overwhelming
+5. Feels personal
+
+Examples:
+- "${name}, what made you smile today?"
+- "Can you describe something you saw today that you liked?"
+- "Who did you talk to today? What did you talk about?"
+
+Generate a similar prompt.`;
+
+    try {
+      const response = await generateText(prompt);
+      return response.trim();
+    } catch (error) {
+      console.error('[AIService] Error generating journal prompt:', error);
+      return `${name}, what's something good that happened today?`;
+    }
+  }
+
   async generateAffirmation(context: {
     userProfile?: UserProfile;
     achievement?: string;

@@ -3,6 +3,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useDementia } from '@/contexts/DementiaContext';
+import { useSubscription } from '@/contexts/SubscriptionContext';
+import { aiService } from '@/services/ai/AIService';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 import { 
   Calendar, 
   Clock, 
@@ -13,6 +16,8 @@ import {
   ChevronRight,
   Shield,
   HelpCircle,
+  Sparkles,
+  Lock,
 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 
@@ -20,6 +25,8 @@ export default function DementiaSupportScreen() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { profile } = useUserProfile();
+  const { isPremium, canAccessFeature } = useSubscription();
   const { 
     settings, 
     emergencyContacts, 
@@ -31,6 +38,9 @@ export default function DementiaSupportScreen() {
 
   const [orientationInfo, setOrientationInfo] = useState(getOrientationInfo());
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [aiPrompt, setAiPrompt] = useState<string>('');
+  const [loadingAI, setLoadingAI] = useState(false);
+  const hasAIAccess = isPremium || canAccessFeature('aiCoaching');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -40,6 +50,34 @@ export default function DementiaSupportScreen() {
 
     return () => clearInterval(interval);
   }, [getOrientationInfo]);
+
+  useEffect(() => {
+    if (hasAIAccess && settings?.enabled) {
+      loadAIPrompt();
+    }
+  }, [hasAIAccess, settings?.enabled]);
+
+  const loadAIPrompt = async () => {
+    setLoadingAI(true);
+    try {
+      const hour = currentTime.getHours();
+      const timeOfDay = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
+      
+      const recentMemories = memoryJournal.slice(0, 3).map(entry => entry.title);
+      
+      const prompt = await aiService.generateMemoryPrompt({
+        userProfile: profile,
+        recentMemories,
+        timeOfDay,
+      });
+      
+      setAiPrompt(prompt);
+    } catch (error) {
+      console.error('Error loading AI prompt:', error);
+    } finally {
+      setLoadingAI(false);
+    }
+  };
 
   const upcomingMeds = getUpcomingMedications();
   const todayRoutine = getTodayRoutineAnchors();
@@ -298,6 +336,23 @@ export default function DementiaSupportScreen() {
       textAlign: 'center' as const,
       marginTop: 12,
     },
+    aiPromptCard: {
+      borderRadius: 16,
+      padding: 20,
+      marginBottom: 24,
+      borderWidth: 2,
+      ...Platform.select({
+        ios: {
+          shadowColor: colors.shadow,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 12,
+        },
+        android: {
+          elevation: 4,
+        },
+      }),
+    },
     setupCard: {
       backgroundColor: colors.primaryLight,
       borderRadius: 16,
@@ -384,6 +439,39 @@ export default function DementiaSupportScreen() {
         <View style={styles.header}>
           <Text style={styles.greeting}>{getGreeting()}</Text>
         </View>
+
+        {hasAIAccess && aiPrompt && (
+          <View style={[styles.aiPromptCard, { backgroundColor: colors.primary + '15', borderColor: colors.primary }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+              <Sparkles size={20} color={colors.primary} />
+              <Text style={{ fontSize: 14, fontWeight: '700' as const, color: colors.primary }}>AI Memory Prompt</Text>
+            </View>
+            <Text style={{ fontSize: 16, color: colors.text, lineHeight: 24 }}>{aiPrompt}</Text>
+            <TouchableOpacity
+              style={{ marginTop: 12, backgroundColor: colors.primary, borderRadius: 12, padding: 12, alignItems: 'center' }}
+              onPress={() => router.push('/memory-journal')}
+              activeOpacity={0.8}
+            >
+              <Text style={{ fontSize: 14, fontWeight: '600' as const, color: colors.surface }}>Record Memory</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {!hasAIAccess && settings?.enabled && (
+          <TouchableOpacity
+            style={[styles.aiPromptCard, { backgroundColor: colors.primaryLight, borderColor: colors.primary }]}
+            onPress={() => router.push('/paywall')}
+            activeOpacity={0.8}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+              <Lock size={20} color={colors.primary} />
+              <Text style={{ fontSize: 16, fontWeight: '700' as const, color: colors.primary }}>Unlock AI Memory Support</Text>
+            </View>
+            <Text style={{ fontSize: 14, color: colors.text, lineHeight: 20 }}>
+              Get personalized memory prompts, AI-powered reminders, and gentle guidance throughout your day.
+            </Text>
+          </TouchableOpacity>
+        )}
 
         <View style={styles.orientationCard}>
           <View style={styles.orientationRow}>

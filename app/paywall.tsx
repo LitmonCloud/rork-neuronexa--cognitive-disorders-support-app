@@ -354,9 +354,9 @@ export default function PaywallScreen() {
                 <Zap size={20} color={colors.primary} />
               </View>
               <View style={styles.benefitContent}>
-                <Text style={styles.benefitTitle}>Unlimited Everything</Text>
+                <Text style={styles.benefitTitle}>AI-Powered Support</Text>
                 <Text style={styles.benefitDescription}>
-                  Create unlimited tasks with AI-powered breakdowns
+                  Personalized memory prompts, task breakdowns, and gentle guidance
                 </Text>
               </View>
             </View>
@@ -365,9 +365,9 @@ export default function PaywallScreen() {
                 <Crown size={20} color={colors.primary} />
               </View>
               <View style={styles.benefitContent}>
-                <Text style={styles.benefitTitle}>Premium Features</Text>
+                <Text style={styles.benefitTitle}>Memory & Cognitive Support</Text>
                 <Text style={styles.benefitDescription}>
-                  Caregiver mode, analytics, custom reminders, and more
+                  AI memory exercises, orientation reminders, and medication tracking
                 </Text>
               </View>
             </View>
