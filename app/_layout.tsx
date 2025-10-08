@@ -181,7 +181,7 @@ function RootLayoutNav() {
       <Stack.Screen name="caregiver-patient-tasks" options={{ headerShown: false }} />
       <Stack.Screen name="invite-generate" options={{ headerShown: true, title: 'Invite Caregiver' }} />
       <Stack.Screen name="invite-redeem" options={{ headerShown: true, title: 'Join as Caregiver' }} />
-      <Stack.Screen name="notifications" options={{ headerShown: false }} />
+      <Stack.Screen name="notifications" options={{ headerShown: true, title: 'Notifications' }} />
       <Stack.Screen name="notification-settings" options={{ headerShown: true, title: 'Notification Settings' }} />
       <Stack.Screen name="finger-trace" options={{ headerShown: false }} />
       <Stack.Screen name="breathing-exercise" options={{ headerShown: false }} />
