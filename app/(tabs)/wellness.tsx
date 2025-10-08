@@ -21,8 +21,8 @@ export default function WellnessScreen() {
   const { profile } = useUserProfile();
   const isMemoryUser = profile?.role === 'patient' && profile?.patientType === 'memory';
 
-  const getExerciseIcon = (iconName: string) => {
-    const iconProps = { size: 20, color: colors.surface };
+  const getExerciseIcon = (iconName: string, iconColor: string) => {
+    const iconProps = { size: 24, color: iconColor };
     switch (iconName) {
       case 'calendar': return <Calendar {...iconProps} />;
       case 'eye': return <Eye {...iconProps} />;
@@ -332,7 +332,7 @@ export default function WellnessScreen() {
                     activeOpacity={0.7}
                   >
                     <View style={[styles.memoryExerciseIcon, { backgroundColor: `${exercise.color}20` }]}>
-                      {getExerciseIcon(exercise.icon)}
+                      {getExerciseIcon(exercise.icon, exercise.color)}
                     </View>
                     <View style={styles.memoryExerciseContent}>
                       <Text style={styles.memoryExerciseTitle}>{exercise.title}</Text>
