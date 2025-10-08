@@ -3,7 +3,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTheme, ThemeMode } from '@/contexts/ThemeContext';
-import { useDementia } from '@/contexts/DementiaContext';
 import { useUserProfile } from '@/contexts/UserProfileContext';
 import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database, Clock, MapPin, Search, UserPlus } from 'lucide-react-native';
 import { caregiverResources, cognitiveResources, memoryResources } from '@/constants/mentalHealthResources';
@@ -12,7 +11,6 @@ import { MentalHealthResource } from '@/types/mentalHealth';
 export default function SettingsScreen() {
   const { settings, toggleSetting } = useAccessibility();
   const { colors, themeMode, setThemeMode } = useTheme();
-  const { settings: dementiaSettings, updateSettings: updateDementiaSettings } = useDementia();
   const { profile } = useUserProfile();
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -519,81 +517,7 @@ export default function SettingsScreen() {
         </View>
         )}
 
-        {!isCaregiver && isMemorySupport && (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Memory Support Features</Text>
-          
-          <TouchableOpacity 
-            style={styles.settingRow}
-            onPress={() => updateDementiaSettings({ enabled: !dementiaSettings?.enabled })}
-            activeOpacity={0.7}
-          >
-            <View style={styles.settingLeft}>
-              <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
-                <Brain size={20} color={colors.primary} />
-              </View>
-              <View style={styles.settingText}>
-                <Text style={styles.settingLabel}>Memory Support Mode</Text>
-                <Text style={styles.settingDescription}>Specialized features for memory challenges</Text>
-              </View>
-            </View>
-            <Switch
-              value={dementiaSettings?.enabled || false}
-              onValueChange={() => updateDementiaSettings({ enabled: !dementiaSettings?.enabled })}
-              trackColor={{ false: colors.borderLight, true: colors.primary }}
-              thumbColor={colors.surface}
-            />
-          </TouchableOpacity>
 
-          {dementiaSettings?.enabled && (
-            <>
-              <TouchableOpacity 
-                style={styles.settingRow}
-                onPress={() => updateDementiaSettings({ autoReadStepsEnabled: !dementiaSettings?.autoReadStepsEnabled })}
-                activeOpacity={0.7}
-              >
-                <View style={styles.settingLeft}>
-                  <View style={[styles.iconContainer, { backgroundColor: colors.accent + '20' }]}>
-                    <Volume2 size={20} color={colors.accent} />
-                  </View>
-                  <View style={styles.settingText}>
-                    <Text style={styles.settingLabel}>Auto-Read Steps</Text>
-                    <Text style={styles.settingDescription}>Automatically read each step aloud</Text>
-                  </View>
-                </View>
-                <Switch
-                  value={dementiaSettings?.autoReadStepsEnabled || false}
-                  onValueChange={() => updateDementiaSettings({ autoReadStepsEnabled: !dementiaSettings?.autoReadStepsEnabled })}
-                  trackColor={{ false: colors.borderLight, true: colors.accent }}
-                  thumbColor={colors.surface}
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity 
-                style={styles.settingRow}
-                onPress={() => updateDementiaSettings({ aiStepCoachEnabled: !dementiaSettings?.aiStepCoachEnabled })}
-                activeOpacity={0.7}
-              >
-                <View style={styles.settingLeft}>
-                  <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
-                    <Sparkles size={20} color={colors.primary} />
-                  </View>
-                  <View style={styles.settingText}>
-                    <Text style={styles.settingLabel}>AI Step-by-Step Coach</Text>
-                    <Text style={styles.settingDescription}>Gentle AI guidance through each step</Text>
-                  </View>
-                </View>
-                <Switch
-                  value={dementiaSettings?.aiStepCoachEnabled || false}
-                  onValueChange={() => updateDementiaSettings({ aiStepCoachEnabled: !dementiaSettings?.aiStepCoachEnabled })}
-                  trackColor={{ false: colors.borderLight, true: colors.primary }}
-                  thumbColor={colors.surface}
-                />
-              </TouchableOpacity>
-            </>
-          )}
-        </View>
-        )}
 
         {!isCaregiver && isCognitiveSupport && (
         <View style={styles.section}>
