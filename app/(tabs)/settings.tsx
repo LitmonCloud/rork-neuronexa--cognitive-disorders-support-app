@@ -330,6 +330,28 @@ export default function SettingsScreen() {
           </Text>
         </View>
 
+        {!profile?.role && (
+          <View style={[styles.infoCard, { backgroundColor: colors.primary + '15', borderColor: colors.primary, marginBottom: 24 }]}>
+            <Text style={[styles.infoTitle, { color: colors.primary }]}>Complete Your Profile</Text>
+            <Text style={[styles.infoText, { color: colors.text }]}>
+              To see personalized resources and features, please complete your profile setup. Tap below to get started.
+            </Text>
+            <TouchableOpacity 
+              style={{
+                backgroundColor: colors.primary,
+                borderRadius: 12,
+                padding: 16,
+                marginTop: 16,
+                alignItems: 'center',
+              }}
+              onPress={() => router.push('/onboarding')}
+              activeOpacity={0.8}
+            >
+              <Text style={{ color: colors.surface, fontSize: 16, fontWeight: '600' as const }}>Complete Profile</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>General</Text>
           
@@ -689,7 +711,7 @@ export default function SettingsScreen() {
         </View>
         )}
 
-        {!isCaregiver && isCognitiveSupport && (
+        {(isCognitiveSupport || (!profile?.role && !isCaregiver && !isMemorySupport)) && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Cognitive Support Resources</Text>
           
@@ -741,7 +763,7 @@ export default function SettingsScreen() {
         </View>
         )}
 
-        {!isCaregiver && isMemorySupport && (
+        {isMemorySupport && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Memory Support Resources</Text>
           
