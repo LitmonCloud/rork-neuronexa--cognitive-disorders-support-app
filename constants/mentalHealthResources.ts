@@ -438,12 +438,12 @@ export const breathingPatterns: BreathingPattern[] = [
   {
     id: '1',
     name: 'Box Breathing',
-    description: 'Calming technique used by Navy SEALs',
+    description: 'Simple 4-count breathing for calm',
     inhale: 4,
     hold: 4,
     exhale: 4,
     holdAfterExhale: 4,
-    cycles: 4,
+    cycles: 3,
     color: colors.primary,
   },
   {
@@ -459,11 +459,11 @@ export const breathingPatterns: BreathingPattern[] = [
   {
     id: '3',
     name: 'Calm Breathing',
-    description: 'Simple and gentle for anxiety relief',
+    description: 'Gentle breathing, no holding',
     inhale: 4,
     hold: 0,
     exhale: 6,
-    cycles: 5,
+    cycles: 3,
     color: colors.decorative.lavender,
   },
   {

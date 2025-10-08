@@ -18,7 +18,7 @@ export interface UserHabit {
 export interface UserInteraction {
   id: string;
   timestamp: string;
-  type: 'task_completed' | 'task_abandoned' | 'step_skipped' | 'feedback_given' | 'encouragement_received';
+  type: 'task_completed' | 'task_abandoned' | 'step_skipped' | 'feedback_given' | 'encouragement_received' | 'wellness_completed';
   taskId?: string;
   sentiment?: 'positive' | 'neutral' | 'negative';
   metadata?: Record<string, any>;

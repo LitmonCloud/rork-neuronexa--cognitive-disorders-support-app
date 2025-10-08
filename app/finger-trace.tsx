@@ -11,6 +11,7 @@ import { Stack, router } from 'expo-router';
 import { ArrowLeft, Sparkles, Filter } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 import { spacing, borderRadius } from '@/theme/spacing';
 import { fontSizes, fontWeights } from '@/theme/typography';
 import { traceExercises } from '@/constants/traceExercises';
@@ -21,6 +22,7 @@ const TRACE_SESSIONS_KEY = '@neuronexa_trace_sessions';
 
 export default function FingerTraceScreen() {
   const { colors } = useTheme();
+  const { recordInteraction } = useUserProfile();
   const insets = useSafeAreaInsets();
   const [selectedExercise, setSelectedExercise] = useState<TraceExercise | null>(null);
   const [filterDifficulty, setFilterDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
@@ -40,10 +42,15 @@ export default function FingerTraceScreen() {
   const handleExerciseComplete = useCallback((session: TraceSession) => {
     console.log('[Analytics] Exercise completed with accuracy:', session.accuracy);
     saveSession(session);
+    recordInteraction('wellness_completed', 'positive', { 
+      exerciseType: 'finger_trace',
+      exerciseId: session.exerciseId,
+      accuracy: session.accuracy,
+    });
     setTimeout(() => {
       setSelectedExercise(null);
     }, 2000);
-  }, [saveSession]);
+  }, [saveSession, recordInteraction]);
 
   const styles = StyleSheet.create({
     container: {

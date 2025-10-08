@@ -10,12 +10,15 @@ import {
 import { router } from 'expo-router';
 import { Wind, Hand, Heart } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 import { breathingPatterns } from '@/constants/mentalHealthResources';
 
 const { width } = Dimensions.get('window');
 
 export default function WellnessScreen() {
   const { colors } = useTheme();
+  const { profile } = useUserProfile();
+  const isMemoryUser = profile?.role === 'patient' && profile?.patientType === 'memory';
 
   const styles = StyleSheet.create({
     container: {
@@ -275,7 +278,12 @@ export default function WellnessScreen() {
           <Text style={styles.sectionTitle}>Breathing Exercises</Text>
           
           <View style={styles.breathingGrid}>
-            {breathingPatterns.map((pattern) => (
+            {breathingPatterns
+              .filter(pattern => {
+                if (!isMemoryUser) return true;
+                return ['1', '3'].includes(pattern.id);
+              })
+              .map((pattern) => (
               <TouchableOpacity
                 key={pattern.id}
                 style={[styles.breathingCard, { borderColor: pattern.color }]}

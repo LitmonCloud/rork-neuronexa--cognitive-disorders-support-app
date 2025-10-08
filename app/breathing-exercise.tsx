@@ -9,11 +9,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 import BreathingExercise from '@/components/BreathingExercise';
 import { breathingPatterns } from '@/constants/mentalHealthResources';
 
 export default function BreathingExerciseScreen() {
   const { colors } = useTheme();
+  const { recordInteraction } = useUserProfile();
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams();
   const patternId = params.patternId as string;
@@ -74,6 +76,18 @@ export default function BreathingExerciseScreen() {
           pattern={pattern}
           onComplete={() => {
             console.log('[Analytics] Breathing exercise completed:', pattern.name);
+            recordInteraction('wellness_completed', 'positive', { 
+              exerciseType: 'breathing',
+              patternId: pattern.id,
+              patternName: pattern.name,
+            });
+            setTimeout(() => {
+              if (router.canGoBack()) {
+                router.back();
+              } else {
+                router.replace('/(tabs)/wellness');
+              }
+            }, 1500);
           }}
         />
       </View>

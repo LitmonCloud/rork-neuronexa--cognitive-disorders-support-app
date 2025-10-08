@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, Animated, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Animated, Dimensions, TouchableOpacity, Platform } from 'react-native';
 import { Play, Pause, RotateCcw } from 'lucide-react-native';
+import * as Haptics from 'expo-haptics';
 import { BreathingPattern } from '@/types/mentalHealth';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 
 interface BreathingExerciseProps {
   pattern: BreathingPattern;
@@ -13,6 +15,8 @@ type BreathingPhase = 'inhale' | 'hold' | 'exhale' | 'holdAfterExhale';
 
 export default function BreathingExercise({ pattern, onComplete }: BreathingExerciseProps) {
   const { colors } = useTheme();
+  const { profile } = useUserProfile();
+  const isMemoryUser = profile?.role === 'patient' && profile?.patientType === 'memory';
   const [isActive, setIsActive] = useState(false);
   const [currentCycle, setCurrentCycle] = useState(0);
   const [phase, setPhase] = useState<BreathingPhase>('inhale');
@@ -53,7 +57,14 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
     }
   }, [currentCycle, pattern.cycles, pattern.inhale, onComplete]);
 
+  const triggerHaptic = () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+  };
+
   const moveToNextPhase = useCallback(() => {
+    triggerHaptic();
     switch (phase) {
       case 'inhale':
         setPhase('hold');
@@ -273,6 +284,11 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
       textAlign: 'center' as const,
       lineHeight: 26,
     },
+    instructionTextLarge: {
+      fontSize: 24,
+      fontWeight: '700' as const,
+      color: colors.text,
+    },
     controls: {
       flexDirection: 'row',
       gap: 16,
@@ -360,11 +376,11 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
       </View>
 
       <View style={styles.instructionContainer}>
-        <Text style={styles.instructionText}>
-          {phase === 'inhale' && 'Slowly breathe in through your nose'}
-          {phase === 'hold' && 'Hold your breath gently'}
-          {phase === 'exhale' && 'Slowly breathe out through your mouth'}
-          {phase === 'holdAfterExhale' && 'Pause before the next breath'}
+        <Text style={[styles.instructionText, isMemoryUser && styles.instructionTextLarge]}>
+          {phase === 'inhale' && (isMemoryUser ? 'Breathe In' : 'Slowly breathe in through your nose')}
+          {phase === 'hold' && (isMemoryUser ? 'Hold' : 'Hold your breath gently')}
+          {phase === 'exhale' && (isMemoryUser ? 'Breathe Out' : 'Slowly breathe out through your mouth')}
+          {phase === 'holdAfterExhale' && (isMemoryUser ? 'Pause' : 'Pause before the next breath')}
         </Text>
       </View>
 
