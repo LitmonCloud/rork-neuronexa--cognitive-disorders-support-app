@@ -32,6 +32,8 @@ export interface Task {
   repeatCount?: number;
 }
 
+export type ColorBlindMode = 'none' | 'protanopia' | 'deuteranopia' | 'tritanopia';
+
 export interface AccessibilitySettings {
   highContrast: boolean;
   largeText: boolean;
@@ -42,6 +44,10 @@ export interface AccessibilitySettings {
   autoReadSteps: boolean;
   visualCuesEnabled: boolean;
   simplifiedLanguage: boolean;
+  screenReaderOptimized: boolean;
+  hapticFeedback: boolean;
+  colorBlindMode: ColorBlindMode;
+  focusIndicators: boolean;
 }
 
 export interface CaregiverSettings {

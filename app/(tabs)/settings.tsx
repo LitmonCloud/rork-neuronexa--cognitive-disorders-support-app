@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTheme, ThemeMode } from '@/contexts/ThemeContext';
 import { useUserProfile } from '@/contexts/UserProfileContext';
-import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database, Clock, MapPin, Search, UserPlus } from 'lucide-react-native';
+import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database, Clock, MapPin, Search, UserPlus, Smartphone, Vibrate, Focus } from 'lucide-react-native';
 import { caregiverResources, cognitiveResources, memoryResources } from '@/constants/mentalHealthResources';
 import { MentalHealthResource } from '@/types/mentalHealth';
 
@@ -413,7 +413,7 @@ export default function SettingsScreen() {
 
         {!isCaregiver && isCognitiveSupport && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Visual Settings</Text>
+          <Text style={styles.sectionTitle}>Visual & Display</Text>
           
           <TouchableOpacity 
             style={styles.settingRow}
@@ -458,12 +458,56 @@ export default function SettingsScreen() {
               thumbColor={colors.surface}
             />
           </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => toggleSetting('screenReaderOptimized')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.accent + '20' }]}>
+                <Smartphone size={20} color={colors.accent} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Screen Reader Mode</Text>
+                <Text style={styles.settingDescription}>Optimize for VoiceOver/TalkBack</Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.screenReaderOptimized}
+              onValueChange={() => toggleSetting('screenReaderOptimized')}
+              trackColor={{ false: colors.borderLight, true: colors.accent }}
+              thumbColor={colors.surface}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => toggleSetting('focusIndicators')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.warning + '20' }]}>
+                <Focus size={20} color={colors.warning} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Focus Indicators</Text>
+                <Text style={styles.settingDescription}>Show focus outlines for navigation</Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.focusIndicators}
+              onValueChange={() => toggleSetting('focusIndicators')}
+              trackColor={{ false: colors.borderLight, true: colors.warning }}
+              thumbColor={colors.surface}
+            />
+          </TouchableOpacity>
         </View>
         )}
 
         {!isCaregiver && isCognitiveSupport && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Motion & Interaction</Text>
+          <Text style={styles.sectionTitle}>Motion & Feedback</Text>
           
           <TouchableOpacity 
             style={styles.settingRow}
@@ -483,6 +527,28 @@ export default function SettingsScreen() {
               value={settings.reducedMotion}
               onValueChange={() => toggleSetting('reducedMotion')}
               trackColor={{ false: colors.borderLight, true: colors.accent }}
+              thumbColor={colors.surface}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => toggleSetting('hapticFeedback')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.success + '20' }]}>
+                <Vibrate size={20} color={colors.success} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Haptic Feedback</Text>
+                <Text style={styles.settingDescription}>Vibration for interactions</Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.hapticFeedback}
+              onValueChange={() => toggleSetting('hapticFeedback')}
+              trackColor={{ false: colors.borderLight, true: colors.success }}
               thumbColor={colors.surface}
             />
           </TouchableOpacity>

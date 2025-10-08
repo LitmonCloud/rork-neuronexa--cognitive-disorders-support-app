@@ -15,6 +15,10 @@ const defaultSettings: AccessibilitySettings = {
   autoReadSteps: false,
   visualCuesEnabled: true,
   simplifiedLanguage: false,
+  screenReaderOptimized: false,
+  hapticFeedback: true,
+  colorBlindMode: 'none',
+  focusIndicators: true,
 };
 
 export const [AccessibilityProvider, useAccessibility] = createContextHook(() => {
