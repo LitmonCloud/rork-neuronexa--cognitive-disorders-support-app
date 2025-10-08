@@ -7,22 +7,35 @@ import {
   TouchableOpacity,
   SafeAreaView,
   TextInput,
+  Image,
+  Modal,
+  Alert,
+  Platform,
 } from 'react-native';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
-import { CheckCircle, ArrowLeft, Calendar, Eye, Wind, Move, Music, Image as ImageIcon, Heart } from 'lucide-react-native';
+import { CheckCircle, ArrowLeft, Calendar, Eye, Wind, Move, Music, Image as ImageIcon, Heart, Plus, Edit2, Trash2, X, Camera } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { memoryExercises, orientationPrompts, sensoryGroundingSteps, gentleMovements } from '@/constants/memoryExercises';
 import { useUserProfile } from '@/contexts/UserProfileContext';
+import { usePhotoMemory } from '@/contexts/PhotoMemoryContext';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function MemoryExerciseScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { recordInteraction } = useUserProfile();
+  const { photos, addPhoto, updatePhoto, deletePhoto } = usePhotoMemory();
   
   const exercise = memoryExercises.find(e => e.id === id);
   const [currentStep, setCurrentStep] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [answers, setAnswers] = useState<string[]>([]);
+  const [showAddPhotoModal, setShowAddPhotoModal] = useState(false);
+  const [editingPhoto, setEditingPhoto] = useState<string | null>(null);
+  const [photoName, setPhotoName] = useState('');
+  const [photoRelationship, setPhotoRelationship] = useState('');
+  const [photoNotes, setPhotoNotes] = useState('');
+  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
 
   useEffect(() => {
     if (!exercise) {
@@ -54,6 +67,72 @@ export default function MemoryExerciseScreen() {
       exerciseType: exercise.type,
       duration: exercise.duration,
     });
+  };
+
+  const pickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (permissionResult.granted === false) {
+      if (Platform.OS === 'web') {
+        alert('Permission to access camera roll is required!');
+      } else {
+        Alert.alert('Permission Required', 'Permission to access camera roll is required!');
+      }
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      setSelectedImageUri(result.assets[0].uri);
+    }
+  };
+
+  const handleSavePhoto = async () => {
+    if (!selectedImageUri || !photoName.trim()) {
+      if (Platform.OS === 'web') {
+        alert('Please select an image and enter a name');
+      } else {
+        Alert.alert('Missing Information', 'Please select an image and enter a name');
+      }
+      return;
+    }
+
+    try {
+      if (editingPhoto) {
+        await updatePhoto(editingPhoto, {
+          uri: selectedImageUri,
+          name: photoName.trim(),
+          relationship: photoRelationship.trim() || undefined,
+          notes: photoNotes.trim() || undefined,
+        });
+      } else {
+        await addPhoto({
+          uri: selectedImageUri,
+          name: photoName.trim(),
+          relationship: photoRelationship.trim() || undefined,
+          notes: photoNotes.trim() || undefined,
+        });
+      }
+      setShowAddPhotoModal(false);
+      setEditingPhoto(null);
+      setPhotoName('');
+      setPhotoRelationship('');
+      setPhotoNotes('');
+      setSelectedImageUri(null);
+    } catch (error) {
+      console.error('Failed to save photo:', error);
+      if (Platform.OS === 'web') {
+        alert('Failed to save photo. Please try again.');
+      } else {
+        Alert.alert('Error', 'Failed to save photo. Please try again.');
+      }
+    }
   };
 
   const handleNextStep = () => {
@@ -266,7 +345,6 @@ export default function MemoryExerciseScreen() {
         );
 
       case 'music-memory':
-      case 'photo-recall':
         return (
           <View style={styles.exerciseContent}>
             <View style={styles.infoCard}>
@@ -290,6 +368,118 @@ export default function MemoryExerciseScreen() {
             </View>
 
             {!completed && (
+              <TouchableOpacity
+                style={[styles.nextButton, { backgroundColor: exercise.color }]}
+                onPress={handleComplete}
+              >
+                <Text style={styles.nextButtonText}>I Finished</Text>
+              </TouchableOpacity>
+            )}
+
+            {completed && (
+              <View style={styles.completedContainer}>
+                <CheckCircle size={64} color={colors.success} />
+                <Text style={styles.completedTitle}>Wonderful!</Text>
+              </View>
+            )}
+          </View>
+        );
+
+      case 'photo-recall':
+        return (
+          <View style={styles.exerciseContent}>
+            <View style={styles.photoHeader}>
+              <Text style={styles.photoHeaderTitle}>My Photo Memories</Text>
+              <TouchableOpacity
+                style={[styles.addPhotoButton, { backgroundColor: exercise.color }]}
+                onPress={() => {
+                  setEditingPhoto(null);
+                  setPhotoName('');
+                  setPhotoRelationship('');
+                  setPhotoNotes('');
+                  setSelectedImageUri(null);
+                  setShowAddPhotoModal(true);
+                }}
+              >
+                <Plus size={20} color="#FFFFFF" />
+                <Text style={styles.addPhotoButtonText}>Add Photo</Text>
+              </TouchableOpacity>
+            </View>
+
+            {photos.length === 0 ? (
+              <View style={styles.emptyState}>
+                <ImageIcon size={48} color={colors.textLight} />
+                <Text style={styles.emptyStateTitle}>No Photos Yet</Text>
+                <Text style={styles.emptyStateText}>
+                  Add photos of family and friends to help with memory recall
+                </Text>
+              </View>
+            ) : (
+              <View style={styles.photoGrid}>
+                {photos.map((photo) => (
+                  <View key={photo.id} style={styles.photoCard}>
+                    <Image source={{ uri: photo.uri }} style={styles.photoImage} />
+                    <View style={styles.photoInfo}>
+                      <Text style={styles.photoName}>{photo.name}</Text>
+                      {photo.relationship && (
+                        <Text style={styles.photoRelationship}>{photo.relationship}</Text>
+                      )}
+                      {photo.notes && (
+                        <Text style={styles.photoNotes} numberOfLines={2}>{photo.notes}</Text>
+                      )}
+                    </View>
+                    <View style={styles.photoActions}>
+                      <TouchableOpacity
+                        style={styles.photoActionButton}
+                        onPress={() => {
+                          setEditingPhoto(photo.id);
+                          setPhotoName(photo.name);
+                          setPhotoRelationship(photo.relationship || '');
+                          setPhotoNotes(photo.notes || '');
+                          setSelectedImageUri(photo.uri);
+                          setShowAddPhotoModal(true);
+                        }}
+                      >
+                        <Edit2 size={18} color={colors.primary} />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.photoActionButton}
+                        onPress={() => {
+                          if (Platform.OS === 'web') {
+                            if (confirm('Delete this photo?')) {
+                              deletePhoto(photo.id);
+                            }
+                          } else {
+                            Alert.alert(
+                              'Delete Photo',
+                              'Are you sure you want to delete this photo?',
+                              [
+                                { text: 'Cancel', style: 'cancel' },
+                                { text: 'Delete', style: 'destructive', onPress: () => deletePhoto(photo.id) },
+                              ]
+                            );
+                          }
+                        }}
+                      >
+                        <Trash2 size={18} color={colors.error} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            <View style={styles.benefitsCard}>
+              <Text style={styles.benefitsTitle}>Benefits:</Text>
+              {exercise.benefits.map((benefit, index) => (
+                <View key={index} style={styles.benefitRow}>
+                  <Text style={styles.benefitBullet}>•</Text>
+                  <Text style={styles.benefitText}>{benefit}</Text>
+                </View>
+              ))}
+            </View>
+
+            {!completed && photos.length > 0 && (
               <TouchableOpacity
                 style={[styles.nextButton, { backgroundColor: exercise.color }]}
                 onPress={handleComplete}
@@ -573,6 +763,204 @@ export default function MemoryExerciseScreen() {
       color: colors.textSecondary,
       textAlign: 'center' as const,
     },
+    photoHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 16,
+    },
+    photoHeaderTitle: {
+      fontSize: 20,
+      fontWeight: '700' as const,
+      color: colors.text,
+    },
+    addPhotoButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      paddingHorizontal: 16,
+      paddingVertical: 10,
+      borderRadius: 12,
+    },
+    addPhotoButtonText: {
+      fontSize: 14,
+      fontWeight: '600' as const,
+      color: '#FFFFFF',
+    },
+    emptyState: {
+      alignItems: 'center',
+      paddingVertical: 48,
+      paddingHorizontal: 24,
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      borderWidth: 2,
+      borderColor: colors.border,
+      borderStyle: 'dashed' as const,
+    },
+    emptyStateTitle: {
+      fontSize: 18,
+      fontWeight: '700' as const,
+      color: colors.text,
+      marginTop: 16,
+      marginBottom: 8,
+    },
+    emptyStateText: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      textAlign: 'center' as const,
+      lineHeight: 20,
+    },
+    photoGrid: {
+      gap: 16,
+      marginBottom: 24,
+    },
+    photoCard: {
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      padding: 16,
+      borderWidth: 2,
+      borderColor: colors.border,
+    },
+    photoImage: {
+      width: '100%',
+      height: 200,
+      borderRadius: 12,
+      marginBottom: 12,
+      backgroundColor: colors.border,
+    },
+    photoInfo: {
+      marginBottom: 12,
+    },
+    photoName: {
+      fontSize: 20,
+      fontWeight: '700' as const,
+      color: colors.text,
+      marginBottom: 4,
+    },
+    photoRelationship: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginBottom: 4,
+    },
+    photoNotes: {
+      fontSize: 14,
+      color: colors.text,
+      lineHeight: 20,
+    },
+    photoActions: {
+      flexDirection: 'row',
+      gap: 12,
+      paddingTop: 12,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+    },
+    photoActionButton: {
+      padding: 8,
+    },
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+    },
+    modalContent: {
+      backgroundColor: colors.surface,
+      borderRadius: 20,
+      padding: 24,
+      width: '100%',
+      maxWidth: 400,
+    },
+    modalHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    modalTitle: {
+      fontSize: 22,
+      fontWeight: '700' as const,
+      color: colors.text,
+    },
+    modalCloseButton: {
+      padding: 4,
+    },
+    modalImagePreview: {
+      width: '100%',
+      height: 200,
+      borderRadius: 12,
+      marginBottom: 16,
+      backgroundColor: colors.border,
+    },
+    modalImagePlaceholder: {
+      width: '100%',
+      height: 200,
+      borderRadius: 12,
+      marginBottom: 16,
+      backgroundColor: colors.border,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 2,
+      borderColor: colors.border,
+      borderStyle: 'dashed' as const,
+    },
+    selectImageButton: {
+      backgroundColor: colors.primary,
+      borderRadius: 12,
+      padding: 16,
+      alignItems: 'center',
+      marginBottom: 16,
+    },
+    selectImageButtonText: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: '#FFFFFF',
+    },
+    modalInput: {
+      backgroundColor: colors.background,
+      borderRadius: 12,
+      padding: 16,
+      fontSize: 16,
+      color: colors.text,
+      borderWidth: 2,
+      borderColor: colors.border,
+      marginBottom: 12,
+    },
+    modalInputMultiline: {
+      minHeight: 80,
+      textAlignVertical: 'top' as const,
+    },
+    modalLabel: {
+      fontSize: 14,
+      fontWeight: '600' as const,
+      color: colors.text,
+      marginBottom: 8,
+    },
+    modalButtons: {
+      flexDirection: 'row',
+      gap: 12,
+      marginTop: 8,
+    },
+    modalButton: {
+      flex: 1,
+      borderRadius: 12,
+      padding: 16,
+      alignItems: 'center',
+    },
+    modalButtonPrimary: {
+      backgroundColor: colors.primary,
+    },
+    modalButtonSecondary: {
+      backgroundColor: colors.border,
+    },
+    modalButtonText: {
+      fontSize: 16,
+      fontWeight: '600' as const,
+      color: '#FFFFFF',
+    },
+    modalButtonTextSecondary: {
+      color: colors.text,
+    },
   });
 
   return (
@@ -605,6 +993,102 @@ export default function MemoryExerciseScreen() {
       >
         {renderExerciseContent()}
       </ScrollView>
+
+      <Modal
+        visible={showAddPhotoModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowAddPhotoModal(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowAddPhotoModal(false)}
+        >
+          <TouchableOpacity 
+            style={styles.modalContent}
+            activeOpacity={1}
+            onPress={(e) => e.stopPropagation()}
+          >
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>
+                {editingPhoto ? 'Edit Photo' : 'Add Photo'}
+              </Text>
+              <TouchableOpacity
+                style={styles.modalCloseButton}
+                onPress={() => setShowAddPhotoModal(false)}
+              >
+                <X size={24} color={colors.text} />
+              </TouchableOpacity>
+            </View>
+
+            {selectedImageUri ? (
+              <Image source={{ uri: selectedImageUri }} style={styles.modalImagePreview} />
+            ) : (
+              <View style={styles.modalImagePlaceholder}>
+                <Camera size={48} color={colors.textLight} />
+                <Text style={{ color: colors.textLight, marginTop: 12 }}>No image selected</Text>
+              </View>
+            )}
+
+            <TouchableOpacity
+              style={styles.selectImageButton}
+              onPress={pickImage}
+            >
+              <Text style={styles.selectImageButtonText}>
+                {selectedImageUri ? 'Change Photo' : 'Select Photo'}
+              </Text>
+            </TouchableOpacity>
+
+            <Text style={styles.modalLabel}>Name *</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Enter name"
+              placeholderTextColor={colors.textLight}
+              value={photoName}
+              onChangeText={setPhotoName}
+            />
+
+            <Text style={styles.modalLabel}>Relationship (optional)</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="e.g., Daughter, Friend, Neighbor"
+              placeholderTextColor={colors.textLight}
+              value={photoRelationship}
+              onChangeText={setPhotoRelationship}
+            />
+
+            <Text style={styles.modalLabel}>Notes (optional)</Text>
+            <TextInput
+              style={[styles.modalInput, styles.modalInputMultiline]}
+              placeholder="Add any helpful notes or memories"
+              placeholderTextColor={colors.textLight}
+              value={photoNotes}
+              onChangeText={setPhotoNotes}
+              multiline
+            />
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalButtonSecondary]}
+                onPress={() => setShowAddPhotoModal(false)}
+              >
+                <Text style={[styles.modalButtonText, styles.modalButtonTextSecondary]}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalButtonPrimary]}
+                onPress={handleSavePhoto}
+              >
+                <Text style={styles.modalButtonText}>
+                  {editingPhoto ? 'Update' : 'Add'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }

@@ -20,6 +20,7 @@ import { UserProfileProvider, useUserProfile } from "@/contexts/UserProfileConte
 import { DementiaProvider } from "@/contexts/DementiaContext";
 import { LocationProvider } from "@/contexts/LocationContext";
 import { RecommendationProvider } from "@/contexts/RecommendationContext";
+import { PhotoMemoryContext } from "@/contexts/PhotoMemoryContext";
 import { posthog } from "@/services/analytics/PostHogService";
 import { sentry } from "@/services/analytics/SentryService";
 import { supabase } from "@/services/backend/SupabaseService";
@@ -192,6 +193,7 @@ function RootLayoutNav() {
       <Stack.Screen name="patient-location" options={{ headerShown: true, title: 'Location Tracking' }} />
       <Stack.Screen name="caregiver-location-monitor" options={{ headerShown: true, title: 'Patient Locations' }} />
       <Stack.Screen name="recommendations" options={{ headerShown: false }} />
+      <Stack.Screen name="memory-exercise" options={{ headerShown: false }} />
     </Stack>
   );
 }
@@ -242,10 +244,12 @@ export default function RootLayout() {
                             <PatientProvider>
                               <TaskProvider>
                                 <RecommendationProvider>
-                                  <GestureHandlerRootView style={{ flex: 1 }}>
-                                    <RealtimeNotificationListener />
-                                    <RootLayoutNav />
-                                  </GestureHandlerRootView>
+                                  <PhotoMemoryContext>
+                                    <GestureHandlerRootView style={{ flex: 1 }}>
+                                      <RealtimeNotificationListener />
+                                      <RootLayoutNav />
+                                    </GestureHandlerRootView>
+                                  </PhotoMemoryContext>
                                 </RecommendationProvider>
                               </TaskProvider>
                             </PatientProvider>
