@@ -416,9 +416,18 @@ export default function MemoryExerciseScreen() {
               </View>
             ) : (
               <View style={styles.photoGrid}>
-                {photos.map((photo) => (
+                {photos.map((photo) => {
+                  if (!photo.uri) {
+                    console.warn('Photo missing uri:', photo);
+                    return null;
+                  }
+                  return (
                   <View key={photo.id} style={styles.photoCard}>
-                    <Image source={{ uri: photo.uri }} style={styles.photoImage} />
+                    <Image 
+                      source={{ uri: photo.uri }} 
+                      style={styles.photoImage}
+                      resizeMode="cover"
+                    />
                     <View style={styles.photoInfo}>
                       <Text style={styles.photoName}>{photo.name}</Text>
                       {photo.relationship && (
@@ -465,7 +474,8 @@ export default function MemoryExerciseScreen() {
                       </TouchableOpacity>
                     </View>
                   </View>
-                ))}
+                  );
+                })}
               </View>
             )}
 
@@ -1023,7 +1033,11 @@ export default function MemoryExerciseScreen() {
             </View>
 
             {selectedImageUri ? (
-              <Image source={{ uri: selectedImageUri }} style={styles.modalImagePreview} />
+              <Image 
+                source={{ uri: selectedImageUri }} 
+                style={styles.modalImagePreview}
+                resizeMode="cover"
+              />
             ) : (
               <View style={styles.modalImagePlaceholder}>
                 <Camera size={48} color={colors.textLight} />
