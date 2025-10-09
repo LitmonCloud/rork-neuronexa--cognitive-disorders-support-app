@@ -443,7 +443,6 @@ Be warm, empathetic, and genuinely supportive.`;
     timeOfDay?: 'morning' | 'afternoon' | 'evening';
     emotionalState?: string;
   }): Promise<string> {
-    const userContext = this.buildUserContext(context.userProfile);
     const name = context.userProfile?.name || 'friend';
 
     const timeGreeting = {
@@ -454,7 +453,16 @@ Be warm, empathetic, and genuinely supportive.`;
 
     const greeting = context.timeOfDay ? timeGreeting[context.timeOfDay] : 'Hello';
 
-    const prompt = `You are Nexa, a gentle AI companion for someone with memory challenges. Generate a warm, simple memory prompt (2-3 sentences) for ${name}.
+    try {
+      const toolkitUrl = process.env.EXPO_PUBLIC_TOOLKIT_URL;
+      if (!toolkitUrl) {
+        console.warn('[AIService] EXPO_PUBLIC_TOOLKIT_URL not configured, using fallback');
+        return this.getFallbackMemoryPrompt(name, greeting);
+      }
+
+      const userContext = this.buildUserContext(context.userProfile);
+
+      const prompt = `You are Nexa, a gentle AI companion for someone with memory challenges. Generate a warm, simple memory prompt (2-3 sentences) for ${name}.
 
 ${userContext}
 
@@ -476,7 +484,6 @@ Examples:
 
 Generate a similar prompt that feels personal and comforting.`;
 
-    try {
       const response = await generateText(prompt);
       const message = response.trim();
       console.log('[Nexa] Generated memory prompt:', message);
