@@ -5,7 +5,7 @@ import { PhotoMemory } from '@/types/photoMemory';
 
 const STORAGE_KEY = '@photo_memories';
 
-export const [PhotoMemoryContext, usePhotoMemory] = createContextHook(() => {
+export const [PhotoMemoryProvider, usePhotoMemory] = createContextHook(() => {
   const [photos, setPhotos] = useState<PhotoMemory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

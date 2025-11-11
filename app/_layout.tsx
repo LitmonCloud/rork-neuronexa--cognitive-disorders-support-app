@@ -20,7 +20,7 @@ import { UserProfileProvider, useUserProfile } from "@/contexts/UserProfileConte
 import { DementiaProvider } from "@/contexts/DementiaContext";
 import { LocationProvider } from "@/contexts/LocationContext";
 import { RecommendationProvider } from "@/contexts/RecommendationContext";
-import { PhotoMemoryContext } from "@/contexts/PhotoMemoryContext";
+import { PhotoMemoryProvider } from "@/contexts/PhotoMemoryContext";
 import { posthog } from "@/services/analytics/PostHogService";
 import { sentry } from "@/services/analytics/SentryService";
 import { supabase } from "@/services/backend/SupabaseService";
@@ -246,12 +246,12 @@ export default function RootLayout() {
                             <PatientProvider>
                               <TaskProvider>
                                 <RecommendationProvider>
-                                  <PhotoMemoryContext>
+                                  <PhotoMemoryProvider>
                                     <GestureHandlerRootView style={{ flex: 1 }}>
                                       <RealtimeNotificationListener />
                                       <RootLayoutNav />
                                     </GestureHandlerRootView>
-                                  </PhotoMemoryContext>
+                                  </PhotoMemoryProvider>
                                 </RecommendationProvider>
                               </TaskProvider>
                             </PatientProvider>
