@@ -1,11 +1,9 @@
 import createContextHook from '@nkzw/create-context-hook';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Recommendation } from '@/types/recommendation';
 import { RecommendationEngine } from '@/services/recommendations/RecommendationEngine';
-import { useUserProfile } from './UserProfileContext';
-import { useTasks } from './TaskContext';
 
 const RECOMMENDATIONS_KEY = '@nexa_recommendations';
 const DISMISSED_KEY = '@nexa_dismissed_recommendations';
@@ -58,8 +56,6 @@ async function saveDismissed(dismissed: string[]): Promise<string[]> {
 
 export const [RecommendationProvider, useRecommendations] = createContextHook(() => {
   const queryClient = useQueryClient();
-  const { profile } = useUserProfile();
-  const { allTasks } = useTasks();
 
   const recommendationsQuery = useQuery({
     queryKey: ['recommendations'],
@@ -103,7 +99,7 @@ export const [RecommendationProvider, useRecommendations] = createContextHook(()
     [recommendations, dismissed]
   );
 
-  const refreshRecommendations = useCallback(async () => {
+  const refreshRecommendations = useCallback(async (profile: any, allTasks: any[]) => {
     if (!profile) return;
 
     console.log('[Recommendations] Generating new recommendations');
@@ -121,7 +117,7 @@ export const [RecommendationProvider, useRecommendations] = createContextHook(()
 
     saveRecommendationsMutate(updated);
     console.log('[Recommendations] Generated', uniqueNew.length, 'new recommendations');
-  }, [profile, allTasks, recommendations, saveRecommendationsMutate]);
+  }, [recommendations, saveRecommendationsMutate]);
 
   const dismissRecommendation = useCallback((id: string) => {
     const updated = recommendations.map(rec =>
@@ -145,11 +141,7 @@ export const [RecommendationProvider, useRecommendations] = createContextHook(()
     console.log('[Recommendations] Cleared dismissed list');
   }, [saveDismissedMutate]);
 
-  useEffect(() => {
-    if (profile && allTasks.length > 0 && recommendations.length === 0) {
-      refreshRecommendations();
-    }
-  }, [profile, allTasks.length, recommendations.length, refreshRecommendations]);
+
 
   return {
     recommendations: activeRecommendations,

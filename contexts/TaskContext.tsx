@@ -4,9 +4,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, useCallback, useMemo } from 'react';
 import { Task, TaskPriority, TaskStatus, TaskStep } from '@/types/task';
 import { generateText } from '@rork-ai/toolkit-sdk';
-import { useNotifications } from './NotificationContext';
-import { usePatients } from './PatientContext';
-import { useCaregivers } from './CaregiverContext';
 
 const TASKS_STORAGE_KEY = '@nexa_tasks';
 
@@ -33,9 +30,6 @@ async function saveTasks(tasks: Task[]): Promise<Task[]> {
 export const [TaskProvider, useTasks] = createContextHook(() => {
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState<TaskStatus | 'all'>('all');
-  const { addNotification } = useNotifications();
-  const { updateTaskLink, getTaskPatient } = usePatients();
-  const { sendRealtimeAlert } = useCaregivers();
 
   const tasksQuery = useQuery({
     queryKey: ['tasks'],
@@ -79,62 +73,15 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
       console.log('[TaskContext] Task scheduled for:', scheduledDate.toISOString());
     }
 
-    addNotification({
-      type: 'task_created',
-      title: 'New Task Created',
-      message: scheduledDate 
-        ? `"${title}" scheduled for ${scheduledDate.toLocaleDateString()}`
-        : `"${title}" has been added`,
-      taskId: newTask.id,
-      taskTitle: title,
-      priority: priority === 'high' ? 'high' : 'low',
-      category: 'task',
-    });
-
-    sendRealtimeAlert({
-      title: 'New Task Created',
-      message: scheduledDate 
-        ? `Patient created task "${title}" scheduled for ${scheduledDate.toLocaleDateString()}`
-        : `Patient created task "${title}"`,
-      type: 'task_created',
-      severity: priority === 'high' ? 'high' : 'medium',
-      taskId: newTask.id,
-      taskTitle: title,
-    });
-
     return newTask;
-  }, [tasks, mutateTasksAsync, addNotification]);
+  }, [tasks, mutateTasksAsync]);
 
   const updateTask = useCallback((taskId: string, updates: Partial<Task>) => {
-    const task = tasks.find(t => t.id === taskId);
     const updatedTasks = tasks.map(task =>
       task.id === taskId ? { ...task, ...updates } : task
     );
     mutateTasks(updatedTasks);
-
-    if (task && updates.status && updates.status !== task.status) {
-      if (updates.status === 'in-progress') {
-        addNotification({
-          type: 'task_started',
-          title: 'Task Started',
-          message: `"${task.title}" is now in progress`,
-          taskId: task.id,
-          taskTitle: task.title,
-          priority: 'low',
-          category: 'task',
-        });
-
-        sendRealtimeAlert({
-          title: 'Task Started',
-          message: `Patient started working on "${task.title}"`,
-          type: 'task_started',
-          severity: 'medium',
-          taskId: task.id,
-          taskTitle: task.title,
-        });
-      }
-    }
-  }, [tasks, mutateTasks, addNotification]);
+  }, [tasks, mutateTasks]);
 
   const deleteTask = useCallback((taskId: string) => {
     const updatedTasks = tasks.filter(task => task.id !== taskId);
@@ -155,41 +102,12 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
       );
       mutateTasks(updatedTasks);
       console.log('[TaskContext] Task updated, mutation called');
-
-      const patient = getTaskPatient(task.id);
-      const patientName = patient ? `${patient.firstName} ${patient.lastNameInitial}.` : 'Patient';
-      
-      addNotification({
-        type: 'task_completed',
-        title: 'Task Completed! 🎉',
-        message: patient 
-          ? `${patientName} completed "${task.title}"`
-          : `"${task.title}" has been completed`,
-        taskId: task.id,
-        taskTitle: task.title,
-        priority: 'low',
-        category: 'task',
-        metadata: { priority: task.priority },
-      });
-
-      sendRealtimeAlert({
-        title: 'Task Completed! 🎉',
-        message: `${patientName} completed "${task.title}"`,
-        type: 'task_completed',
-        severity: 'low',
-        taskId: task.id,
-        taskTitle: task.title,
-        metadata: { priority: task.priority },
-      });
-      
-      updateTaskLink(task.id, 'patient');
     } else {
       console.log('[TaskContext] Task not updated - either not found or already completed');
     }
-  }, [tasks, mutateTasks, addNotification]);
+  }, [tasks, mutateTasks]);
 
   const updateStep = useCallback((taskId: string, stepId: string, completed: boolean) => {
-    const task = tasks.find(t => t.id === taskId);
     const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
         const updatedSteps = task.steps.map(step =>
@@ -208,61 +126,7 @@ export const [TaskProvider, useTasks] = createContextHook(() => {
       return task;
     });
     mutateTasks(updatedTasks);
-    
-    updateTaskLink(taskId, 'patient');
-
-    if (task && completed) {
-      const completedSteps = task.steps.filter(s => s.completed || s.id === stepId).length;
-      const totalSteps = task.steps.length;
-
-      const patient = getTaskPatient(task.id);
-      const patientName = patient ? `${patient.firstName} ${patient.lastNameInitial}.` : 'Patient';
-      
-      if (completedSteps === totalSteps) {
-        addNotification({
-          type: 'all_steps_completed',
-          title: 'All Steps Completed! 🎉',
-          message: `${patientName} completed all steps for "${task.title}"`,
-          taskId: task.id,
-          taskTitle: task.title,
-          priority: 'low',
-          category: 'task',
-          metadata: { completedSteps, totalSteps },
-        });
-
-        sendRealtimeAlert({
-          title: 'All Steps Completed! 🎉',
-          message: `${patientName} completed all steps for "${task.title}"`,
-          type: 'all_steps_completed',
-          severity: 'low',
-          taskId: task.id,
-          taskTitle: task.title,
-          metadata: { completedSteps, totalSteps },
-        });
-      } else {
-        addNotification({
-          type: 'step_completed',
-          title: 'Step Completed',
-          message: `${patientName} made progress on "${task.title}": ${completedSteps}/${totalSteps} steps`,
-          taskId: task.id,
-          taskTitle: task.title,
-          priority: 'low',
-          category: 'task',
-          metadata: { completedSteps, totalSteps },
-        });
-
-        sendRealtimeAlert({
-          title: 'Step Completed',
-          message: `${patientName} made progress on "${task.title}": ${completedSteps}/${totalSteps} steps`,
-          type: 'step_completed',
-          severity: 'low',
-          taskId: task.id,
-          taskTitle: task.title,
-          metadata: { completedSteps, totalSteps },
-        });
-      }
-    }
-  }, [tasks, mutateTasks, addNotification]);
+  }, [tasks, mutateTasks]);
 
   const addStep = useCallback((taskId: string, description: string, simplifiedText?: string, contextualPrompt?: string) => {
     const task = tasks.find(t => t.id === taskId);
