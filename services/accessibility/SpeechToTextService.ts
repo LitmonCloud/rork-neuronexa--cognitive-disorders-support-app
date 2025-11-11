@@ -80,16 +80,16 @@ class SpeechToTextService {
     await this.recording.prepareToRecordAsync({
       android: {
         extension: '.m4a',
-        outputFormat: Audio.AndroidOutputFormat.MPEG_4,
-        audioEncoder: Audio.AndroidAudioEncoder.AAC,
+        outputFormat: Audio.RecordingOptionsPresets.HIGH_QUALITY.android.outputFormat,
+        audioEncoder: Audio.RecordingOptionsPresets.HIGH_QUALITY.android.audioEncoder,
         sampleRate: 44100,
         numberOfChannels: 2,
         bitRate: 128000,
       },
       ios: {
         extension: '.wav',
-        outputFormat: Audio.IOSOutputFormat.LINEARPCM,
-        audioQuality: Audio.IOSAudioQuality.HIGH,
+        outputFormat: Audio.RecordingOptionsPresets.HIGH_QUALITY.ios.outputFormat,
+        audioQuality: Audio.RecordingOptionsPresets.HIGH_QUALITY.ios.audioQuality,
         sampleRate: 44100,
         numberOfChannels: 2,
         bitRate: 128000,
