@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTheme, ThemeMode } from '@/contexts/ThemeContext';
 import { useUserProfile } from '@/contexts/UserProfileContext';
-import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database, Clock, MapPin, Search, UserPlus, Smartphone, Vibrate, Focus, TestTube2 } from 'lucide-react-native';
+import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database, Clock, MapPin, Search, UserPlus, Smartphone, Vibrate, Focus } from 'lucide-react-native';
 import { caregiverResources, cognitiveResources, memoryResources } from '@/constants/mentalHealthResources';
 import { MentalHealthResource } from '@/types/mentalHealth';
 
@@ -382,23 +382,6 @@ export default function SettingsScreen() {
               <View style={styles.settingText}>
                 <Text style={styles.settingLabel}>Notifications</Text>
                 <Text style={styles.settingDescription}>Manage notification preferences</Text>
-              </View>
-            </View>
-            <ChevronRight size={20} color={colors.textLight} />
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.settingRow}
-            onPress={() => router.push('/accessibility-test')}
-            activeOpacity={0.7}
-          >
-            <View style={styles.settingLeft}>
-              <View style={[styles.iconContainer, { backgroundColor: colors.secondary + '20' }]}>
-                <TestTube2 size={20} color={colors.secondary} />
-              </View>
-              <View style={styles.settingText}>
-                <Text style={styles.settingLabel}>Accessibility Features</Text>
-                <Text style={styles.settingDescription}>Test voice input and text-to-speech</Text>
               </View>
             </View>
             <ChevronRight size={20} color={colors.textLight} />
