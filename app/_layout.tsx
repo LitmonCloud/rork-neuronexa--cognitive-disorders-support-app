@@ -245,14 +245,14 @@ export default function RootLayout() {
                           <CaregiverProvider>
                             <PatientProvider>
                               <TaskProvider>
-                                <RecommendationProvider>
-                                  <PhotoMemoryProvider>
+                                <PhotoMemoryProvider>
+                                  <RecommendationProvider>
                                     <GestureHandlerRootView style={{ flex: 1 }}>
                                       <RealtimeNotificationListener />
                                       <RootLayoutNav />
                                     </GestureHandlerRootView>
-                                  </PhotoMemoryProvider>
-                                </RecommendationProvider>
+                                  </RecommendationProvider>
+                                </PhotoMemoryProvider>
                               </TaskProvider>
                             </PatientProvider>
                           </CaregiverProvider>
