@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTheme, ThemeMode } from '@/contexts/ThemeContext';
 import { useUserProfile } from '@/contexts/UserProfileContext';
-import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database, Clock, MapPin, Search, UserPlus, Smartphone, Vibrate, Focus } from 'lucide-react-native';
+import { Eye, Type, Zap, Volume2, Brain, Heart, Phone, MessageCircle, Info, Users, BookOpen, Shield, Video, ChevronRight, Sparkles, Languages, Image as ImageIcon, Bell, Moon, Sun, Monitor, FileText, HelpCircle, Mail, Database, Clock, MapPin, Search, UserPlus, Smartphone, Vibrate, Focus, Crown } from 'lucide-react-native';
 import { caregiverResources, cognitiveResources, memoryResources } from '@/constants/mentalHealthResources';
 import { MentalHealthResource } from '@/types/mentalHealth';
 
@@ -382,6 +382,23 @@ export default function SettingsScreen() {
               <View style={styles.settingText}>
                 <Text style={styles.settingLabel}>Notifications</Text>
                 <Text style={styles.settingDescription}>Manage notification preferences</Text>
+              </View>
+            </View>
+            <ChevronRight size={20} color={colors.textLight} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingRow}
+            onPress={() => router.push('/customer-center')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.success + '20' }]}>
+                <Crown size={20} color={colors.success} />
+              </View>
+              <View style={styles.settingText}>
+                <Text style={styles.settingLabel}>Subscription</Text>
+                <Text style={styles.settingDescription}>Manage your subscription & billing</Text>
               </View>
             </View>
             <ChevronRight size={20} color={colors.textLight} />

@@ -194,6 +194,8 @@ function RootLayoutNav() {
       <Stack.Screen name="caregiver-location-monitor" options={{ headerShown: true, title: 'Patient Locations' }} />
       <Stack.Screen name="recommendations" options={{ headerShown: false }} />
       <Stack.Screen name="memory-exercise" options={{ headerShown: false }} />
+      <Stack.Screen name="paywall-revenuecat" options={{ headerShown: false, presentation: 'modal' }} />
+      <Stack.Screen name="customer-center" options={{ headerShown: false }} />
     </Stack>
   );
 }

@@ -1,13 +1,16 @@
 import createContextHook from '@nkzw/create-context-hook';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useEffect, useState } from 'react';
+import { CustomerInfo, PurchasesPackage } from 'react-native-purchases';
 import { 
   UserSubscription, 
   UsageStats, 
   SubscriptionTier, 
   SUBSCRIPTION_FEATURES 
 } from '@/types/subscription';
+import { revenueCatService } from '@/services/subscriptions/RevenueCatService';
+import { logger } from '@/utils/logger';
 
 const SUBSCRIPTION_KEY = '@neuronexa_subscription';
 const USAGE_KEY = '@neuronexa_usage';
@@ -29,7 +32,7 @@ async function loadSubscription(): Promise<UserSubscription> {
       trialEndDate: trialEndDate.toISOString(),
     };
   } catch (error) {
-    console.error('Error loading subscription:', error);
+    logger.error('Error loading subscription', error as Error);
     return {
       tier: 'free',
       startDate: new Date().toISOString(),
@@ -47,7 +50,7 @@ async function loadUserRole(): Promise<'patient' | 'caregiver'> {
     }
     return 'patient';
   } catch (error) {
-    console.error('Error loading user role:', error);
+    logger.error('Error loading user role', error as Error);
     return 'patient';
   }
 }
@@ -57,7 +60,7 @@ async function saveSubscription(subscription: UserSubscription): Promise<UserSub
     await AsyncStorage.setItem(SUBSCRIPTION_KEY, JSON.stringify(subscription));
     return subscription;
   } catch (error) {
-    console.error('Error saving subscription:', error);
+    logger.error('Error saving subscription', error as Error);
     throw error;
   }
 }
@@ -87,7 +90,7 @@ async function loadUsage(): Promise<UsageStats> {
       wellnessSessionsToday: 0,
     };
   } catch (error) {
-    console.error('Error loading usage:', error);
+    logger.error('Error loading usage', error as Error);
     return {
       tasksCreatedToday: 0,
       totalTasks: 0,
@@ -103,7 +106,7 @@ async function saveUsage(usage: UsageStats): Promise<UsageStats> {
     await AsyncStorage.setItem(USAGE_KEY, JSON.stringify(usage));
     return usage;
   } catch (error) {
-    console.error('Error saving usage:', error);
+    logger.error('Error saving usage', error as Error);
     throw error;
   }
 }
@@ -113,7 +116,7 @@ async function loadOnboardingStatus(): Promise<boolean> {
     const stored = await AsyncStorage.getItem(ONBOARDING_KEY);
     return stored === 'true';
   } catch (error) {
-    console.error('Error loading onboarding status:', error);
+    logger.error('Error loading onboarding status', error as Error);
     return false;
   }
 }
@@ -123,17 +126,81 @@ async function saveOnboardingStatus(completed: boolean): Promise<boolean> {
     await AsyncStorage.setItem(ONBOARDING_KEY, completed.toString());
     return completed;
   } catch (error) {
-    console.error('Error saving onboarding status:', error);
+    logger.error('Error saving onboarding status', error as Error);
     throw error;
+  }
+}
+
+async function syncSubscriptionWithRevenueCat(): Promise<UserSubscription> {
+  try {
+    logger.info('[SubscriptionContext] Syncing with RevenueCat');
+    const customerInfo = await revenueCatService.getCustomerInfo();
+    
+    if (!customerInfo) {
+      logger.warn('[SubscriptionContext] No customer info available');
+      return await loadSubscription();
+    }
+
+    const isPremium = revenueCatService.isPremium(customerInfo);
+    
+    const subscription: UserSubscription = {
+      tier: isPremium ? 'premium' : 'free',
+      startDate: new Date().toISOString(),
+      trialUsed: customerInfo.entitlements.all['premium']?.isActive === false,
+    };
+
+    if (isPremium) {
+      const expirationDate = customerInfo.entitlements.active['premium']?.expirationDate;
+      if (expirationDate) {
+        subscription.expiryDate = expirationDate;
+      }
+    }
+
+    await saveSubscription(subscription);
+    logger.info('[SubscriptionContext] Subscription synced', { tier: subscription.tier });
+    
+    return subscription;
+  } catch (error) {
+    logger.error('[SubscriptionContext] Error syncing with RevenueCat', error as Error);
+    return await loadSubscription();
   }
 }
 
 export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
   const queryClient = useQueryClient();
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo | null>(null);
+
+  useEffect(() => {
+    logger.info('[SubscriptionContext] Initializing RevenueCat');
+    
+    const initRevenueCat = async () => {
+      try {
+        await revenueCatService.initialize();
+        const info = await revenueCatService.getCustomerInfo();
+        setCustomerInfo(info);
+        await syncSubscriptionWithRevenueCat();
+        queryClient.invalidateQueries({ queryKey: ['subscription'] });
+      } catch (error) {
+        logger.error('[SubscriptionContext] RevenueCat initialization error', error as Error);
+      }
+    };
+
+    initRevenueCat();
+
+    const unsubscribe = revenueCatService.addCustomerInfoUpdateListener((info) => {
+      logger.info('[SubscriptionContext] Customer info updated');
+      setCustomerInfo(info);
+      syncSubscriptionWithRevenueCat().then(() => {
+        queryClient.invalidateQueries({ queryKey: ['subscription'] });
+      });
+    });
+
+    return unsubscribe;
+  }, [queryClient]);
 
   const subscriptionQuery = useQuery({
     queryKey: ['subscription'],
-    queryFn: loadSubscription,
+    queryFn: syncSubscriptionWithRevenueCat,
   });
 
   const usageQuery = useQuery({
@@ -254,6 +321,47 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
     mutateUsage(newUsage);
   }, [usage, mutateUsage]);
 
+  const purchasePackage = useCallback(async (pkg: PurchasesPackage): Promise<boolean> => {
+    try {
+      logger.info('[SubscriptionContext] Purchasing package', { 
+        packageId: pkg.identifier 
+      });
+      
+      const result = await revenueCatService.purchasePackage(pkg);
+      
+      if (result?.success) {
+        logger.info('[SubscriptionContext] Purchase successful');
+        await syncSubscriptionWithRevenueCat();
+        queryClient.invalidateQueries({ queryKey: ['subscription'] });
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      logger.error('[SubscriptionContext] Purchase error', error as Error);
+      return false;
+    }
+  }, [queryClient]);
+
+  const restorePurchases = useCallback(async (): Promise<boolean> => {
+    try {
+      logger.info('[SubscriptionContext] Restoring purchases');
+      const result = await revenueCatService.restorePurchases();
+      
+      if (result) {
+        logger.info('[SubscriptionContext] Purchases restored');
+        await syncSubscriptionWithRevenueCat();
+        queryClient.invalidateQueries({ queryKey: ['subscription'] });
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      logger.error('[SubscriptionContext] Restore error', error as Error);
+      return false;
+    }
+  }, [queryClient]);
+
   const upgradeToPremium = useCallback((period: 'month' | 'year') => {
     const newSubscription: UserSubscription = {
       tier: 'premium',
@@ -293,10 +401,13 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
     isInTrial,
     onboardingCompleted,
     requiresSubscription,
+    customerInfo,
     canCreateTask,
     canAccessFeature,
     incrementTaskUsage,
     incrementWellnessUsage,
+    purchasePackage,
+    restorePurchases,
     upgradeToPremium,
     completeOnboarding,
     getRemainingTasks,
@@ -309,10 +420,13 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
     isInTrial,
     onboardingCompleted,
     requiresSubscription,
+    customerInfo,
     canCreateTask,
     canAccessFeature,
     incrementTaskUsage,
     incrementWellnessUsage,
+    purchasePackage,
+    restorePurchases,
     upgradeToPremium,
     completeOnboarding,
     getRemainingTasks,
