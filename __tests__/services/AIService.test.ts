@@ -1,8 +1,8 @@
 import { aiService } from '@/services/ai/AIService';
-import { generateText } from '@rork/toolkit-sdk';
+import { generateText } from '@rork-ai/toolkit-sdk';
 import { UserProfile } from '@/types/userProfile';
 
-jest.mock('@rork/toolkit-sdk');
+jest.mock('@rork-ai/toolkit-sdk');
 
 describe('AIService', () => {
   beforeEach(() => {

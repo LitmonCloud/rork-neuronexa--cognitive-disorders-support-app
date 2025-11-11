@@ -1,4 +1,4 @@
-import { generateText } from '@rork/toolkit-sdk';
+import { generateText } from '@rork-ai/toolkit-sdk';
 import { UserProfile } from '@/types/userProfile';
 
 export interface AIProvider {

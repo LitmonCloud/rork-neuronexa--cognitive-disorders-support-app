@@ -13,7 +13,7 @@ jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn(() => Promise.resolve()),
 }));
 
-jest.mock('@rork/toolkit-sdk', () => ({
+jest.mock('@rork-ai/toolkit-sdk', () => ({
   generateText: jest.fn(() => Promise.resolve('Mocked AI response')),
   generateObject: jest.fn(() => Promise.resolve({})),
   useRorkAgent: jest.fn(() => ({

@@ -2,10 +2,10 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import AITaskCoach from '@/components/AITaskCoach';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import { useRorkAgent } from '@rork/toolkit-sdk';
+import { useRorkAgent } from '@rork-ai/toolkit-sdk';
 import { Task } from '@/types/task';
 
-jest.mock('@rork/toolkit-sdk');
+jest.mock('@rork-ai/toolkit-sdk');
 
 const renderWithTheme = (component: React.ReactElement) => {
   return render(<ThemeProvider>{component}</ThemeProvider>);

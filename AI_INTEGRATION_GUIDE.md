@@ -17,7 +17,7 @@ NeuroNexa uses **Rork Toolkit AI** for task breakdown and cognitive support. The
 
 ### **How It Works**
 ```typescript
-import { generateText } from '@rork/toolkit-sdk';
+import { generateText } from '@rork-ai/toolkit-sdk';
 
 const response = await generateText(prompt);
 ```

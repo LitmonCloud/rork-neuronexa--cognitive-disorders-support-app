@@ -7,7 +7,7 @@ import { useTasks } from '@/contexts/TaskContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useUserProfile } from '@/contexts/UserProfileContext';
 import { Sparkles, Send, User, Bot, CheckCircle2, AlertCircle } from 'lucide-react-native';
-import { useRorkAgent, createRorkTool } from '@rork/toolkit-sdk';
+import { useRorkAgent, createRorkTool } from '@rork-ai/toolkit-sdk';
 import { z } from 'zod';
 import PremiumGate from '@/components/PremiumGate';
 

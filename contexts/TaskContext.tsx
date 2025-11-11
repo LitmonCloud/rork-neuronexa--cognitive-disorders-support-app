@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, useCallback, useMemo } from 'react';
 import { Task, TaskPriority, TaskStatus, TaskStep } from '@/types/task';
-import { generateText } from '@rork/toolkit-sdk';
+import { generateText } from '@rork-ai/toolkit-sdk';
 import { useNotifications } from './NotificationContext';
 import { usePatients } from './PatientContext';
 import { useCaregivers } from './CaregiverContext';

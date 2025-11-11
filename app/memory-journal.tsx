@@ -7,7 +7,7 @@ import { useSubscription } from '@/contexts/SubscriptionContext';
 import { ArrowLeft, BookOpen, Plus, Trash2, Edit2, Sparkles, MapPin, Users, Heart, Frown, Meh, Smile, HelpCircle } from 'lucide-react-native';
 import { useState } from 'react';
 import { MemoryJournalEntry } from '@/types/dementia';
-import { generateText, generateObject } from '@rork/toolkit-sdk';
+import { generateText, generateObject } from '@rork-ai/toolkit-sdk';
 import * as ImagePicker from 'expo-image-picker';
 import { z } from 'zod';
 

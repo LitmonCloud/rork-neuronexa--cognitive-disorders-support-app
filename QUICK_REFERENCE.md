@@ -48,7 +48,7 @@ completeTask(taskId);
 
 ### **AI Integration**
 ```typescript
-import { generateText } from '@rork/toolkit-sdk';
+import { generateText } from '@rork-ai/toolkit-sdk';
 
 const response = await generateText(prompt);
 ```
