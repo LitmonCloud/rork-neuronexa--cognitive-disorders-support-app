@@ -77,9 +77,9 @@ export default function Button({
 
     return (
       <View style={styles.content}>
-        {icon && iconPosition === 'left' && <View style={styles.iconLeft}><Text>{icon}</Text></View>}
+        {icon && iconPosition === 'left' && <View style={styles.iconLeft}>{icon}</View>}
         <Text style={textStyles}>{title}</Text>
-        {icon && iconPosition === 'right' && <View style={styles.iconRight}><Text>{icon}</Text></View>}
+        {icon && iconPosition === 'right' && <View style={styles.iconRight}>{icon}</View>}
       </View>
     );
   };

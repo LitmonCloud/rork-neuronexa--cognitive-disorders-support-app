@@ -249,25 +249,22 @@ export default function AccessibilityTestScreen() {
 
             <View style={styles.buttonRow}>
               <Button
+                title={isSpeaking ? 'Speaking...' : 'Speak'}
                 onPress={handleSpeak}
                 disabled={!textToSpeak.trim() || isSpeaking}
                 variant="primary"
+                icon={<Volume2 size={18} color={colors.surface} />}
+                iconPosition="left"
                 style={{ flex: 1 }}
-              >
-                <Volume2 size={18} color={colors.surface} />
-                <Text style={{ color: colors.surface, marginLeft: 8, fontWeight: '600' as const }}>
-                  {isSpeaking ? 'Speaking...' : 'Speak'}
-                </Text>
-              </Button>
+              />
 
               {isSpeaking && (
                 <Button
+                  title="Stop"
                   onPress={handleStop}
                   variant="secondary"
                   style={{ flex: 1 }}
-                >
-                  <Text style={{ color: colors.text, fontWeight: '600' as const }}>Stop</Text>
-                </Button>
+                />
               )}
             </View>
           </View>
