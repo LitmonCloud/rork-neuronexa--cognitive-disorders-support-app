@@ -38,12 +38,10 @@
       "channel": "production",
       "ios": {
         "buildConfiguration": "Release",
-        "bundleIdentifier": "app.rork.nexa-cognitive-disorders-support-ykokwhv",
         "resourceClass": "m-medium"
       },
       "android": {
         "buildType": "app-bundle",
-        "package": "app.rork.nexa-cognitive-disorders-support-ykokwhv",
         "resourceClass": "medium"
       },
       "env": {
@@ -54,7 +52,6 @@
       "extends": "production",
       "ios": {
         "buildConfiguration": "Release",
-        "bundleIdentifier": "app.rork.nexa-cognitive-disorders-support-ykokwhv",
         "resourceClass": "m-medium"
       }
     },
@@ -62,7 +59,6 @@
       "extends": "production",
       "android": {
         "buildType": "app-bundle",
-        "package": "app.rork.nexa-cognitive-disorders-support-ykokwhv",
         "resourceClass": "medium"
       }
     }
