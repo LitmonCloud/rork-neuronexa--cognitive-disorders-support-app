@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { router } from 'expo-router';
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -24,14 +24,14 @@ export default function CustomerCenterScreen() {
   const { subscription, isPremium, customerInfo, restorePurchases } = useSubscription();
   const [restoring, setRestoring] = useState(false);
 
-  const styles = StyleSheet.create({
+  const styles = useMemo(() => StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: colors.background,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const,
       paddingHorizontal: 20,
       paddingTop: insets.top + 10,
       paddingBottom: 16,
@@ -44,13 +44,13 @@ export default function CustomerCenterScreen() {
       height: 40,
       borderRadius: 20,
       backgroundColor: colors.surfaceTint,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
       marginRight: 12,
     },
     headerTitle: {
       fontSize: 20,
-      fontWeight: '700',
+      fontWeight: '700' as const,
       color: colors.text,
     },
     scrollView: {
@@ -74,8 +74,8 @@ export default function CustomerCenterScreen() {
       borderColor: colors.border,
     },
     statusHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const,
       marginBottom: 16,
       gap: 12,
     },
@@ -83,8 +83,8 @@ export default function CustomerCenterScreen() {
       width: 48,
       height: 48,
       borderRadius: 24,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
     },
     statusIconPremium: {
       backgroundColor: colors.success + '20',
@@ -94,7 +94,7 @@ export default function CustomerCenterScreen() {
     },
     statusTitle: {
       fontSize: 24,
-      fontWeight: '800',
+      fontWeight: '800' as const,
       color: colors.text,
     },
     statusSubtitle: {
@@ -106,9 +106,9 @@ export default function CustomerCenterScreen() {
       gap: 12,
     },
     detailRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: 'row' as const,
+      justifyContent: 'space-between' as const,
+      alignItems: 'center' as const,
     },
     detailLabel: {
       fontSize: 14,
@@ -116,7 +116,7 @@ export default function CustomerCenterScreen() {
     },
     detailValue: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: '600' as const,
       color: colors.text,
     },
     section: {
@@ -124,7 +124,7 @@ export default function CustomerCenterScreen() {
     },
     sectionTitle: {
       fontSize: 18,
-      fontWeight: '700',
+      fontWeight: '700' as const,
       color: colors.text,
       marginBottom: 12,
     },
@@ -133,9 +133,9 @@ export default function CustomerCenterScreen() {
       borderRadius: 12,
       padding: 16,
       marginBottom: 12,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const,
+      justifyContent: 'space-between' as const,
       borderWidth: 1,
       borderColor: colors.border,
     },
@@ -145,7 +145,7 @@ export default function CustomerCenterScreen() {
     },
     actionTitle: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: '600' as const,
       color: colors.text,
       marginBottom: 4,
     },
@@ -157,7 +157,7 @@ export default function CustomerCenterScreen() {
       backgroundColor: colors.primary + '10',
       borderRadius: 12,
       padding: 16,
-      flexDirection: 'row',
+      flexDirection: 'row' as const,
       gap: 12,
       marginBottom: 24,
     },
@@ -169,7 +169,7 @@ export default function CustomerCenterScreen() {
     },
     infoTitle: {
       fontSize: 14,
-      fontWeight: '600',
+      fontWeight: '600' as const,
       color: colors.text,
       marginBottom: 4,
     },
@@ -183,7 +183,7 @@ export default function CustomerCenterScreen() {
       paddingVertical: 16,
       paddingHorizontal: 24,
       borderRadius: 12,
-      alignItems: 'center',
+      alignItems: 'center' as const,
       marginTop: 8,
       shadowColor: colors.primary,
       shadowOffset: { width: 0, height: 4 },
@@ -193,10 +193,21 @@ export default function CustomerCenterScreen() {
     },
     upgradeButtonText: {
       fontSize: 16,
-      fontWeight: '700',
+      fontWeight: '700' as const,
       color: colors.surface,
     },
-  });
+    flexOne: {
+      flex: 1,
+    },
+    detailRowInner: {
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const,
+      gap: 6,
+    },
+    detailValueSuccess: {
+      color: colors.success,
+    },
+  }), [colors, insets]);
 
   const handleManageSubscription = async () => {
     try {
@@ -312,7 +323,7 @@ export default function CustomerCenterScreen() {
             ]}>
               <StatusIcon size={24} color={status.color} />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={styles.flexOne}>
               <Text style={styles.statusTitle}>{status.title}</Text>
               <Text style={styles.statusSubtitle}>{status.subtitle}</Text>
             </View>
@@ -326,9 +337,9 @@ export default function CustomerCenterScreen() {
               </View>
               <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>Status</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <View style={styles.detailRowInner}>
                   <CheckCircle size={16} color={colors.success} />
-                  <Text style={[styles.detailValue, { color: colors.success }]}>Active</Text>
+                  <Text style={[styles.detailValue, styles.detailValueSuccess]}>Active</Text>
                 </View>
               </View>
             </View>
