@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import { Audio } from 'expo-av';
+import { Audio } from 'expo-audio';
 
 export interface TranscriptionResult {
   text: string;
@@ -80,16 +80,13 @@ class SpeechToTextService {
     await this.recording.prepareToRecordAsync({
       android: {
         extension: '.m4a',
-        outputFormat: Audio.RecordingOptionsPresets.HIGH_QUALITY.android.outputFormat,
-        audioEncoder: Audio.RecordingOptionsPresets.HIGH_QUALITY.android.audioEncoder,
         sampleRate: 44100,
         numberOfChannels: 2,
         bitRate: 128000,
       },
       ios: {
-        extension: '.wav',
-        outputFormat: Audio.RecordingOptionsPresets.HIGH_QUALITY.ios.outputFormat,
-        audioQuality: Audio.RecordingOptionsPresets.HIGH_QUALITY.ios.audioQuality,
+        extension: '.m4a',
+        audioQuality: 0x7F, // AVAudioQuality.high
         sampleRate: 44100,
         numberOfChannels: 2,
         bitRate: 128000,

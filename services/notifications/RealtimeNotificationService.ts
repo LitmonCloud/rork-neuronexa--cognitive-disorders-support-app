@@ -48,14 +48,25 @@ class RealtimeNotificationService {
   }
 
   cleanup() {
-    if (this.notificationSubscription) {
-      Notifications.removeNotificationSubscription(this.notificationSubscription);
-      this.notificationSubscription = null;
+    // Defensive cleanup for Expo Go compatibility (SDK 53+ removeNotificationSubscription may not exist)
+    if (this.notificationSubscription && typeof Notifications.removeNotificationSubscription === 'function') {
+      try {
+        Notifications.removeNotificationSubscription(this.notificationSubscription);
+        this.notificationSubscription = null;
+      } catch (error) {
+        console.log('[RealtimeNotification] Notification subscription cleanup skipped:', error);
+        this.notificationSubscription = null;
+      }
     }
 
-    if (this.responseSubscription) {
-      Notifications.removeNotificationSubscription(this.responseSubscription);
-      this.responseSubscription = null;
+    if (this.responseSubscription && typeof Notifications.removeNotificationSubscription === 'function') {
+      try {
+        Notifications.removeNotificationSubscription(this.responseSubscription);
+        this.responseSubscription = null;
+      } catch (error) {
+        console.log('[RealtimeNotification] Response subscription cleanup skipped:', error);
+        this.responseSubscription = null;
+      }
     }
 
     this.listeners.clear();

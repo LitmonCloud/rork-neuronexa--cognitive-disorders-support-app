@@ -8,8 +8,8 @@ import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import { AppNotification, NotificationPreferences, NotificationStats, NotificationType, NotificationPriority } from '@/types/notification';
 
-const NOTIFICATIONS_KEY = '@neuronexa_notifications';
-const PREFERENCES_KEY = '@neuronexa_notification_preferences';
+const NOTIFICATIONS_KEY = '@nexa_notifications';
+const PREFERENCES_KEY = '@nexa_notification_preferences';
 const isExpoGo = Constants.appOwnership === 'expo';
 
 const DEFAULT_PREFERENCES: NotificationPreferences = {
@@ -195,11 +195,20 @@ export const [NotificationProvider, useNotifications] = createContextHook(() => 
       }
 
       return () => {
-        if (notificationListener.current) {
-          Notifications.removeNotificationSubscription(notificationListener.current);
+        // Defensive cleanup for Expo Go compatibility (SDK 53+ removeNotificationSubscription may not exist)
+        if (notificationListener.current && typeof Notifications.removeNotificationSubscription === 'function') {
+          try {
+            Notifications.removeNotificationSubscription(notificationListener.current);
+          } catch (error) {
+            console.log('[NotificationContext] Listener cleanup skipped:', error);
+          }
         }
-        if (responseListener.current) {
-          Notifications.removeNotificationSubscription(responseListener.current);
+        if (responseListener.current && typeof Notifications.removeNotificationSubscription === 'function') {
+          try {
+            Notifications.removeNotificationSubscription(responseListener.current);
+          } catch (error) {
+            console.log('[NotificationContext] Response listener cleanup skipped:', error);
+          }
         }
       };
     }
