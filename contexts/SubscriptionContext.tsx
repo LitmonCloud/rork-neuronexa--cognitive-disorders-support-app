@@ -2,7 +2,6 @@ import createContextHook from '@nkzw/create-context-hook';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo, useEffect, useState } from 'react';
-import { CustomerInfo, PurchasesPackage } from 'react-native-purchases';
 import { 
   UserSubscription, 
   UsageStats, 
@@ -10,6 +9,7 @@ import {
   SUBSCRIPTION_FEATURES 
 } from '@/types/subscription';
 import { revenueCatService } from '@/services/subscriptions/RevenueCatService';
+import type { CustomerInfo, PurchasesPackage } from '@/services/subscriptions/RevenueCatService';
 import { logger } from '@/utils/logger';
 
 const SUBSCRIPTION_KEY = '@neuronexa_subscription';
@@ -172,6 +172,7 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
 
   useEffect(() => {
     logger.info('[SubscriptionContext] Initializing RevenueCat');
+    let unsubscribe: (() => void) | undefined;
     
     const initRevenueCat = async () => {
       try {
@@ -180,6 +181,14 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
         setCustomerInfo(info);
         await syncSubscriptionWithRevenueCat();
         queryClient.invalidateQueries({ queryKey: ['subscription'] });
+        
+        unsubscribe = revenueCatService.addCustomerInfoUpdateListener((info) => {
+          logger.info('[SubscriptionContext] Customer info updated');
+          setCustomerInfo(info);
+          syncSubscriptionWithRevenueCat().then(() => {
+            queryClient.invalidateQueries({ queryKey: ['subscription'] });
+          });
+        });
       } catch (error) {
         logger.error('[SubscriptionContext] RevenueCat initialization error', error as Error);
       }
@@ -187,15 +196,11 @@ export const [SubscriptionProvider, useSubscription] = createContextHook(() => {
 
     initRevenueCat();
 
-    const unsubscribe = revenueCatService.addCustomerInfoUpdateListener((info) => {
-      logger.info('[SubscriptionContext] Customer info updated');
-      setCustomerInfo(info);
-      syncSubscriptionWithRevenueCat().then(() => {
-        queryClient.invalidateQueries({ queryKey: ['subscription'] });
-      });
-    });
-
-    return unsubscribe;
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, [queryClient]);
 
   const subscriptionQuery = useQuery({

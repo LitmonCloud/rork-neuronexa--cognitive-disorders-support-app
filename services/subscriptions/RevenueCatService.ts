@@ -1,11 +1,22 @@
-import Purchases, {
-  PurchasesPackage,
-  CustomerInfo,
-  PurchasesOfferings,
-  LOG_LEVEL,
-} from 'react-native-purchases';
-
+import { Platform } from 'react-native';
 import { logger } from '@/utils/logger';
+
+let Purchases: any = null;
+let LOG_LEVEL: any = null;
+let PurchasesPackage: any;
+let CustomerInfo: any;
+let PurchasesOfferings: any;
+
+if (Platform.OS !== 'web') {
+  const RCModule = require('react-native-purchases');
+  Purchases = RCModule.default || RCModule;
+  LOG_LEVEL = RCModule.LOG_LEVEL;
+  PurchasesPackage = RCModule.PurchasesPackage;
+  CustomerInfo = RCModule.CustomerInfo;
+  PurchasesOfferings = RCModule.PurchasesOfferings;
+}
+
+export type { CustomerInfo, PurchasesPackage, PurchasesOfferings };
 
 const API_KEY = 'test_UuEBbaCMjdjrwVUWDdquJcjAmkw';
 
@@ -14,6 +25,17 @@ class RevenueCatService {
 
   async initialize(userId?: string): Promise<void> {
     try {
+      if (Platform.OS === 'web') {
+        logger.info('[RevenueCat] Web platform - skipping initialization');
+        this.isConfigured = true;
+        return;
+      }
+
+      if (!Purchases) {
+        logger.warn('[RevenueCat] SDK not available');
+        return;
+      }
+
       if (this.isConfigured) {
         logger.info('[RevenueCat] Already configured');
         return;
@@ -41,8 +63,13 @@ class RevenueCatService {
     }
   }
 
-  async getOfferings(): Promise<PurchasesOfferings | null> {
+  async getOfferings(): Promise<any | null> {
     try {
+      if (Platform.OS === 'web' || !Purchases) {
+        logger.info('[RevenueCat] Not available on this platform');
+        return null;
+      }
+
       logger.info('[RevenueCat] Fetching offerings');
       const offerings = await Purchases.getOfferings();
       
@@ -62,8 +89,13 @@ class RevenueCatService {
     }
   }
 
-  async getCustomerInfo(): Promise<CustomerInfo | null> {
+  async getCustomerInfo(): Promise<any | null> {
     try {
+      if (Platform.OS === 'web' || !Purchases) {
+        logger.info('[RevenueCat] Not available on this platform');
+        return null;
+      }
+
       logger.info('[RevenueCat] Fetching customer info');
       const customerInfo = await Purchases.getCustomerInfo();
       
@@ -79,11 +111,16 @@ class RevenueCatService {
     }
   }
 
-  async purchasePackage(packageToPurchase: PurchasesPackage): Promise<{
-    customerInfo: CustomerInfo;
+  async purchasePackage(packageToPurchase: any): Promise<{
+    customerInfo: any;
     success: boolean;
   } | null> {
     try {
+      if (Platform.OS === 'web' || !Purchases) {
+        logger.info('[RevenueCat] Not available on this platform');
+        return null;
+      }
+
       logger.info('[RevenueCat] Initiating purchase', {
         packageId: packageToPurchase.identifier,
         productId: packageToPurchase.product.identifier,
@@ -109,8 +146,13 @@ class RevenueCatService {
     }
   }
 
-  async restorePurchases(): Promise<CustomerInfo | null> {
+  async restorePurchases(): Promise<any | null> {
     try {
+      if (Platform.OS === 'web' || !Purchases) {
+        logger.info('[RevenueCat] Not available on this platform');
+        return null;
+      }
+
       logger.info('[RevenueCat] Restoring purchases');
       const customerInfo = await Purchases.restorePurchases();
       
@@ -125,14 +167,20 @@ class RevenueCatService {
     }
   }
 
-  isPremium(customerInfo: CustomerInfo): boolean {
-    const hasPremiumEntitlement = customerInfo.entitlements.active['premium'] !== undefined;
+  isPremium(customerInfo: any): boolean {
+    if (!customerInfo) return false;
+    const hasPremiumEntitlement = customerInfo.entitlements?.active?.['premium'] !== undefined;
     logger.debug('[RevenueCat] Premium status check', { isPremium: hasPremiumEntitlement });
     return hasPremiumEntitlement;
   }
 
-  async logIn(userId: string): Promise<{ customerInfo: CustomerInfo } | null> {
+  async logIn(userId: string): Promise<{ customerInfo: any } | null> {
     try {
+      if (Platform.OS === 'web' || !Purchases) {
+        logger.info('[RevenueCat] Not available on this platform');
+        return null;
+      }
+
       logger.info('[RevenueCat] Logging in user', { userId });
       const result = await Purchases.logIn(userId);
       
@@ -148,8 +196,13 @@ class RevenueCatService {
     }
   }
 
-  async logOut(): Promise<CustomerInfo | null> {
+  async logOut(): Promise<any | null> {
     try {
+      if (Platform.OS === 'web' || !Purchases) {
+        logger.info('[RevenueCat] Not available on this platform');
+        return null;
+      }
+
       logger.info('[RevenueCat] Logging out user');
       const customerInfo = await Purchases.logOut();
       
@@ -163,8 +216,13 @@ class RevenueCatService {
   }
 
   addCustomerInfoUpdateListener(
-    listener: (customerInfo: CustomerInfo) => void
+    listener: (customerInfo: any) => void
   ): () => void {
+    if (Platform.OS === 'web' || !Purchases) {
+      logger.info('[RevenueCat] Not available on this platform');
+      return () => {};
+    }
+
     logger.info('[RevenueCat] Adding customer info update listener');
     Purchases.addCustomerInfoUpdateListener(listener);
 
@@ -179,6 +237,11 @@ class RevenueCatService {
     [key: string]: string | undefined;
   }): Promise<void> {
     try {
+      if (Platform.OS === 'web' || !Purchases) {
+        logger.info('[RevenueCat] Not available on this platform');
+        return;
+      }
+
       logger.info('[RevenueCat] Syncing user attributes', { keys: Object.keys(attributes) });
 
       if (attributes.email) {
@@ -202,6 +265,11 @@ class RevenueCatService {
 
   async getManagementURL(): Promise<string | null> {
     try {
+      if (Platform.OS === 'web' || !Purchases) {
+        logger.info('[RevenueCat] Not available on this platform');
+        return null;
+      }
+
       logger.info('[RevenueCat] Fetching management URL');
       const url = await Purchases.getCustomerInfo().then(info => {
         return info.managementURL;
@@ -217,6 +285,11 @@ class RevenueCatService {
 
   async checkTrialEligibility(productIdentifier: string): Promise<boolean> {
     try {
+      if (Platform.OS === 'web' || !Purchases) {
+        logger.info('[RevenueCat] Not available on this platform');
+        return true;
+      }
+
       logger.info('[RevenueCat] Checking trial eligibility', { productIdentifier });
       
       const customerInfo = await this.getCustomerInfo();
