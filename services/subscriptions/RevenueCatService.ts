@@ -18,7 +18,13 @@ if (Platform.OS !== 'web') {
 
 export type { CustomerInfo, PurchasesPackage, PurchasesOfferings };
 
-const API_KEY = 'test_UuEBbaCMjdjrwVUWDdquJcjAmkw';
+// Revenue Cat API Keys
+// Get from https://app.revenuecat.com/settings/api-keys
+const API_KEY_IOS = process.env.EXPO_PUBLIC_RC_IOS_API_KEY || 'test_UuEBbaCMjdjrwVUWDdquJcjAmkw';
+const API_KEY_ANDROID = process.env.EXPO_PUBLIC_RC_ANDROID_API_KEY || 'test_UuEBbaCMjdjrwVUWDdquJcjAmkw';
+
+// Select the appropriate API key based on platform
+const API_KEY = Platform.OS === 'ios' ? API_KEY_IOS : API_KEY_ANDROID;
 
 class RevenueCatService {
   private isConfigured = false;
