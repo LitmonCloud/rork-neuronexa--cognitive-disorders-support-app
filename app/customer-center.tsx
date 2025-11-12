@@ -320,7 +320,7 @@ export default function CustomerCenterScreen() {
 
           {isPremium && subscription.expiryDate && (
             <View style={styles.statusDetails}>
-              <View style={detailRow}>
+              <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>Renewal Date</Text>
                 <Text style={styles.detailValue}>{formatDate(subscription.expiryDate)}</Text>
               </View>
@@ -418,9 +418,3 @@ export default function CustomerCenterScreen() {
     </View>
   );
 }
-
-const detailRow = StyleSheet.create({
-  flexDirection: 'row' as const,
-  justifyContent: 'space-between' as const,
-  alignItems: 'center' as const,
-});
