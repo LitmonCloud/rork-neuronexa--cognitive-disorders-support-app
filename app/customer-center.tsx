@@ -50,7 +50,7 @@ export default function CustomerCenterScreen() {
     },
     headerTitle: {
       fontSize: 20,
-      fontWeight: '700' as const,
+      fontWeight: '700',
       color: colors.text,
     },
     scrollView: {
@@ -94,7 +94,7 @@ export default function CustomerCenterScreen() {
     },
     statusTitle: {
       fontSize: 24,
-      fontWeight: '800' as const,
+      fontWeight: '800',
       color: colors.text,
     },
     statusSubtitle: {
@@ -116,7 +116,7 @@ export default function CustomerCenterScreen() {
     },
     detailValue: {
       fontSize: 14,
-      fontWeight: '600' as const,
+      fontWeight: '600',
       color: colors.text,
     },
     section: {
@@ -124,7 +124,7 @@ export default function CustomerCenterScreen() {
     },
     sectionTitle: {
       fontSize: 18,
-      fontWeight: '700' as const,
+      fontWeight: '700',
       color: colors.text,
       marginBottom: 12,
     },
@@ -145,7 +145,7 @@ export default function CustomerCenterScreen() {
     },
     actionTitle: {
       fontSize: 16,
-      fontWeight: '600' as const,
+      fontWeight: '600',
       color: colors.text,
       marginBottom: 4,
     },
@@ -169,7 +169,7 @@ export default function CustomerCenterScreen() {
     },
     infoTitle: {
       fontSize: 14,
-      fontWeight: '600' as const,
+      fontWeight: '600',
       color: colors.text,
       marginBottom: 4,
     },
@@ -193,7 +193,7 @@ export default function CustomerCenterScreen() {
     },
     upgradeButtonText: {
       fontSize: 16,
-      fontWeight: '700' as const,
+      fontWeight: '700',
       color: colors.surface,
     },
   });
