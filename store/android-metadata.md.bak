@@ -1,10 +1,10 @@
-# Nexa — Google Play Store Metadata
+# NeuroNexa — Google Play Store Metadata
 
 ## App Information
 
-**App Name:** Nexa
+**App Name:** NeuroNexa
 
-**Package Name:** `app.rork.nexa-cognitive-disorders-support-ykokwhv`
+**Package Name:** `app.rork.neuronexa-cognitive-disorders-support-ykokwhv`
 
 **Category:** Health & Fitness
 
@@ -21,9 +21,9 @@ Adaptive task coach for ADHD, autism & cognitive support with AI guidance.
 
 ### Full Description (4000 characters max)
 
-**Nexa: Your Personal Cognitive Support Coach**
+**NeuroNexa: Your Personal Cognitive Support Coach**
 
-Nexa is designed specifically for individuals with ADHD, autism, executive function challenges, and other cognitive differences. Our AI coach, Nexa, learns your unique patterns and adapts to provide personalized support that actually works for you.
+NeuroNexa is designed specifically for individuals with ADHD, autism, executive function challenges, and other cognitive differences. Our AI coach, Nexa, learns your unique patterns and adapts to provide personalized support that actually works for you.
 
 **🧠 Meet Nexa: Your AI Coach**
 Nexa isn't just another chatbot—she's a warm, personable coach who genuinely cares about your success. She learns your habits, preferences, communication style, and what motivates you. The more you interact, the better she understands how to support you.
@@ -79,7 +79,7 @@ Nexa isn't just another chatbot—she's a warm, personable coach who genuinely c
 
 **Who Is This For?**
 
-Nexa is built for individuals with:
+NeuroNexa is built for individuals with:
 • ADHD (Attention-Deficit/Hyperactivity Disorder)
 • Autism Spectrum Disorder (ASD)
 • Executive function challenges
@@ -111,33 +111,33 @@ Upgrade to Premium for:
 
 **Medical Disclaimer**
 
-Nexa is a productivity and wellness tool, not a medical device. It does not provide medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical concerns.
+NeuroNexa is a productivity and wellness tool, not a medical device. It does not provide medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical concerns.
 
 **Support**
 
-Need help? Contact us at support@nexa.app
-Visit: https://nexa.app
+Need help? Contact us at support@neuronexa.app
+Visit: https://neuronexa.app
 
 ---
 
 ## URLs
 
-**Website:** https://nexa.app
+**Website:** https://neuronexa.app
 
-**Privacy Policy:** https://nexa.app/legal/privacy
+**Privacy Policy:** https://neuronexa.app/legal/privacy
 
-**Terms of Service:** https://nexa.app/legal/terms
+**Terms of Service:** https://neuronexa.app/legal/terms
 
-**Accessibility Statement:** https://nexa.app/legal/accessibility
+**Accessibility Statement:** https://neuronexa.app/legal/accessibility
 
-**Data Retention Policy:** https://nexa.app/legal/data-retention
+**Data Retention Policy:** https://neuronexa.app/legal/data-retention
 
 ---
 
 ## Screenshots & Graphics
 
 ### Feature Graphic (1024 x 500)
-- App logo + "Nexa: Cognitive Support That Adapts to You"
+- App logo + "NeuroNexa: Cognitive Support That Adapts to You"
 - Show Nexa AI coach icon
 - Highlight key features: Tasks, Breathing, Accessibility
 
@@ -161,7 +161,7 @@ Visit: https://nexa.app
 3. "Get personalized, step-by-step guidance"
 4. "Reduce anxiety with guided breathing"
 5. "Customize for your needs"
-6. "Nexa. Simplify. Scaffold. Support."
+6. "NeuroNexa. Simplify. Scaffold. Support."
 
 ---
 
@@ -201,19 +201,19 @@ Visit: https://nexa.app
 ## In-App Products
 
 ### Premium Monthly
-- **Product ID:** `nexa_premium_monthly`
+- **Product ID:** `neuronexa_premium_monthly`
 - **Title:** Premium Monthly
 - **Description:** Unlock unlimited tasks, AI breakdowns, and advanced features
 - **Price:** $9.99/month
 
 ### Premium Yearly
-- **Product ID:** `nexa_premium_yearly`
+- **Product ID:** `neuronexa_premium_yearly`
 - **Title:** Premium Yearly
 - **Description:** Unlock unlimited tasks, AI breakdowns, and advanced features. Save 40%!
 - **Price:** $59.99/year
 
 ### Lifetime Access
-- **Product ID:** `nexa_lifetime`
+- **Product ID:** `neuronexa_lifetime`
 - **Title:** Lifetime Access
 - **Description:** One-time purchase for lifetime access to all premium features
 - **Price:** $149.99
@@ -224,7 +224,7 @@ Visit: https://nexa.app
 
 **Version 1.0.0 - Initial Release**
 
-Welcome to Nexa!
+Welcome to NeuroNexa!
 
 • Meet Nexa: Your personalized AI cognitive support coach
 • Smart task management with AI-powered breakdowns
@@ -310,7 +310,7 @@ We're excited to bring neurodiversity-affirming cognitive support to Google Play
 
 ## Notes for Review
 
-Thank you for reviewing Nexa. Here's what you need to know:
+Thank you for reviewing NeuroNexa. Here's what you need to know:
 
 1. **First Launch:** The app will show a 4-slide onboarding flow. You can skip through or complete it.
 
@@ -333,4 +333,4 @@ Thank you for reviewing Nexa. Here's what you need to know:
 
 8. **Accessibility:** Tested with TalkBack. High contrast and large text modes available in Settings.
 
-If you have any questions, please contact support@nexa.app.
+If you have any questions, please contact support@neuronexa.app.

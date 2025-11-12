@@ -1,14 +1,14 @@
-# Nexa — iOS App Store Metadata
+# NeuroNexa — iOS App Store Metadata
 
 ## App Information
 
-**App Name:** Nexa
+**App Name:** NeuroNexa
 
 **Subtitle:** Cognitive support that adapts to you
 
-**Bundle ID:** `app.rork.nexa-cognitive-disorders-support-ykokwhv`
+**Bundle ID:** `app.rork.neuronexa-cognitive-disorders-support-ykokwhv`
 
-**SKU:** `nexa-ios-001`
+**SKU:** `neuronexa-ios-001`
 
 **Primary Category:** Health & Fitness
 
@@ -25,9 +25,9 @@ Adaptive task coach for ADHD, autism, and cognitive support. AI-powered breakdow
 
 ### Full Description (4000 characters max)
 
-**Nexa: Your Personal Cognitive Support Coach**
+**NeuroNexa: Your Personal Cognitive Support Coach**
 
-Nexa is designed specifically for individuals with ADHD, autism, executive function challenges, and other cognitive differences. Our AI coach, Nexa, learns your unique patterns and adapts to provide personalized support that actually works for you.
+NeuroNexa is designed specifically for individuals with ADHD, autism, executive function challenges, and other cognitive differences. Our AI coach, Nexa, learns your unique patterns and adapts to provide personalized support that actually works for you.
 
 **🧠 Meet Nexa: Your AI Coach**
 Nexa isn't just another chatbot—she's a warm, personable coach who genuinely cares about your success. She learns your habits, preferences, communication style, and what motivates you. The more you interact, the better she understands how to support you.
@@ -83,7 +83,7 @@ Nexa isn't just another chatbot—she's a warm, personable coach who genuinely c
 
 **Who Is This For?**
 
-Nexa is built for individuals with:
+NeuroNexa is built for individuals with:
 • ADHD (Attention-Deficit/Hyperactivity Disorder)
 • Autism Spectrum Disorder (ASD)
 • Executive function challenges
@@ -115,12 +115,12 @@ Upgrade to Premium for:
 
 **Medical Disclaimer**
 
-Nexa is a productivity and wellness tool, not a medical device. It does not provide medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical concerns.
+NeuroNexa is a productivity and wellness tool, not a medical device. It does not provide medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical concerns.
 
 **Support**
 
-Need help? Contact us at support@nexa.app
-Visit: https://nexa.app
+Need help? Contact us at support@neuronexa.app
+Visit: https://neuronexa.app
 
 ---
 
@@ -132,35 +132,35 @@ ADHD,autism,neurodiversity,cognitive support,task coach,breathing,focus,executiv
 
 ## URLs
 
-**Marketing URL:** https://nexa.app
+**Marketing URL:** https://neuronexa.app
 
-**Support URL:** https://nexa.app/support
+**Support URL:** https://neuronexa.app/support
 
-**Privacy Policy URL:** https://nexa.app/legal/privacy
+**Privacy Policy URL:** https://neuronexa.app/legal/privacy
 
-**Terms of Service URL:** https://nexa.app/legal/terms
+**Terms of Service URL:** https://neuronexa.app/legal/terms
 
-**Accessibility Statement URL:** https://nexa.app/legal/accessibility
+**Accessibility Statement URL:** https://neuronexa.app/legal/accessibility
 
-**Data Retention Policy URL:** https://nexa.app/legal/data-retention
+**Data Retention Policy URL:** https://neuronexa.app/legal/data-retention
 
 ---
 
 ## App Review Information
 
 **Contact Information:**
-- First Name: Nexa
+- First Name: NeuroNexa
 - Last Name: Support
 - Phone: +1 (555) 123-4567
-- Email: support@nexa.app
+- Email: support@neuronexa.app
 
 **Demo Account (if required):**
-- Username: reviewer@nexa.app
+- Username: reviewer@neuronexa.app
 - Password: ReviewAccess2025!
 
 **Notes for Reviewer:**
 
-Thank you for reviewing Nexa. Here's what you need to know:
+Thank you for reviewing NeuroNexa. Here's what you need to know:
 
 1. **First Launch:** The app will show a 4-slide onboarding flow. You can skip through or complete it.
 
@@ -183,7 +183,7 @@ Thank you for reviewing Nexa. Here's what you need to know:
 
 8. **Accessibility:** Tested with VoiceOver. High contrast and large text modes available in Settings.
 
-If you have any questions, please contact support@nexa.app.
+If you have any questions, please contact support@neuronexa.app.
 
 ---
 
@@ -193,7 +193,7 @@ If you have any questions, please contact support@nexa.app.
 
 **What's New in This Version:**
 
-Initial release of Nexa!
+Initial release of NeuroNexa!
 
 • Meet Nexa: Your personalized AI cognitive support coach
 • Smart task management with AI-powered breakdowns
@@ -210,19 +210,19 @@ We're excited to bring neurodiversity-affirming cognitive support to the App Sto
 ## In-App Purchases
 
 ### Premium Monthly
-- **Product ID:** `nexa_premium_monthly`
+- **Product ID:** `neuronexa_premium_monthly`
 - **Display Name:** Premium Monthly
 - **Description:** Unlock unlimited tasks, AI breakdowns, and advanced features
 - **Price:** $9.99/month
 
 ### Premium Yearly
-- **Product ID:** `nexa_premium_yearly`
+- **Product ID:** `neuronexa_premium_yearly`
 - **Display Name:** Premium Yearly
 - **Description:** Unlock unlimited tasks, AI breakdowns, and advanced features. Save 40%!
 - **Price:** $59.99/year
 
 ### Lifetime Access
-- **Product ID:** `nexa_lifetime`
+- **Product ID:** `neuronexa_lifetime`
 - **Display Name:** Lifetime Access
 - **Description:** One-time purchase for lifetime access to all premium features
 - **Price:** $149.99
@@ -258,7 +258,7 @@ We're excited to bring neurodiversity-affirming cognitive support to the App Sto
 3. AI breakdown → "Get personalized, step-by-step guidance"
 4. Breathing exercise → "Reduce anxiety with guided breathing"
 5. Settings → "Customize for your needs"
-6. End card → "Nexa. Simplify. Scaffold. Support."
+6. End card → "NeuroNexa. Simplify. Scaffold. Support."
 
 ---
 
