@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
 import { LocationProvider, useLocation } from '@/contexts/LocationContext';
+import { MockUserProfileProvider, TestWrapper } from '../__mocks__/contextMocks';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -32,9 +33,13 @@ describe('Location Tracking Functionality', () => {
     };
 
     render(
-      <LocationProvider>
-        <TestComponent />
-      </LocationProvider>
+      <TestWrapper>
+        <MockUserProfileProvider>
+          <LocationProvider>
+            <TestComponent />
+          </LocationProvider>
+        </MockUserProfileProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -61,9 +66,13 @@ describe('Location Tracking Functionality', () => {
     };
 
     render(
-      <LocationProvider>
-        <TestComponent />
-      </LocationProvider>
+      <TestWrapper>
+        <MockUserProfileProvider>
+          <LocationProvider>
+            <TestComponent />
+          </LocationProvider>
+        </MockUserProfileProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -104,9 +113,13 @@ describe('Location Tracking Functionality', () => {
     };
 
     render(
-      <LocationProvider>
-        <TestComponent />
-      </LocationProvider>
+      <TestWrapper>
+        <MockUserProfileProvider>
+          <LocationProvider>
+            <TestComponent />
+          </LocationProvider>
+        </MockUserProfileProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -172,9 +185,13 @@ describe('Location Tracking Functionality', () => {
     };
 
     render(
-      <LocationProvider>
-        <TestComponent />
-      </LocationProvider>
+      <TestWrapper>
+        <MockUserProfileProvider>
+          <LocationProvider>
+            <TestComponent />
+          </LocationProvider>
+        </MockUserProfileProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {

@@ -1,13 +1,5 @@
 import React from 'react';
-import { Linking } from 'react-native';
-
-jest.mock('react-native/Libraries/Linking/Linking', () => ({
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  openURL: jest.fn(),
-  canOpenURL: jest.fn(),
-  getInitialURL: jest.fn(),
-}));
+import * as Linking from 'expo-linking';
 
 describe('Deep Linking', () => {
   beforeEach(() => {
