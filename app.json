@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Nexa: Cognitive Disorders Support App",
-    "slug": "nexa-cognitive-disorders-support-ykokwhv",
+    "name": "NeuroNexa: Cognitive Disorders Support",
+    "slug": "neuronexa-cognitive-disorders-support",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -112,17 +112,11 @@
     "extra": {
       "router": {
         "origin": "https://rork.com/"
-      },
-      "eas": {
-        "projectId": "60c48ad5-c1e8-41cf-ad9f-05b8d61377c0"
       }
     },
     "owner": "litmoncloud",
     "runtimeVersion": {
       "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/60c48ad5-c1e8-41cf-ad9f-05b8d61377c0"
     }
   }
 }
