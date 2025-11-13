@@ -1,7 +1,7 @@
 # Terms of Service Implementation
 
 ## Overview
-NeuroNexa now requires users to accept the Terms of Service and Privacy Policy before using the app. This implementation ensures legal compliance and user awareness of app policies.
+Nexa now requires users to accept the Terms of Service and Privacy Policy before using the app. This implementation ensures legal compliance and user awareness of app policies.
 
 ## User Flow
 
@@ -41,7 +41,7 @@ App Launch → Main App (if terms already accepted)
 #### Data Storage
 Terms acceptance is stored in two places:
 
-1. **AsyncStorage** (`@neuronexa_terms_accepted`)
+1. **AsyncStorage** (`@nexa_terms_accepted`)
    ```json
    {
      "accepted": true,
@@ -81,10 +81,10 @@ Users can view legal documents at any time from Settings:
 - Data Retention Policy
 
 #### Document URLs
-- Terms: `https://neuronexa.app/legal/terms`
-- Privacy: `https://neuronexa.app/legal/privacy`
-- Accessibility: `https://neuronexa.app/legal/accessibility`
-- Data Retention: `https://neuronexa.app/legal/data-retention`
+- Terms: `https://nexa.app/legal/terms`
+- Privacy: `https://nexa.app/legal/privacy`
+- Accessibility: `https://nexa.app/legal/accessibility`
+- Data Retention: `https://nexa.app/legal/data-retention`
 
 ## Key Features
 
@@ -215,13 +215,13 @@ A: Yes, you can delete your data and stop using the app at any time.
 A: Tap "View Terms" or "View Privacy Policy" on the agreement screen, or access from Settings.
 
 ### Contact
-For legal questions: legal@neuronexa.app
-For privacy questions: privacy@neuronexa.app
-For support: support@neuronexa.app
+For legal questions: legal@nexa.app
+For privacy questions: privacy@nexa.app
+For support: support@nexa.app
 
 ## Conclusion
 
-The Terms of Service implementation ensures NeuroNexa is legally compliant while maintaining a user-friendly experience. Users are informed about their rights and our practices before using the app, and can access legal documents at any time from Settings.
+The Terms of Service implementation ensures Nexa is legally compliant while maintaining a user-friendly experience. Users are informed about their rights and our practices before using the app, and can access legal documents at any time from Settings.
 
 The implementation is:
 - ✅ Legally compliant

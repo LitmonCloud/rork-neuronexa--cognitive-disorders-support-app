@@ -1,4 +1,4 @@
-# NeuroNexa — 100% App Store Readiness Implementation Summary
+# Nexa — 100% App Store Readiness Implementation Summary
 
 **Date:** 2025-10-02  
 **Status:** Documentation Phase Complete (78-82% → 85%)  
@@ -8,7 +8,7 @@
 
 ## 🎯 What Was Accomplished
 
-I've taken NeuroNexa from ~80% to **85% App Store readiness** by creating comprehensive documentation, legal compliance files, and submission guides. Here's what's been delivered:
+I've taken Nexa from ~80% to **85% App Store readiness** by creating comprehensive documentation, legal compliance files, and submission guides. Here's what's been delivered:
 
 ### ✅ Completed Deliverables
 
@@ -116,7 +116,7 @@ I've taken NeuroNexa from ~80% to **85% App Store readiness** by creating compre
 ### What's Missing ❌ (15%)
 
 **Critical for Submission (Required)**
-- ❌ Legal docs hosting (need neuronexa.app domain)
+- ❌ Legal docs hosting (need nexa.app domain)
 - ❌ Screenshots (7 per device class)
 - ❌ Settings screen legal links
 - ❌ Asset validation script
@@ -213,8 +213,8 @@ I've taken NeuroNexa from ~80% to **85% App Store readiness** by creating compre
 
 1. **Host Legal Documents** (2 hours)
    ```bash
-   # Option 1: Purchase neuronexa.app domain
-   # Option 2: Use placeholder (e.g., your-domain.com/neuronexa)
+   # Option 1: Purchase nexa.app domain
+   # Option 2: Use placeholder (e.g., your-domain.com/nexa)
    
    # Deploy static site with:
    - legal/PRIVACY_POLICY.md → /legal/privacy
@@ -257,15 +257,15 @@ I've taken NeuroNexa from ~80% to **85% App Store readiness** by creating compre
    <View style={styles.section}>
      <Text style={styles.sectionTitle}>Legal</Text>
      
-     <TouchableOpacity onPress={() => Linking.openURL('https://neuronexa.app/legal/privacy')}>
+     <TouchableOpacity onPress={() => Linking.openURL('https://nexa.app/legal/privacy')}>
        <Text>Privacy Policy</Text>
      </TouchableOpacity>
      
-     <TouchableOpacity onPress={() => Linking.openURL('https://neuronexa.app/legal/terms')}>
+     <TouchableOpacity onPress={() => Linking.openURL('https://nexa.app/legal/terms')}>
        <Text>Terms of Service</Text>
      </TouchableOpacity>
      
-     <TouchableOpacity onPress={() => Linking.openURL('https://neuronexa.app/support')}>
+     <TouchableOpacity onPress={() => Linking.openURL('https://nexa.app/support')}>
        <Text>Support</Text>
      </TouchableOpacity>
    </View>
@@ -423,7 +423,7 @@ I've taken NeuroNexa from ~80% to **85% App Store readiness** by creating compre
 ## 🔥 Critical Blockers
 
 ### Must Resolve Before Submission
-1. **Legal Docs Hosting** — Need neuronexa.app domain or placeholder
+1. **Legal Docs Hosting** — Need nexa.app domain or placeholder
 2. **Screenshots** — Required by both stores
 3. **Settings Legal Links** — Required for compliance
 
@@ -471,7 +471,7 @@ npm install react-native-purchases posthog-react-native @sentry/react-native @su
 
 ## 🎉 Conclusion
 
-NeuroNexa is **85% ready for App Store submission**. With the comprehensive documentation now in place, you have two clear paths forward:
+Nexa is **85% ready for App Store submission**. With the comprehensive documentation now in place, you have two clear paths forward:
 
 1. **MVP (2-3 days):** Submit quickly with core features, iterate based on feedback
 2. **Full Production (2-3 weeks):** Launch with complete feature set, monetization, and analytics
@@ -491,7 +491,7 @@ The extra 2-3 weeks will result in:
 
 **Questions or need help with implementation?**
 
-Contact: support@neuronexa.app
+Contact: support@nexa.app
 
 ---
 

@@ -1,9 +1,9 @@
-# NeuroNexa — App Store Submission Guide
+# Nexa — App Store Submission Guide
 
 **Version:** 1.0.0  
 **Last Updated:** 2025-10-02
 
-This guide provides step-by-step instructions for submitting NeuroNexa to the Apple App Store and Google Play Store.
+This guide provides step-by-step instructions for submitting Nexa to the Apple App Store and Google Play Store.
 
 ---
 
@@ -12,9 +12,9 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
 ### Critical Requirements
 
 - [ ] **Legal Documents Live**
-  - [ ] Privacy Policy accessible at https://neuronexa.app/legal/privacy
-  - [ ] Terms of Service accessible at https://neuronexa.app/legal/terms
-  - [ ] Support page accessible at https://neuronexa.app/support
+  - [ ] Privacy Policy accessible at https://nexa.app/legal/privacy
+  - [ ] Terms of Service accessible at https://nexa.app/legal/terms
+  - [ ] Support page accessible at https://nexa.app/support
 
 - [ ] **App Store Assets**
   - [ ] App icon (1024×1024, no alpha)
@@ -51,13 +51,13 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
    - Click "My Apps" → "+" → "New App"
    - Fill in:
      - Platform: iOS
-     - Name: NeuroNexa
+     - Name: Nexa
      - Primary Language: English (U.S.)
-     - Bundle ID: `app.rork.neuronexa-cognitive-disorders-support-ykokwhv`
-     - SKU: `neuronexa-ios-001`
+     - Bundle ID: `app.rork.nexa-cognitive-disorders-support-ykokwhv`
+     - SKU: `nexa-ios-001`
 
 2. **App Information**
-   - **Name:** NeuroNexa
+   - **Name:** Nexa
    - **Subtitle:** Cognitive support that adapts to you
    - **Category:** Health & Fitness (Primary), Productivity (Secondary)
    - **Content Rights:** Check "Yes" (you own all rights)
@@ -77,7 +77,7 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
    **Premium Monthly:**
    - Type: Auto-Renewable Subscription
    - Reference Name: Premium Monthly
-   - Product ID: `neuronexa_premium_monthly`
+   - Product ID: `nexa_premium_monthly`
    - Subscription Group: Premium Access
    - Subscription Duration: 1 Month
    - Price: $9.99 USD
@@ -87,7 +87,7 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
    **Premium Yearly:**
    - Type: Auto-Renewable Subscription
    - Reference Name: Premium Yearly
-   - Product ID: `neuronexa_premium_yearly`
+   - Product ID: `nexa_premium_yearly`
    - Subscription Group: Premium Access
    - Subscription Duration: 1 Year
    - Price: $59.99 USD
@@ -97,14 +97,14 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
    **Lifetime Access:**
    - Type: Non-Consumable
    - Reference Name: Lifetime Access
-   - Product ID: `neuronexa_lifetime`
+   - Product ID: `nexa_lifetime`
    - Price: $149.99 USD
    - Localized Description: "One-time purchase for lifetime access to all premium features"
    - Review Screenshot: Upload screenshot showing premium features
 
 3. **Configure Subscription Group**
    - Name: Premium Access
-   - Subscription Group Display Name: NeuroNexa Premium
+   - Subscription Group Display Name: Nexa Premium
    - Add both monthly and yearly subscriptions to this group
 
 ### Step 3: Link Products to RevenueCat
@@ -119,9 +119,9 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
 3. **Add Products**
    - Go to "Products"
    - Add iOS products:
-     - `neuronexa_premium_monthly` → Link to `premium` entitlement
-     - `neuronexa_premium_yearly` → Link to `premium` entitlement
-     - `neuronexa_lifetime` → Link to `premium` entitlement
+     - `nexa_premium_monthly` → Link to `premium` entitlement
+     - `nexa_premium_yearly` → Link to `premium` entitlement
+     - `nexa_lifetime` → Link to `premium` entitlement
 
 4. **Get API Keys**
    - Go to "API Keys"
@@ -180,14 +180,14 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
    - Show key features: Nexa, tasks, breathing, accessibility
 
 4. **App Review Information**
-   - Contact: support@neuronexa.app
+   - Contact: support@nexa.app
    - Phone: +1 (555) 123-4567
-   - Demo Account: reviewer@neuronexa.app / ReviewAccess2025!
+   - Demo Account: reviewer@nexa.app / ReviewAccess2025!
    - Notes: Copy from `store/ios-metadata.md` → "Notes for Reviewer"
 
 5. **Version Information**
    - Version: 1.0.0
-   - Copyright: © 2025 NeuroNexa
+   - Copyright: © 2025 Nexa
    - What's New: Copy from `store/ios-metadata.md`
 
 6. **Age Rating**
@@ -222,7 +222,7 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
    - Go to [Google Play Console](https://play.google.com/console/)
    - Click "Create app"
    - Fill in:
-     - App name: NeuroNexa
+     - App name: Nexa
      - Default language: English (United States)
      - App or game: App
      - Free or paid: Free
@@ -242,10 +242,10 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
    - **Category:** Health & Fitness
    - **Tags:** ADHD, autism, cognitive support, task management, breathing, accessibility
    - **Contact details:**
-     - Email: support@neuronexa.app
-     - Website: https://neuronexa.app
+     - Email: support@nexa.app
+     - Website: https://nexa.app
      - Phone: +1 (555) 123-4567
-   - **Privacy Policy:** https://neuronexa.app/legal/privacy
+   - **Privacy Policy:** https://nexa.app/legal/privacy
 
 ### Step 2: Configure In-App Products
 
@@ -254,7 +254,7 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
 2. **Create Subscriptions**
 
    **Premium Monthly:**
-   - Product ID: `neuronexa_premium_monthly`
+   - Product ID: `nexa_premium_monthly`
    - Name: Premium Monthly
    - Description: "Unlock unlimited tasks, AI breakdowns, and advanced features"
    - Billing period: 1 month
@@ -262,7 +262,7 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
    - Free trial: 7 days
 
    **Premium Yearly:**
-   - Product ID: `neuronexa_premium_yearly`
+   - Product ID: `nexa_premium_yearly`
    - Name: Premium Yearly
    - Description: "Unlock unlimited tasks, AI breakdowns, and advanced features. Save 40%!"
    - Billing period: 1 year
@@ -272,7 +272,7 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
 3. **Create In-App Product**
 
    **Lifetime Access:**
-   - Product ID: `neuronexa_lifetime`
+   - Product ID: `nexa_lifetime`
    - Name: Lifetime Access
    - Description: "One-time purchase for lifetime access to all premium features"
    - Price: $149.99 USD
@@ -282,9 +282,9 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
 1. **Add Android Products in RevenueCat**
    - Go to RevenueCat Dashboard → "Products"
    - Add Google Play products:
-     - `neuronexa_premium_monthly` → Link to `premium` entitlement
-     - `neuronexa_premium_yearly` → Link to `premium` entitlement
-     - `neuronexa_lifetime` → Link to `premium` entitlement
+     - `nexa_premium_monthly` → Link to `premium` entitlement
+     - `nexa_premium_yearly` → Link to `premium` entitlement
+     - `nexa_lifetime` → Link to `premium` entitlement
 
 2. **Configure Google Play Service Credentials**
    - Follow RevenueCat's guide to link Google Play
@@ -331,7 +331,7 @@ This guide provides step-by-step instructions for submitting NeuroNexa to the Ap
      - No data used for advertising
 
 2. **Privacy Policy**
-   - Link: https://neuronexa.app/legal/privacy
+   - Link: https://nexa.app/legal/privacy
 
 ### Step 7: Submit for Review
 
@@ -467,8 +467,8 @@ If you encounter issues during submission:
 **Google Play Console:**
 - Support: https://support.google.com/googleplay/android-developer/
 
-**NeuroNexa Team:**
-- Email: support@neuronexa.app
+**Nexa Team:**
+- Email: support@nexa.app
 
 ---
 

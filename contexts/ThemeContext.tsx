@@ -95,7 +95,7 @@ export const darkColors = {
   },
 };
 
-const THEME_STORAGE_KEY = '@neuronexa_theme_mode';
+const THEME_STORAGE_KEY = '@nexa_theme_mode';
 
 export const [ThemeProvider, useTheme] = createContextHook(() => {
   const systemColorScheme = useColorScheme();

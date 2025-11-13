@@ -10,7 +10,7 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useRouter, Redirect } from 'expo-router';
 import { Copy, Share2, RefreshCw } from 'lucide-react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { useCaregivers } from '@/contexts/CaregiverContext';
@@ -23,15 +23,20 @@ import {
 } from '@/utils/inviteCodeGenerator';
 import * as Clipboard from 'expo-clipboard';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 
 export default function InviteGenerateScreen() {
   const router = useRouter();
   const { colors } = useTheme();
+  const { profile, isLoading: profileLoading } = useUserProfile();
   const { generateInvite, activeInvite } = useCaregivers();
   const [loading, setLoading] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState<number>(0);
   const [code, setCode] = useState<string>('');
   const [deepLink, setDeepLink] = useState<string>('');
+
+  // Access control: Only Cognitive Support Users and Caregivers can access this screen
+  const isMemoryPatient = profile?.role === 'patient' && profile?.patientType === 'memory';
 
   useEffect(() => {
     if (activeInvite) {
@@ -322,6 +327,20 @@ export default function InviteGenerateScreen() {
       marginBottom: 8,
     },
   });
+
+  // Access control: Redirect Memory Support Users
+  if (profileLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (isMemoryPatient) {
+    return <Redirect href="/(tabs)" />;
+  }
 
   if (loading) {
     return (

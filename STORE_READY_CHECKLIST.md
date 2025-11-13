@@ -1,4 +1,4 @@
-# NeuroNexa — Store Readiness Checklist
+# Nexa — Store Readiness Checklist
 
 **Version:** 1.0.0  
 **Last Updated:** 2025-10-02  
@@ -14,14 +14,14 @@ This is your final pre-submission checklist. Complete all items before submittin
 
 - [x] Privacy Policy created (`legal/PRIVACY_POLICY.md`)
 - [x] Terms of Service created (`legal/TERMS_OF_SERVICE.md`)
-- [ ] **Host legal docs at neuronexa.app domain**
+- [ ] **Host legal docs at nexa.app domain**
   - [ ] Purchase domain or use placeholder
   - [ ] Deploy static site (Netlify/Vercel/GitHub Pages)
   - [ ] Verify URLs are accessible:
-    - [ ] https://neuronexa.app/legal/privacy
-    - [ ] https://neuronexa.app/legal/terms
-    - [ ] https://neuronexa.app/legal/accessibility
-    - [ ] https://neuronexa.app/support
+    - [ ] https://nexa.app/legal/privacy
+    - [ ] https://nexa.app/legal/terms
+    - [ ] https://nexa.app/legal/accessibility
+    - [ ] https://nexa.app/support
 - [ ] Update `.env` with actual URLs
 - [ ] Test all links in Settings screen
 
@@ -342,7 +342,7 @@ This is your final pre-submission checklist. Complete all items before submittin
 ### Week 1: Critical Path (Days 1-3)
 
 **Day 1: Legal & Hosting (4-6 hours)**
-- [ ] Purchase neuronexa.app domain (or use placeholder)
+- [ ] Purchase nexa.app domain (or use placeholder)
 - [ ] Deploy legal docs to static site
 - [ ] Update environment variables
 - [ ] Test all links

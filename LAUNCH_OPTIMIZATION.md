@@ -1,4 +1,4 @@
-# NeuroNexa Launch Optimization Guide
+# Nexa Launch Optimization Guide
 
 **Last Updated:** 2025-10-03  
 **Status:** Production Optimized  
@@ -227,7 +227,7 @@ if (Platform.OS === 'android') {
 // Optimize for web
 if (Platform.OS === 'web') {
   // Use web-specific optimizations
-  document.title = 'NeuroNexa';
+  document.title = 'Nexa';
 }
 ```
 

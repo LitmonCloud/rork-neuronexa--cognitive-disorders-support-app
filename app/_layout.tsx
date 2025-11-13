@@ -111,21 +111,26 @@ function RootLayoutNav() {
     const currentRoute = segments[0];
     const publicRoutes = ['terms-agreement', 'onboarding', 'paywall'];
     const caregiverRoutes = ['caregiver-dashboard', 'caregiver-hub', 'caregiver-task-manager', 'caregiver-patient-tasks', 'caregiver-location-monitor'];
-    const sharedRoutes = ['(tabs)', 'task', 'notifications', 'notification-settings', 'finger-trace', 'emergency-contacts', 'memory-journal', 'invite-generate', 'invite-redeem', 'patient-generate-code', 'patient-location'];
-    
+    const sharedRoutes = ['(tabs)', 'task', 'notifications', 'notification-settings', 'finger-trace', 'emergency-contacts', 'memory-journal', 'patient-generate-code', 'patient-location'];
+    const cognitiveOnlyRoutes = ['invite-generate', 'invite-redeem']; // Only for Cognitive Support Users and Caregivers
+
     const isPublicRoute = publicRoutes.includes(currentRoute);
     const isCaregiverRoute = caregiverRoutes.includes(currentRoute);
     const isSharedRoute = sharedRoutes.includes(currentRoute);
+    const isCognitiveOnlyRoute = cognitiveOnlyRoutes.includes(currentRoute);
+    const isMemoryPatient = profile?.role === 'patient' && profile?.patientType === 'memory';
 
-    logger.debug('Navigation check', { 
-      currentRoute, 
-      termsAccepted, 
-      onboardingCompleted, 
-      isCaregiver, 
+    logger.debug('Navigation check', {
+      currentRoute,
+      termsAccepted,
+      onboardingCompleted,
+      isCaregiver,
       requiresSubscription,
       isPublicRoute,
       isCaregiverRoute,
-      isSharedRoute
+      isSharedRoute,
+      isCognitiveOnlyRoute,
+      isMemoryPatient
     });
 
     if (!termsAccepted && currentRoute !== 'terms-agreement') {
@@ -153,13 +158,19 @@ function RootLayoutNav() {
         return;
       }
 
-      if (!isPublicRoute && !isCaregiverRoute && !isSharedRoute && !currentRoute) {
+      if (isMemoryPatient && isCognitiveOnlyRoute) {
+        logger.info('Memory Support User blocked from cognitive-only route, redirecting to tabs');
+        router.replace('/(tabs)');
+        return;
+      }
+
+      if (!isPublicRoute && !isCaregiverRoute && !isSharedRoute && !isCognitiveOnlyRoute && !currentRoute) {
         logger.info('Navigating to default route', { isCaregiver });
         router.replace(isCaregiver ? '/caregiver-dashboard' : '/(tabs)');
         return;
       }
     }
-  }, [isInitialized, termsAccepted, onboardingCompleted, isCaregiver, requiresSubscription, segments, isLoading, router]);
+  }, [isInitialized, termsAccepted, onboardingCompleted, isCaregiver, requiresSubscription, segments, isLoading, router, profile]);
 
   if (!isInitialized || isLoading || termsAccepted === null) {
     return (

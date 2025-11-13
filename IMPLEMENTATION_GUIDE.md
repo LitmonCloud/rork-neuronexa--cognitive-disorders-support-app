@@ -1,4 +1,4 @@
-# NeuroNexa - Complete Implementation Guide
+# Nexa - Complete Implementation Guide
 
 ## 🎉 Implementation Status: **COMPLETE**
 

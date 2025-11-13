@@ -1,5 +1,30 @@
 import '@testing-library/jest-native/extend-expect';
 
+// Must be BEFORE any react-native imports
+jest.mock('react-native/Libraries/StyleSheet/StyleSheetExports', () => {
+  const PixelRatio = {
+    get: () => 2,
+    getFontScale: () => 1,
+    getPixelSizeForLayoutSize: (layoutSize) => layoutSize * 2,
+    roundToNearestPixel: (layoutSize) => Math.round(layoutSize),
+  };
+
+  return {
+    __esModule: true,
+    default: {
+      create: (styles) => styles,
+      flatten: (styles) => styles,
+      compose: (...styles) => Object.assign({}, ...styles),
+      hairlineWidth: 1,
+      absoluteFill: { position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 },
+      absoluteFillObject: { position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 },
+    },
+    hairlineWidth: 1,
+    absoluteFill: 0,
+    absoluteFillObject: { position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 },
+  };
+});
+
 jest.mock('@react-native-async-storage/async-storage', () => ({
   setItem: jest.fn(() => Promise.resolve()),
   getItem: jest.fn(() => Promise.resolve(null)),
@@ -114,6 +139,18 @@ jest.mock('expo-notifications', () => ({
   addNotificationReceivedListener: jest.fn(() => ({ remove: jest.fn() })),
   addNotificationResponseReceivedListener: jest.fn(() => ({ remove: jest.fn() })),
 }));
+
+// Mock Dimensions for react-native main export
+jest.doMock('react-native', () => {
+  const RN = jest.requireActual('react-native');
+  return Object.defineProperty(RN, 'Dimensions', {
+    get: () => ({
+      get: jest.fn(() => ({ width: 375, height: 667 })),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    }),
+  });
+});
 
 global.console = {
   ...console,

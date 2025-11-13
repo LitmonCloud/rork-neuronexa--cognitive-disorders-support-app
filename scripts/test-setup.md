@@ -1,8 +1,8 @@
-# NeuroNexa Testing Setup Guide
+# Nexa Testing Setup Guide
 
 ## Overview
 
-This guide explains how to set up comprehensive testing for NeuroNexa, including unit tests, integration tests, and E2E tests.
+This guide explains how to set up comprehensive testing for Nexa, including unit tests, integration tests, and E2E tests.
 
 ## Current Status
 
@@ -236,8 +236,8 @@ module.exports = {
   apps: {
     'ios.debug': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/NeuroNexa.app',
-      build: 'xcodebuild -workspace ios/NeuroNexa.xcworkspace -scheme NeuroNexa -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/Nexa.app',
+      build: 'xcodebuild -workspace ios/Nexa.xcworkspace -scheme Nexa -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'android.debug': {
       type: 'android.apk',
@@ -287,7 +287,7 @@ describe('Onboarding Flow', () => {
   });
 
   it('should complete onboarding', async () => {
-    await expect(element(by.text('Welcome to NeuroNexa'))).toBeVisible();
+    await expect(element(by.text('Welcome to Nexa'))).toBeVisible();
     
     await element(by.id('next-button')).tap();
     await expect(element(by.text('Meet Nexa'))).toBeVisible();

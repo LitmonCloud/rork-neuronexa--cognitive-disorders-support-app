@@ -1,4 +1,4 @@
-# NeuroNexa — Final Readiness Report
+# Nexa — Final Readiness Report
 
 **Date:** 2025-10-02  
 **Status:** 98% App Store Ready 🎉  
@@ -8,7 +8,7 @@
 
 ## 🎯 Executive Summary
 
-NeuroNexa has progressed from 95% to **98% App Store readiness**. The app is now feature-complete, well-tested, optimized, and documented. All critical systems are in place, and the remaining 2% consists of user-dependent actions (hosting legal docs, capturing screenshots, and building with EAS).
+Nexa has progressed from 95% to **98% App Store readiness**. The app is now feature-complete, well-tested, optimized, and documented. All critical systems are in place, and the remaining 2% consists of user-dependent actions (hosting legal docs, capturing screenshots, and building with EAS).
 
 ---
 
@@ -198,7 +198,7 @@ NeuroNexa has progressed from 95% to **98% App Store readiness**. The app is now
 ### Critical (Required for Submission)
 
 **1. Host Legal Documents (2-3 hours)**
-- [ ] Purchase neuronexa.app domain OR use GitHub Pages
+- [ ] Purchase nexa.app domain OR use GitHub Pages
 - [ ] Deploy legal documents
 - [ ] Update environment variables with actual URLs
 - [ ] Test all links in Settings screen
@@ -382,7 +382,7 @@ NeuroNexa has progressed from 95% to **98% App Store readiness**. The app is now
 ### Immediate (User Actions Required)
 
 1. **Host Legal Documents**
-   - Choose hosting solution (neuronexa.app or GitHub Pages)
+   - Choose hosting solution (nexa.app or GitHub Pages)
    - Deploy legal docs
    - Update `.env` with actual URLs
 
@@ -458,7 +458,7 @@ NeuroNexa has progressed from 95% to **98% App Store readiness**. The app is now
 - ⚠️ Submit to stores (user action)
 
 **Recommendation:**
-NeuroNexa is **ready for TestFlight/Internal Testing**. Complete the 5 remaining user actions over the next 2-3 weeks, then submit to both stores. The app is feature-complete, well-tested, optimized, and documented. All systems are production-ready.
+Nexa is **ready for TestFlight/Internal Testing**. Complete the 5 remaining user actions over the next 2-3 weeks, then submit to both stores. The app is feature-complete, well-tested, optimized, and documented. All systems are production-ready.
 
 ---
 

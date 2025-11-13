@@ -36,7 +36,7 @@ const REQUIRED_ASSETS = [
   },
 ];
 
-console.log('🔍 Validating NeuroNexa assets...\n');
+console.log('🔍 Validating Nexa assets...\n');
 
 let hasErrors = false;
 let warnings = [];

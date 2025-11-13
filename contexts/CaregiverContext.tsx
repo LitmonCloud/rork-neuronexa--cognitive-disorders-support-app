@@ -17,9 +17,9 @@ export interface Caregiver {
   createdAt: string;
 }
 
-const CAREGIVERS_KEY = '@neuronexa_caregivers';
-const NOTIFICATIONS_KEY = '@neuronexa_caregiver_notifications';
-const INVITES_KEY = '@neuronexa_caregiver_invites';
+const CAREGIVERS_KEY = '@nexa_caregivers';
+const NOTIFICATIONS_KEY = '@nexa_caregiver_notifications';
+const INVITES_KEY = '@nexa_caregiver_invites';
 
 async function loadCaregivers(): Promise<Caregiver[]> {
   try {

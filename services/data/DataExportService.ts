@@ -67,7 +67,7 @@ class DataExportService {
       const data = await this.exportAllData();
       const json = JSON.stringify(data, null, 2);
       
-      const fileName = `neuronexa_export_${Date.now()}.json`;
+      const fileName = `nexa_export_${Date.now()}.json`;
       const filePath = `${FileSystem.documentDirectory}${fileName}`;
       
       await FileSystem.writeAsStringAsync(filePath, json);
@@ -102,7 +102,7 @@ class DataExportService {
       });
       
       const csv = csvLines.join('\n');
-      const fileName = `neuronexa_export_${Date.now()}.csv`;
+      const fileName = `nexa_export_${Date.now()}.csv`;
       const filePath = `${FileSystem.documentDirectory}${fileName}`;
       
       await FileSystem.writeAsStringAsync(filePath, csv);
@@ -130,7 +130,7 @@ class DataExportService {
 
       await Sharing.shareAsync(filePath, {
         mimeType: format === 'json' ? 'application/json' : 'text/csv',
-        dialogTitle: 'Export Your NeuroNexa Data',
+        dialogTitle: 'Export Your Nexa Data',
       });
 
       console.log('[DataExport] Data shared successfully');

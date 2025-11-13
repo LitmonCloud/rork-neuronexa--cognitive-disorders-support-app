@@ -10,8 +10,8 @@ import {
   TooltipConfig 
 } from '@/types/funnel';
 
-const FUNNEL_STORAGE_KEY = '@neuronexa_funnel_metrics';
-const SESSION_ID_KEY = '@neuronexa_session_id';
+const FUNNEL_STORAGE_KEY = '@nexa_funnel_metrics';
+const SESSION_ID_KEY = '@nexa_session_id';
 
 function generateSessionId(): string {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;

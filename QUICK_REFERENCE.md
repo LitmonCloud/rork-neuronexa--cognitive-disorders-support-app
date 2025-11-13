@@ -1,4 +1,4 @@
-# NeuroNexa - Quick Reference Card
+# Nexa - Quick Reference Card
 
 ## 🚀 Getting Started (30 seconds)
 
@@ -235,7 +235,7 @@ console.log('Query status:', { data, isLoading, error });
 ### **AsyncStorage**
 ```typescript
 // View stored data
-const tasks = await AsyncStorage.getItem('@neuronexa_tasks');
+const tasks = await AsyncStorage.getItem('@nexa_tasks');
 console.log('Stored tasks:', JSON.parse(tasks));
 
 // Clear storage
@@ -304,7 +304,7 @@ await AsyncStorage.clear();
 ```bash
 # .env
 AI_PROVIDER=rork                    # AI provider
-EXPO_PUBLIC_APP_NAME=NeuroNexa      # App name
+EXPO_PUBLIC_APP_NAME=Nexa      # App name
 EXPO_PUBLIC_DEBUG_MODE=true         # Debug mode
 ```
 

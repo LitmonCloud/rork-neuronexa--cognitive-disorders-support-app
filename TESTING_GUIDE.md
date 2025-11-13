@@ -1,4 +1,4 @@
-# NeuroNexa Testing Guide
+# Nexa Testing Guide
 
 **Last Updated:** 2025-10-03  
 **Test Coverage:** 85%+  
@@ -8,7 +8,7 @@
 
 ## 📋 Overview
 
-This guide covers all testing strategies, frameworks, and best practices for NeuroNexa.
+This guide covers all testing strategies, frameworks, and best practices for Nexa.
 
 ---
 
@@ -260,7 +260,7 @@ module.exports = {
   apps: {
     'ios.debug': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/NeuroNexa.app',
+      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/Nexa.app',
     },
   },
   devices: {

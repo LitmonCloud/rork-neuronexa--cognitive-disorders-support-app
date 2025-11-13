@@ -1,11 +1,19 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react-native';
 import BreathingExercise from '@/components/BreathingExercise';
-import { ThemeProvider } from '@/contexts/ThemeContext';
+import { MockThemeProvider, MockUserProfileProvider, TestWrapper } from '../__mocks__/contextMocks';
 import { BreathingPattern } from '@/types/mentalHealth';
 
 const renderWithTheme = (component: React.ReactElement) => {
-  return render(<ThemeProvider>{component}</ThemeProvider>);
+  return render(
+    <TestWrapper>
+      <MockThemeProvider>
+        <MockUserProfileProvider>
+          {component}
+        </MockUserProfileProvider>
+      </MockThemeProvider>
+    </TestWrapper>
+  );
 };
 
 describe('BreathingExercise', () => {

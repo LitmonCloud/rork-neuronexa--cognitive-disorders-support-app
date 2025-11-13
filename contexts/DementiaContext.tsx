@@ -13,13 +13,13 @@ import {
   OrientationInfo,
 } from '@/types/dementia';
 
-const DEMENTIA_SETTINGS_KEY = '@neuronexa_dementia_settings';
-const EMERGENCY_CONTACTS_KEY = '@neuronexa_emergency_contacts';
-const MEDICATIONS_KEY = '@neuronexa_medications';
-const MEMORY_JOURNAL_KEY = '@neuronexa_memory_journal';
-const SAFE_ZONES_KEY = '@neuronexa_safe_zones';
-const ROUTINE_ANCHORS_KEY = '@neuronexa_routine_anchors';
-const REPETITIVE_QUESTIONS_KEY = '@neuronexa_repetitive_questions';
+const DEMENTIA_SETTINGS_KEY = '@nexa_dementia_settings';
+const EMERGENCY_CONTACTS_KEY = '@nexa_emergency_contacts';
+const MEDICATIONS_KEY = '@nexa_medications';
+const MEMORY_JOURNAL_KEY = '@nexa_memory_journal';
+const SAFE_ZONES_KEY = '@nexa_safe_zones';
+const ROUTINE_ANCHORS_KEY = '@nexa_routine_anchors';
+const REPETITIVE_QUESTIONS_KEY = '@nexa_repetitive_questions';
 
 async function loadDementiaSettings(): Promise<DementiaSettings> {
   try {

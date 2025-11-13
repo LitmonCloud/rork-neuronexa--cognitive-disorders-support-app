@@ -11,13 +11,13 @@ module.exports = {
   apps: {
     'ios.debug': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/NeuroNexa.app',
-      build: 'xcodebuild -workspace ios/NeuroNexa.xcworkspace -scheme NeuroNexa -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
+      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/Nexa.app',
+      build: 'xcodebuild -workspace ios/Nexa.xcworkspace -scheme Nexa -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
     },
     'ios.release': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/NeuroNexa.app',
-      build: 'xcodebuild -workspace ios/NeuroNexa.xcworkspace -scheme NeuroNexa -configuration Release -sdk iphonesimulator -derivedDataPath ios/build',
+      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/Nexa.app',
+      build: 'xcodebuild -workspace ios/Nexa.xcworkspace -scheme Nexa -configuration Release -sdk iphonesimulator -derivedDataPath ios/build',
     },
     'android.debug': {
       type: 'android.apk',

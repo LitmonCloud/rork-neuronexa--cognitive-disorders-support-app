@@ -1,7 +1,7 @@
 # Notification System Documentation
 
 ## Overview
-A comprehensive, production-ready notification system for the NeuroNexa app with support for in-app notifications, push notifications, and granular user preferences.
+A comprehensive, production-ready notification system for the Nexa app with support for in-app notifications, push notifications, and granular user preferences.
 
 ## Features
 
@@ -280,9 +280,9 @@ addNotification({
 ## Storage
 
 ### AsyncStorage Keys
-- `@neuronexa_notifications` - Notification history
-- `@neuronexa_notification_preferences` - User preferences
-- `@neuronexa_push_token` - Push notification token
+- `@nexa_notifications` - Notification history
+- `@nexa_notification_preferences` - User preferences
+- `@nexa_push_token` - Push notification token
 
 ### Data Persistence
 - Notifications are persisted across app restarts

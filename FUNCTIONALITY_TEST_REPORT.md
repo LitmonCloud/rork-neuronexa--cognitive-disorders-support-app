@@ -1,8 +1,8 @@
-# NeuroNexa - Functionality Test Report
+# Nexa - Functionality Test Report
 
 ## Executive Summary
 
-This report documents the comprehensive functionality test suite created for the NeuroNexa application. The test suite covers all major features and user flows.
+This report documents the comprehensive functionality test suite created for the Nexa application. The test suite covers all major features and user flows.
 
 **Test Suite Created:** January 2025  
 **Total Test Files:** 6 functionality test suites  
@@ -289,7 +289,7 @@ When features change:
 
 ## Conclusion
 
-The functionality test suite provides comprehensive coverage of all major features in the NeuroNexa application. With 34 tests across 6 domains, the suite validates:
+The functionality test suite provides comprehensive coverage of all major features in the Nexa application. With 34 tests across 6 domains, the suite validates:
 
 - ✅ Core user flows
 - ✅ Data persistence

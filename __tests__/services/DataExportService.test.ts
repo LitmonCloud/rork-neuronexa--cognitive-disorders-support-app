@@ -35,7 +35,7 @@ describe('DataExportService', () => {
 
     const filePath = await dataExport.exportAsJSON();
 
-    expect(filePath).toContain('neuronexa_export_');
+    expect(filePath).toContain('nexa_export_');
     expect(filePath).toContain('.json');
     expect(FileSystem.writeAsStringAsync).toHaveBeenCalled();
   });
@@ -46,7 +46,7 @@ describe('DataExportService', () => {
 
     const filePath = await dataExport.exportAsCSV();
 
-    expect(filePath).toContain('neuronexa_export_');
+    expect(filePath).toContain('nexa_export_');
     expect(filePath).toContain('.csv');
     expect(FileSystem.writeAsStringAsync).toHaveBeenCalled();
   });

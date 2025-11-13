@@ -4,8 +4,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { Streak, Achievement, ACHIEVEMENTS } from '@/types/retention';
 
-const STREAK_KEY = '@neuronexa_streak';
-const ACHIEVEMENTS_KEY = '@neuronexa_achievements';
+const STREAK_KEY = '@nexa_streak';
+const ACHIEVEMENTS_KEY = '@nexa_achievements';
 
 async function loadStreak(): Promise<Streak> {
   try {

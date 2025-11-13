@@ -1,6 +1,6 @@
 # Legal Documents Deployment Guide
 
-This guide walks you through deploying NeuroNexa's legal documents to production.
+This guide walks you through deploying Nexa's legal documents to production.
 
 ---
 
@@ -13,10 +13,10 @@ You have **4 legal documents** ready to deploy:
 4. Data Retention Policy
 
 **Target URLs:**
-- https://neuronexa.app/legal/privacy
-- https://neuronexa.app/legal/terms
-- https://neuronexa.app/legal/accessibility
-- https://neuronexa.app/legal/data-retention
+- https://nexa.app/legal/privacy
+- https://nexa.app/legal/terms
+- https://nexa.app/legal/accessibility
+- https://nexa.app/legal/data-retention
 
 ---
 
@@ -51,7 +51,7 @@ netlify deploy --prod
 
 4. **Configure custom domain**
 - Go to Netlify dashboard
-- Add custom domain: `neuronexa.app`
+- Add custom domain: `nexa.app`
 - Configure DNS records
 - SSL will be automatic
 
@@ -94,7 +94,7 @@ vercel --prod
 
 4. **Configure custom domain**
 - Go to Vercel dashboard
-- Add domain: `neuronexa.app`
+- Add domain: `nexa.app`
 - Configure DNS records
 - SSL will be automatic
 
@@ -124,8 +124,8 @@ vercel --prod
 
 1. **Create a new repository**
 ```bash
-# Create repo: neuronexa-legal
-gh repo create neuronexa-legal --public
+# Create repo: nexa-legal
+gh repo create nexa-legal --public
 ```
 
 2. **Push legal directory**
@@ -134,7 +134,7 @@ cd legal
 git init
 git add .
 git commit -m "Initial legal documents"
-git remote add origin https://github.com/[username]/neuronexa-legal.git
+git remote add origin https://github.com/[username]/nexa-legal.git
 git push -u origin main
 ```
 
@@ -142,12 +142,12 @@ git push -u origin main
 - Go to repository Settings
 - Navigate to Pages section
 - Source: Deploy from main branch
-- Custom domain: `neuronexa.app`
+- Custom domain: `nexa.app`
 
 4. **Configure DNS**
 Add CNAME record:
 ```
-CNAME neuronexa.app [username].github.io
+CNAME nexa.app [username].github.io
 ```
 
 5. **Wait for SSL**
@@ -167,23 +167,23 @@ GitHub will automatically provision SSL (may take a few minutes)
 
 1. **Create S3 bucket**
 ```bash
-aws s3 mb s3://neuronexa-legal
+aws s3 mb s3://nexa-legal
 ```
 
 2. **Upload files**
 ```bash
 cd legal
-aws s3 sync . s3://neuronexa-legal --acl public-read
+aws s3 sync . s3://nexa-legal --acl public-read
 ```
 
 3. **Enable static website hosting**
 ```bash
-aws s3 website s3://neuronexa-legal --index-document index.html
+aws s3 website s3://nexa-legal --index-document index.html
 ```
 
 4. **Create CloudFront distribution**
 - Origin: S3 bucket
-- Custom domain: neuronexa.app
+- Custom domain: nexa.app
 - SSL certificate: Request via ACM
 
 5. **Configure DNS**
@@ -261,28 +261,28 @@ Once you've chosen a hosting provider, configure your DNS:
 ### For Netlify
 ```
 Type: CNAME
-Name: neuronexa.app
+Name: nexa.app
 Value: [your-site].netlify.app
 ```
 
 ### For Vercel
 ```
 Type: CNAME
-Name: neuronexa.app
+Name: nexa.app
 Value: cname.vercel-dns.com
 ```
 
 ### For GitHub Pages
 ```
 Type: CNAME
-Name: neuronexa.app
+Name: nexa.app
 Value: [username].github.io
 ```
 
 ### For CloudFront
 ```
 Type: CNAME
-Name: neuronexa.app
+Name: nexa.app
 Value: [distribution-id].cloudfront.net
 ```
 
@@ -295,10 +295,10 @@ After deploying, verify everything works:
 ### 1. Test All URLs
 ```bash
 # Test each URL
-curl -I https://neuronexa.app/legal/privacy
-curl -I https://neuronexa.app/legal/terms
-curl -I https://neuronexa.app/legal/accessibility
-curl -I https://neuronexa.app/legal/data-retention
+curl -I https://nexa.app/legal/privacy
+curl -I https://nexa.app/legal/terms
+curl -I https://nexa.app/legal/accessibility
+curl -I https://nexa.app/legal/data-retention
 ```
 
 Expected response: `200 OK`
@@ -324,10 +324,10 @@ Expected response: `200 OK`
 ### 5. Update Environment Variables
 ```bash
 # Update .env file
-EXPO_PUBLIC_PRIVACY_POLICY_URL=https://neuronexa.app/legal/privacy
-EXPO_PUBLIC_TERMS_URL=https://neuronexa.app/legal/terms
-EXPO_PUBLIC_ACCESSIBILITY_URL=https://neuronexa.app/legal/accessibility
-EXPO_PUBLIC_DATA_RETENTION_URL=https://neuronexa.app/legal/data-retention
+EXPO_PUBLIC_PRIVACY_POLICY_URL=https://nexa.app/legal/privacy
+EXPO_PUBLIC_TERMS_URL=https://nexa.app/legal/terms
+EXPO_PUBLIC_ACCESSIBILITY_URL=https://nexa.app/legal/accessibility
+EXPO_PUBLIC_DATA_RETENTION_URL=https://nexa.app/legal/data-retention
 ```
 
 ### 6. Update App Store Metadata

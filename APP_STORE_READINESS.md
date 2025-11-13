@@ -1,4 +1,4 @@
-# NeuroNexa — App Store Readiness Report
+# Nexa — App Store Readiness Report
 
 **Generated:** 2025-10-02  
 **Current Status:** 78-82% → Target: 100%
@@ -7,7 +7,7 @@
 
 ## 📊 Executive Summary
 
-NeuroNexa is a cognitive support application designed for individuals with ADHD, autism, and other cognitive differences. The app features "Nexa," a personalized AI coach that learns user habits and adapts support strategies.
+Nexa is a cognitive support application designed for individuals with ADHD, autism, and other cognitive differences. The app features "Nexa," a personalized AI coach that learns user habits and adapts support strategies.
 
 **Current Readiness: 78-82%**
 
@@ -45,7 +45,7 @@ NeuroNexa is a cognitive support application designed for individuals with ADHD,
 | Error boundary | ✅ Complete | Global error handler with Sentry hooks |
 
 **Blockers:**
-- Legal docs need to be hosted at neuronexa.app domain
+- Legal docs need to be hosted at nexa.app domain
 - Icons need validation script to verify dimensions
 
 ---
@@ -134,7 +134,7 @@ NeuroNexa is a cognitive support application designed for individuals with ADHD,
 | Screenshots | ❌ Not started | Required for submission |
 
 **Blockers:**
-- Need to host legal docs at neuronexa.app
+- Need to host legal docs at nexa.app
 - Need to generate screenshots
 
 **Estimated Time:** 4-6 hours
@@ -210,7 +210,7 @@ NeuroNexa is a cognitive support application designed for individuals with ADHD,
 ### Critical Path (Must Do Before Submission)
 
 1. **Host Legal Documents** (2 hours)
-   - Purchase neuronexa.app domain (or use placeholder)
+   - Purchase nexa.app domain (or use placeholder)
    - Deploy static site with legal docs
    - Update URLs in app.json and Settings
 
@@ -308,7 +308,7 @@ NeuroNexa is a cognitive support application designed for individuals with ADHD,
 ### One-Time Costs
 - Apple Developer Program: $99/year
 - Google Play Developer: $25 (one-time)
-- Domain (neuronexa.app): $12/year
+- Domain (nexa.app): $12/year
 - **Total:** ~$136/year
 
 ### Monthly Costs (Production)
@@ -424,7 +424,7 @@ NeuroNexa is a cognitive support application designed for individuals with ADHD,
 
 **Next Action:** Choose Option A (MVP) or Option B (Full) and begin implementation.
 
-**Questions?** Contact support@neuronexa.app
+**Questions?** Contact support@nexa.app
 
 ---
 

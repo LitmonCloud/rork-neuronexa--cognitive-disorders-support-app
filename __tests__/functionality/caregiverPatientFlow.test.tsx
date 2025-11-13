@@ -2,7 +2,9 @@ import React from 'react';
 import { render, waitFor, act } from '@testing-library/react-native';
 import { PatientProvider, usePatients } from '@/contexts/PatientContext';
 import { CaregiverProvider, useCaregivers } from '@/contexts/CaregiverContext';
+import { NotificationProvider } from '@/contexts/NotificationContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TestWrapper } from '../__mocks__/contextMocks';
 
 jest.mock('@react-native-async-storage/async-storage');
 
@@ -25,9 +27,13 @@ describe('Caregiver-Patient Connection Flow', () => {
     };
 
     render(
-      <PatientProvider>
-        <TestComponent />
-      </PatientProvider>
+      <TestWrapper>
+        <NotificationProvider>
+          <PatientProvider>
+            <TestComponent />
+          </PatientProvider>
+        </NotificationProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -47,9 +53,11 @@ describe('Caregiver-Patient Connection Flow', () => {
     };
 
     render(
-      <CaregiverProvider>
-        <TestComponent />
-      </CaregiverProvider>
+      <TestWrapper>
+        <CaregiverProvider>
+          <TestComponent />
+        </CaregiverProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -77,9 +85,13 @@ describe('Caregiver-Patient Connection Flow', () => {
     };
 
     render(
-      <PatientProvider>
-        <TestComponent />
-      </PatientProvider>
+      <TestWrapper>
+        <NotificationProvider>
+          <PatientProvider>
+            <TestComponent />
+          </PatientProvider>
+        </NotificationProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -116,9 +128,11 @@ describe('Caregiver-Patient Connection Flow', () => {
     };
 
     render(
-      <CaregiverProvider>
-        <TestComponent />
-      </CaregiverProvider>
+      <TestWrapper>
+        <CaregiverProvider>
+          <TestComponent />
+        </CaregiverProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -155,9 +169,13 @@ describe('Caregiver-Patient Connection Flow', () => {
     };
 
     render(
-      <PatientProvider>
-        <TestComponent />
-      </PatientProvider>
+      <TestWrapper>
+        <NotificationProvider>
+          <PatientProvider>
+            <TestComponent />
+          </PatientProvider>
+        </NotificationProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {

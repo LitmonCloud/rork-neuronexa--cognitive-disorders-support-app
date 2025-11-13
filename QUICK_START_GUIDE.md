@@ -1,4 +1,4 @@
-# NeuroNexa — Quick Start Guide for App Store Submission
+# Nexa — Quick Start Guide for App Store Submission
 
 **Current Status:** 85% Ready  
 **Time to Submit:** 2-3 days (MVP) or 2-3 weeks (Full)
@@ -12,12 +12,12 @@
 **Morning: Host Legal Docs (2 hours)**
 ```bash
 # Option 1: Buy domain
-# - Purchase neuronexa.app from Namecheap/GoDaddy
+# - Purchase nexa.app from Namecheap/GoDaddy
 # - Deploy to Vercel/Netlify
 # - Upload legal/*.md files
 
 # Option 2: Use placeholder
-# - Use existing domain: yourdomain.com/neuronexa
+# - Use existing domain: yourdomain.com/nexa
 # - Create /legal/privacy, /legal/terms, /support pages
 ```
 
@@ -56,19 +56,19 @@ import * as Linking from 'expo-linking';
   <Text style={styles.sectionTitle}>Legal & Support</Text>
   
   <TouchableOpacity 
-    onPress={() => Linking.openURL('https://neuronexa.app/legal/privacy')}
+    onPress={() => Linking.openURL('https://nexa.app/legal/privacy')}
   >
     <Text style={styles.link}>Privacy Policy</Text>
   </TouchableOpacity>
   
   <TouchableOpacity 
-    onPress={() => Linking.openURL('https://neuronexa.app/legal/terms')}
+    onPress={() => Linking.openURL('https://nexa.app/legal/terms')}
   >
     <Text style={styles.link}>Terms of Service</Text>
   </TouchableOpacity>
   
   <TouchableOpacity 
-    onPress={() => Linking.openURL('https://neuronexa.app/support')}
+    onPress={() => Linking.openURL('https://nexa.app/support')}
   >
     <Text style={styles.link}>Support</Text>
   </TouchableOpacity>
@@ -122,7 +122,7 @@ eas build --platform ios --profile preview
 ## 📋 Pre-Submission Checklist
 
 ### Critical (Must Have)
-- [ ] Legal docs hosted at neuronexa.app (or placeholder)
+- [ ] Legal docs hosted at nexa.app (or placeholder)
 - [ ] Screenshots generated (7 per device class)
 - [ ] Settings screen has legal links
 - [ ] App version displayed in Settings
@@ -155,25 +155,25 @@ eas build --platform ios --profile preview
 {
   "expo": {
     "ios": {
-      "bundleIdentifier": "app.rork.neuronexa-cognitive-disorders-support-ykokwhv"
+      "bundleIdentifier": "app.rork.nexa-cognitive-disorders-support-ykokwhv"
     },
     "android": {
-      "package": "app.rork.neuronexa-cognitive-disorders-support-ykokwhv"
+      "package": "app.rork.nexa-cognitive-disorders-support-ykokwhv"
     }
   }
 }
 
 // app/(tabs)/settings.tsx
-const PRIVACY_URL = 'https://neuronexa.app/legal/privacy';
-const TERMS_URL = 'https://neuronexa.app/legal/terms';
-const SUPPORT_URL = 'https://neuronexa.app/support';
+const PRIVACY_URL = 'https://nexa.app/legal/privacy';
+const TERMS_URL = 'https://nexa.app/legal/terms';
+const SUPPORT_URL = 'https://nexa.app/support';
 ```
 
 ### In Store Listings
-- Privacy Policy: https://neuronexa.app/legal/privacy
-- Terms of Service: https://neuronexa.app/legal/terms
-- Support: https://neuronexa.app/support
-- Marketing: https://neuronexa.app
+- Privacy Policy: https://nexa.app/legal/privacy
+- Terms of Service: https://nexa.app/legal/terms
+- Support: https://nexa.app/support
+- Marketing: https://nexa.app
 
 ---
 
@@ -186,7 +186,7 @@ const SUPPORT_URL = 'https://neuronexa.app/support';
 **Solution:** Capture fresh screenshots from latest build. Ensure no placeholder content.
 
 ### Issue: "Medical claims in description"
-**Solution:** Add disclaimer: "NeuroNexa is not a medical device and does not provide medical advice."
+**Solution:** Add disclaimer: "Nexa is not a medical device and does not provide medical advice."
 
 ### Issue: "IAP products not configured"
 **Solution:** For MVP, you can submit without real IAP. Add in v1.1 update.

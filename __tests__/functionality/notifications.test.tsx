@@ -2,6 +2,7 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
 import { NotificationProvider, useNotifications } from '@/contexts/NotificationContext';
 import * as Notifications from 'expo-notifications';
+import { TestWrapper } from '../__mocks__/contextMocks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 jest.mock('expo-notifications');
@@ -30,9 +31,11 @@ describe('Notification System Functionality', () => {
     };
 
     render(
-      <NotificationProvider>
+      <TestWrapper>
+        <NotificationProvider>
         <TestComponent />
       </NotificationProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -58,9 +61,11 @@ describe('Notification System Functionality', () => {
     };
 
     render(
-      <NotificationProvider>
+      <TestWrapper>
+        <NotificationProvider>
         <TestComponent />
       </NotificationProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -92,9 +97,11 @@ describe('Notification System Functionality', () => {
     };
 
     render(
-      <NotificationProvider>
+      <TestWrapper>
+        <NotificationProvider>
         <TestComponent />
       </NotificationProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -132,9 +139,11 @@ describe('Notification System Functionality', () => {
     };
 
     render(
-      <NotificationProvider>
+      <TestWrapper>
+        <NotificationProvider>
         <TestComponent />
       </NotificationProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -185,9 +194,11 @@ describe('Notification System Functionality', () => {
     };
 
     render(
-      <NotificationProvider>
+      <TestWrapper>
+        <NotificationProvider>
         <TestComponent />
       </NotificationProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -225,9 +236,11 @@ describe('Notification System Functionality', () => {
     };
 
     render(
-      <NotificationProvider>
+      <TestWrapper>
+        <NotificationProvider>
         <TestComponent />
       </NotificationProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {

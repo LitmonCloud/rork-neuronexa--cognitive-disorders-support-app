@@ -197,11 +197,11 @@ export default function TermsAgreementScreen() {
   };
 
   const openTerms = () => {
-    Linking.openURL('https://neuronexa.app/legal/terms');
+    Linking.openURL('https://nexa.app/legal/terms');
   };
 
   const openPrivacy = () => {
-    Linking.openURL('https://neuronexa.app/legal/privacy');
+    Linking.openURL('https://nexa.app/legal/privacy');
   };
 
   const canContinue = acceptedTerms && acceptedPrivacy;

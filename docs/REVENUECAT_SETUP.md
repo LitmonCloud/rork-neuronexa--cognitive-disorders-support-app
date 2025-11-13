@@ -4,7 +4,7 @@
 
 ## Overview
 
-RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription context, and paywall UI are all implemented. You just need to add your production API keys and configure products in the RevenueCat dashboard.
+RevenueCat is **already fully integrated** into Nexa. The SDK, subscription context, and paywall UI are all implemented. You just need to add your production API keys and configure products in the RevenueCat dashboard.
 
 ---
 
@@ -17,7 +17,7 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
 
 ### 1.2 Create Project
 1. Click **"Create new project"**
-2. **Project name**: NeuroNexa
+2. **Project name**: Nexa
 3. **Platform**: iOS + Android (cross-platform)
 4. Click **"Create"**
 
@@ -29,8 +29,8 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
 1. In RevenueCat dashboard, go to **Apps**
 2. Click **"+ New"** → **iOS**
 3. Enter details:
-   - **App name**: NeuroNexa iOS
-   - **Bundle ID**: `com.litmoncloud.neuronexa` (check app.json)
+   - **App name**: Nexa iOS
+   - **Bundle ID**: `com.litmoncloud.nexa` (check app.json)
    - **App Store ID**: (Leave blank until App Store Connect is set up)
 4. Click **"Save"**
 5. Copy the **iOS Public SDK Key** → Add to `.env` as `EXPO_PUBLIC_RC_IOS_API_KEY`
@@ -38,8 +38,8 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
 ### 2.2 Android App Setup
 1. Click **"+ New"** → **Android**
 2. Enter details:
-   - **App name**: NeuroNexa Android
-   - **Package name**: `com.litmoncloud.neuronexa` (check app.json)
+   - **App name**: Nexa Android
+   - **Package name**: `com.litmoncloud.nexa` (check app.json)
 3. Click **"Save"**
 4. Copy the **Android Public SDK Key** → Add to `.env` as `EXPO_PUBLIC_RC_ANDROID_API_KEY`
 
@@ -58,9 +58,9 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
 
 #### Monthly Subscription
 1. Go to **Products** → **"+ New"**
-2. Select **iOS App**: NeuroNexa iOS
+2. Select **iOS App**: Nexa iOS
 3. Configure:
-   - **Product ID**: `neuronexa_premium_monthly` (must match App Store Connect)
+   - **Product ID**: `nexa_premium_monthly` (must match App Store Connect)
    - **Display name**: Premium Monthly
    - **Price**: $9.99/month
    - **Subscription duration**: 1 month
@@ -72,7 +72,7 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
 #### Annual Subscription
 1. Go to **Products** → **"+ New"**
 2. Configure:
-   - **Product ID**: `neuronexa_premium_annual`
+   - **Product ID**: `nexa_premium_annual`
    - **Display name**: Premium Annual
    - **Price**: $59.99/year
    - **Subscription duration**: 1 year
@@ -84,7 +84,7 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
 #### Lifetime Purchase
 1. Go to **Products** → **"+ New"**
 2. Configure:
-   - **Product ID**: `neuronexa_premium_lifetime`
+   - **Product ID**: `nexa_premium_lifetime`
    - **Display name**: Premium Lifetime
    - **Type**: Non-consumable
    - **Price**: $149.99
@@ -110,15 +110,15 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
    - **Package 1**:
      - **Identifier**: `monthly`
      - **Package type**: Monthly
-     - **Product**: `neuronexa_premium_monthly`
+     - **Product**: `nexa_premium_monthly`
    - **Package 2**:
      - **Identifier**: `annual`
      - **Package type**: Annual
-     - **Product**: `neuronexa_premium_annual`
+     - **Product**: `nexa_premium_annual`
    - **Package 3**:
      - **Identifier**: `lifetime`
      - **Package type**: Lifetime
-     - **Product**: `neuronexa_premium_lifetime`
+     - **Product**: `nexa_premium_lifetime`
 3. Click **"Save"**
 
 ### 4.3 Set as Current Offering
@@ -131,13 +131,13 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
 
 ### 5.1 Create In-App Purchases
 1. Go to https://appstoreconnect.apple.com
-2. Navigate to **My Apps** → **NeuroNexa** → **In-App Purchases**
+2. Navigate to **My Apps** → **Nexa** → **In-App Purchases**
 3. Click **"+"** to create products
 
 #### Monthly Subscription
 - **Type**: Auto-Renewable Subscription
 - **Reference Name**: Premium Monthly
-- **Product ID**: `neuronexa_premium_monthly` (must match RevenueCat)
+- **Product ID**: `nexa_premium_monthly` (must match RevenueCat)
 - **Subscription Group**: Premium Subscriptions
 - **Subscription Duration**: 1 Month
 - **Price**: $9.99 (Tier 10)
@@ -146,7 +146,7 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
 #### Annual Subscription
 - **Type**: Auto-Renewable Subscription
 - **Reference Name**: Premium Annual
-- **Product ID**: `neuronexa_premium_annual`
+- **Product ID**: `nexa_premium_annual`
 - **Subscription Group**: Premium Subscriptions
 - **Subscription Duration**: 1 Year
 - **Price**: $59.99
@@ -155,14 +155,14 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
 #### Lifetime Purchase
 - **Type**: Non-Consumable
 - **Reference Name**: Premium Lifetime
-- **Product ID**: `neuronexa_premium_lifetime`
+- **Product ID**: `nexa_premium_lifetime`
 - **Price**: $149.99
 
 ### 5.2 Subscription Metadata
 1. Add localized descriptions
 2. Add promotional images (required for featured placements)
 3. Configure subscription benefits
-4. Set up subscription management URL: `https://neuronexa.app/manage-subscription`
+4. Set up subscription management URL: `https://nexa.app/manage-subscription`
 
 ---
 
@@ -170,11 +170,11 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
 
 ### 6.1 Create In-App Products
 1. Go to https://play.google.com/console
-2. Navigate to **NeuroNexa** → **Monetize** → **In-app products**
+2. Navigate to **Nexa** → **Monetize** → **In-app products**
 3. Click **"Create product"**
 
 #### Monthly Subscription
-- **Product ID**: `neuronexa_premium_monthly`
+- **Product ID**: `nexa_premium_monthly`
 - **Name**: Premium Monthly
 - **Description**: Full access to premium features
 - **Status**: Active
@@ -183,7 +183,7 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
 - **Free trial period**: 7 days (optional)
 
 #### Annual Subscription
-- **Product ID**: `neuronexa_premium_annual`
+- **Product ID**: `nexa_premium_annual`
 - **Name**: Premium Annual
 - **Description**: Full access to premium features (save 50%!)
 - **Status**: Active
@@ -192,7 +192,7 @@ RevenueCat is **already fully integrated** into NeuroNexa. The SDK, subscription
 - **Free trial period**: 7 days (optional)
 
 #### Lifetime Purchase
-- **Product ID**: `neuronexa_premium_lifetime`
+- **Product ID**: `nexa_premium_lifetime`
 - **Name**: Premium Lifetime
 - **Description**: One-time purchase for lifetime access
 - **Status**: Active
@@ -254,7 +254,7 @@ EXPO_PUBLIC_RC_ANDROID_API_KEY=goog_xxxxxxxxxxxxxxxxxxxxx
 ### 9.1 Webhooks (Optional)
 Set up webhooks for backend integration:
 1. Go to **Integrations** → **Webhooks**
-2. Add webhook URL: `https://api.neuronexa.app/webhooks/revenuecat`
+2. Add webhook URL: `https://api.nexa.app/webhooks/revenuecat`
 3. Select events:
    - Initial purchase
    - Renewal

@@ -1,7 +1,7 @@
 # User Funneling System - Implementation Guide
 
 ## Overview
-A comprehensive user funneling system has been implemented to improve conversion, retention, and engagement in NeuroNexa.
+A comprehensive user funneling system has been implemented to improve conversion, retention, and engagement in Nexa.
 
 ## Components Implemented
 

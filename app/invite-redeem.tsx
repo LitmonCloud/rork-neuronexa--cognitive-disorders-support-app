@@ -11,7 +11,7 @@ import {
   Platform,
   Keyboard,
 } from 'react-native';
-import { Stack, router } from 'expo-router';
+import { Stack, router, Redirect } from 'expo-router';
 import { CheckCircle, XCircle } from 'lucide-react-native';
 import { useCaregivers } from '@/contexts/CaregiverContext';
 import {
@@ -19,13 +19,18 @@ import {
   validateInviteCodeFormat,
 } from '@/utils/inviteCodeGenerator';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 
 export default function InviteRedeemScreen() {
   const { colors } = useTheme();
+  const { profile, isLoading: profileLoading } = useUserProfile();
   const { redeemInvite } = useCaregivers();
   const [code, setCode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+
+  // Access control: Only Cognitive Support Users and Caregivers can access this screen
+  const isMemoryPatient = profile?.role === 'patient' && profile?.patientType === 'memory';
 
   const handleCodeChange = (text: string) => {
     const formatted = formatInviteCode(text);
@@ -183,6 +188,20 @@ export default function InviteRedeemScreen() {
       marginBottom: 8,
     },
   });
+
+  // Access control: Redirect Memory Support Users
+  if (profileLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 100 }} />
+        <Text style={{ color: colors.textSecondary, marginTop: 16, textAlign: 'center' }}>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (isMemoryPatient) {
+    return <Redirect href="/(tabs)" />;
+  }
 
   return (
     <KeyboardAvoidingView

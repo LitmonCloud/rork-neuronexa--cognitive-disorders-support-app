@@ -1,17 +1,19 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text } from 'react-native';
 
-jest.mock('react-native/Libraries/Utilities/Dimensions', () => ({
+const mockDimensions = {
   get: jest.fn(() => ({ width: 375, height: 812 })),
   addEventListener: jest.fn(),
   removeEventListener: jest.fn(),
-}));
+};
+
+jest.mock('react-native/Libraries/Utilities/Dimensions', () => mockDimensions);
 
 describe('Responsive Design', () => {
   describe('Screen Size Adaptation', () => {
     it('should render for iPhone SE size', () => {
-      (Dimensions.get as jest.Mock).mockReturnValue({ width: 375, height: 667 });
+      mockDimensions.get.mockReturnValue({ width: 375, height: 667 });
       
       const { getByTestId } = render(
         <View testID="container" style={{ width: '100%' }}>
@@ -23,7 +25,7 @@ describe('Responsive Design', () => {
     });
 
     it('should render for iPhone 14 Pro size', () => {
-      (Dimensions.get as jest.Mock).mockReturnValue({ width: 393, height: 852 });
+      mockDimensions.get.mockReturnValue({ width: 393, height: 852 });
       
       const { getByTestId } = render(
         <View testID="container" style={{ width: '100%' }}>
@@ -35,7 +37,7 @@ describe('Responsive Design', () => {
     });
 
     it('should render for iPad size', () => {
-      (Dimensions.get as jest.Mock).mockReturnValue({ width: 768, height: 1024 });
+      mockDimensions.get.mockReturnValue({ width: 768, height: 1024 });
       
       const { getByTestId } = render(
         <View testID="container" style={{ width: '100%' }}>
@@ -47,7 +49,7 @@ describe('Responsive Design', () => {
     });
 
     it('should render for Android phone size', () => {
-      (Dimensions.get as jest.Mock).mockReturnValue({ width: 360, height: 640 });
+      mockDimensions.get.mockReturnValue({ width: 360, height: 640 });
       
       const { getByTestId } = render(
         <View testID="container" style={{ width: '100%' }}>
@@ -61,7 +63,7 @@ describe('Responsive Design', () => {
 
   describe('Orientation Changes', () => {
     it('should handle portrait orientation', () => {
-      (Dimensions.get as jest.Mock).mockReturnValue({ width: 375, height: 812 });
+      mockDimensions.get.mockReturnValue({ width: 375, height: 812 });
       
       const { getByTestId } = render(
         <View testID="container" style={{ flexDirection: 'column' }}>
@@ -73,7 +75,7 @@ describe('Responsive Design', () => {
     });
 
     it('should handle landscape orientation', () => {
-      (Dimensions.get as jest.Mock).mockReturnValue({ width: 812, height: 375 });
+      mockDimensions.get.mockReturnValue({ width: 812, height: 375 });
       
       const { getByTestId } = render(
         <View testID="container" style={{ flexDirection: 'row' }}>

@@ -1,4 +1,4 @@
-# NeuroNexa - Project Summary
+# Nexa - Project Summary
 
 ## 🎉 Project Status: **COMPLETE & PRODUCTION READY**
 
@@ -265,7 +265,7 @@ All requested features have been successfully implemented according to the speci
 ## 📁 Project Structure
 
 ```
-neuronexa/
+nexa/
 ├── app/
 │   ├── (tabs)/
 │   │   ├── index.tsx           # Tasks screen
@@ -322,7 +322,7 @@ neuronexa/
 ```bash
 # Clone repository
 git clone <YOUR_GIT_URL>
-cd neuronexa
+cd nexa
 
 # Install dependencies
 bun install
@@ -462,7 +462,7 @@ bun run start-web
 
 ## 🎯 Conclusion
 
-**NeuroNexa is complete and production-ready.**
+**Nexa is complete and production-ready.**
 
 All 10 goals have been successfully implemented with:
 - ✅ Full feature parity with requirements

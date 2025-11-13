@@ -1,7 +1,7 @@
 # Caregiver Subscription Implementation
 
 ## Overview
-This document outlines the implementation of mandatory subscription requirements for caregivers in the NeuroNexa app.
+This document outlines the implementation of mandatory subscription requirements for caregivers in the Nexa app.
 
 ## Key Changes
 
@@ -130,7 +130,7 @@ if (termsAccepted && onboardingCompleted && isCaregiver && requiresSubscription 
 
 ### State Management:
 - User role is stored in AsyncStorage under `@nexa_user_profile`
-- Subscription status is stored under `@neuronexa_subscription`
+- Subscription status is stored under `@nexa_subscription`
 - Both are loaded on app initialization and cached
 
 ### Error Handling:

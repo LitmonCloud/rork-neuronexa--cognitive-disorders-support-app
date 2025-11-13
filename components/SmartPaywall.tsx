@@ -23,7 +23,7 @@ const CONTEXT_MESSAGES = {
   },
   value_demo: {
     title: 'Upgrade to Premium',
-    subtitle: 'Get the most out of NeuroNexa',
+    subtitle: 'Get the most out of Nexa',
     icon: Sparkles,
     color: colors.primary,
   },

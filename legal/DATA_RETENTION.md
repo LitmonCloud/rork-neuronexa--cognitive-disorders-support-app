@@ -1,4 +1,4 @@
-# Data Retention Policy for NeuroNexa
+# Data Retention Policy for Nexa
 
 **Effective Date:** October 2, 2025  
 **Last Updated:** October 2, 2025
@@ -7,9 +7,9 @@
 
 ## Introduction
 
-This Data Retention Policy explains how long NeuroNexa retains your personal information and data, and how we securely delete it when no longer needed.
+This Data Retention Policy explains how long Nexa retains your personal information and data, and how we securely delete it when no longer needed.
 
-**This policy applies to all users of NeuroNexa, regardless of location.**
+**This policy applies to all users of Nexa, regardless of location.**
 
 ---
 
@@ -93,7 +93,7 @@ When cloud sync is enabled:
 
 **Deletion:**
 - Manual: Delete account in Settings
-- Request: Email privacy@neuronexa.app
+- Request: Email privacy@nexa.app
 - Processing Time: Within 30 days
 
 ### 3.2 User Profile
@@ -131,7 +131,7 @@ When cloud sync is enabled:
 **Deletion:**
 - Automatic: Anonymized after 90 days
 - Manual: Opt-out in Settings stops new data collection
-- Request: Email privacy@neuronexa.app for deletion
+- Request: Email privacy@nexa.app for deletion
 
 **Note:** Analytics is opt-in and can be disabled at any time.
 
@@ -161,7 +161,7 @@ When cloud sync is enabled:
 
 **Deletion:** Automatically deleted after 2 years
 
-**Request Deletion:** Email privacy@neuronexa.app
+**Request Deletion:** Email privacy@nexa.app
 
 ### 5.2 Caregiver Alert Emails
 
@@ -197,7 +197,7 @@ When cloud sync is enabled:
 
 **Storage Location:** RevenueCat servers
 
-**Deletion:** Request deletion via privacy@neuronexa.app
+**Deletion:** Request deletion via privacy@nexa.app
 
 ---
 
@@ -288,14 +288,14 @@ You have the right to:
 
 ### 11.1 In-App Deletion
 
-1. Open NeuroNexa
+1. Open Nexa
 2. Go to Settings → Privacy
 3. Tap "Delete My Data" (local data)
 4. Tap "Delete Account" (cloud data, when available)
 
 ### 11.2 Email Request
 
-Send an email to **privacy@neuronexa.app** with:
+Send an email to **privacy@nexa.app** with:
 - Subject: "Data Deletion Request"
 - Your account email (if applicable)
 - Specific data you want deleted
@@ -336,7 +336,7 @@ We may update this Data Retention Policy from time to time. Changes will be comm
 - Email (if you have an account)
 - Updated "Last Updated" date
 
-**Your continued use of NeuroNexa after changes constitutes acceptance.**
+**Your continued use of Nexa after changes constitutes acceptance.**
 
 ---
 
@@ -344,9 +344,9 @@ We may update this Data Retention Policy from time to time. Changes will be comm
 
 If you have questions about our data retention practices:
 
-**Email:** privacy@neuronexa.app  
-**Website:** https://neuronexa.app/legal/data-retention  
-**Mail:** NeuroNexa Privacy Team, [Address TBD]
+**Email:** privacy@nexa.app  
+**Website:** https://nexa.app/legal/data-retention  
+**Mail:** Nexa Privacy Team, [Address TBD]
 
 ---
 
@@ -361,6 +361,6 @@ This Data Retention Policy complies with:
 
 ---
 
-**Thank you for trusting NeuroNexa with your data. We take your privacy seriously.**
+**Thank you for trusting Nexa with your data. We take your privacy seriously.**
 
 *Simplify. Scaffold. Support independence.*

@@ -12,9 +12,9 @@ import { revenueCatService } from '@/services/subscriptions/RevenueCatService';
 import type { CustomerInfo, PurchasesPackage } from '@/services/subscriptions/RevenueCatService';
 import { logger } from '@/utils/logger';
 
-const SUBSCRIPTION_KEY = '@neuronexa_subscription';
-const USAGE_KEY = '@neuronexa_usage';
-const ONBOARDING_KEY = '@neuronexa_onboarding_completed';
+const SUBSCRIPTION_KEY = '@nexa_subscription';
+const USAGE_KEY = '@nexa_usage';
+const ONBOARDING_KEY = '@nexa_onboarding_completed';
 
 async function loadSubscription(): Promise<UserSubscription> {
   try {

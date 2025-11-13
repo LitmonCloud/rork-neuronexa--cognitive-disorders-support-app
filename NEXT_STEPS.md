@@ -1,4 +1,4 @@
-# NeuroNexa — Your Next Steps to Launch
+# Nexa — Your Next Steps to Launch
 
 **Current Status:** 95% Store Ready 🎉  
 **Time to Launch:** 2-3 weeks (MVP approach)  
@@ -8,7 +8,7 @@
 
 ## 🎯 Quick Start: What to Do Right Now
 
-You're almost there! Here are your immediate next steps to get NeuroNexa into the App Store and Google Play:
+You're almost there! Here are your immediate next steps to get Nexa into the App Store and Google Play:
 
 ### This Week (10-12 hours)
 
@@ -17,25 +17,25 @@ You're almost there! Here are your immediate next steps to get NeuroNexa into th
 **Why:** Required for App Store and Google Play submission
 
 **Options:**
-- **Option A:** Purchase neuronexa.app domain + deploy to Netlify/Vercel
+- **Option A:** Purchase nexa.app domain + deploy to Netlify/Vercel
 - **Option B:** Use GitHub Pages (free, quick setup)
 - **Option C:** Use temporary domain for initial submission
 
 **Quick Setup with GitHub Pages:**
 ```bash
-# 1. Create a new repo: neuronexa-legal
+# 1. Create a new repo: nexa-legal
 # 2. Copy legal docs to repo
-cp legal/*.md neuronexa-legal/
+cp legal/*.md nexa-legal/
 # 3. Enable GitHub Pages in repo settings
-# 4. Your URLs will be: https://yourusername.github.io/neuronexa-legal/PRIVACY_POLICY
+# 4. Your URLs will be: https://yourusername.github.io/nexa-legal/PRIVACY_POLICY
 ```
 
 **Then update your `.env` file:**
 ```bash
-EXPO_PUBLIC_PRIVACY_POLICY_URL=https://yourusername.github.io/neuronexa-legal/PRIVACY_POLICY
-EXPO_PUBLIC_TERMS_URL=https://yourusername.github.io/neuronexa-legal/TERMS_OF_SERVICE
-EXPO_PUBLIC_ACCESSIBILITY_URL=https://yourusername.github.io/neuronexa-legal/ACCESSIBILITY
-EXPO_PUBLIC_SUPPORT_URL=https://yourusername.github.io/neuronexa-legal/SUPPORT
+EXPO_PUBLIC_PRIVACY_POLICY_URL=https://yourusername.github.io/nexa-legal/PRIVACY_POLICY
+EXPO_PUBLIC_TERMS_URL=https://yourusername.github.io/nexa-legal/TERMS_OF_SERVICE
+EXPO_PUBLIC_ACCESSIBILITY_URL=https://yourusername.github.io/nexa-legal/ACCESSIBILITY
+EXPO_PUBLIC_SUPPORT_URL=https://yourusername.github.io/nexa-legal/SUPPORT
 ```
 
 ---
@@ -359,7 +359,7 @@ Track these after launch:
 
 ## 🎊 Final Thoughts
 
-You've built something amazing. NeuroNexa is a beautiful, functional app that will genuinely help people with cognitive disabilities. The hard work is done - now it's time to get it into users' hands.
+You've built something amazing. Nexa is a beautiful, functional app that will genuinely help people with cognitive disabilities. The hard work is done - now it's time to get it into users' hands.
 
 **Remember:**
 - MVP first, iterate based on feedback

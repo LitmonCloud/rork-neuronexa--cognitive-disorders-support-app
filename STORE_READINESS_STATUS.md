@@ -1,4 +1,4 @@
-# NeuroNexa — App Store Readiness Status
+# Nexa — App Store Readiness Status
 
 **Last Updated:** 2025-10-02  
 **Current Status:** 98% Store Ready 🎉  
@@ -129,7 +129,7 @@
 **Action Required:** User must host documents
 
 **Options:**
-- **Option A:** Purchase neuronexa.app domain + deploy to Netlify/Vercel
+- **Option A:** Purchase nexa.app domain + deploy to Netlify/Vercel
 - **Option B:** Use GitHub Pages (free, quick)
 - **Option C:** Use temporary domain for initial submission
 
@@ -435,7 +435,7 @@ eas submit --platform ios --latest
 
 ## 💡 Key Highlights
 
-### What Makes NeuroNexa Special
+### What Makes Nexa Special
 1. **Neurodiversity-First Design**
    - Built specifically for ADHD, autism, and cognitive disabilities
    - Accessibility features are first-class, not afterthoughts
@@ -510,4 +510,4 @@ eas submit --platform ios --latest
 
 *Simplify. Scaffold. Support independence.*
 
-**NeuroNexa — Empowering neurodivergent individuals to thrive.**
+**Nexa — Empowering neurodivergent individuals to thrive.**

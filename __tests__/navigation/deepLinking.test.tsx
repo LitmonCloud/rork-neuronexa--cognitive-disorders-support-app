@@ -17,7 +17,7 @@ describe('Deep Linking', () => {
   describe('URL Scheme Handling', () => {
     it('should handle task detail deep link', async () => {
       const taskId = 'task-123';
-      const url = `neuronexa://task/${taskId}`;
+      const url = `nexa://task/${taskId}`;
       
       (Linking.canOpenURL as jest.Mock).mockResolvedValue(true);
       
@@ -27,7 +27,7 @@ describe('Deep Linking', () => {
 
     it('should handle caregiver invite deep link', async () => {
       const inviteCode = 'ABC123';
-      const url = `neuronexa://invite/${inviteCode}`;
+      const url = `nexa://invite/${inviteCode}`;
       
       (Linking.canOpenURL as jest.Mock).mockResolvedValue(true);
       
@@ -37,7 +37,7 @@ describe('Deep Linking', () => {
 
     it('should handle notification deep link', async () => {
       const notificationId = 'notif-456';
-      const url = `neuronexa://notification/${notificationId}`;
+      const url = `nexa://notification/${notificationId}`;
       
       (Linking.canOpenURL as jest.Mock).mockResolvedValue(true);
       
@@ -48,7 +48,7 @@ describe('Deep Linking', () => {
 
   describe('Universal Links', () => {
     it('should handle web URL for task', async () => {
-      const url = 'https://neuronexa.app/task/task-123';
+      const url = 'https://nexa.app/task/task-123';
       
       (Linking.canOpenURL as jest.Mock).mockResolvedValue(true);
       
@@ -57,7 +57,7 @@ describe('Deep Linking', () => {
     });
 
     it('should handle web URL for invite', async () => {
-      const url = 'https://neuronexa.app/invite/ABC123';
+      const url = 'https://nexa.app/invite/ABC123';
       
       (Linking.canOpenURL as jest.Mock).mockResolvedValue(true);
       
@@ -68,7 +68,7 @@ describe('Deep Linking', () => {
 
   describe('External Links', () => {
     it('should open external support URL', async () => {
-      const url = 'https://support.neuronexa.app';
+      const url = 'https://support.nexa.app';
       
       (Linking.canOpenURL as jest.Mock).mockResolvedValue(true);
       (Linking.openURL as jest.Mock).mockResolvedValue(true);
@@ -90,7 +90,7 @@ describe('Deep Linking', () => {
     });
 
     it('should handle email links', async () => {
-      const emailUrl = 'mailto:support@neuronexa.app';
+      const emailUrl = 'mailto:support@nexa.app';
       
       (Linking.canOpenURL as jest.Mock).mockResolvedValue(true);
       (Linking.openURL as jest.Mock).mockResolvedValue(true);

@@ -31,7 +31,7 @@ cd legal
 git init
 git add .
 git commit -m "Legal documents"
-gh repo create neuronexa-legal --public
+gh repo create nexa-legal --public
 git push -u origin main
 # Enable Pages in repo settings
 ```
@@ -139,10 +139,10 @@ npm run android
    - Or use legal template service ($500-$1,500)
 
 4. **Set Up Email Addresses**
-   - privacy@neuronexa.app
-   - legal@neuronexa.app
-   - support@neuronexa.app
-   - accessibility@neuronexa.app
+   - privacy@nexa.app
+   - legal@nexa.app
+   - support@nexa.app
+   - accessibility@nexa.app
 
 ---
 

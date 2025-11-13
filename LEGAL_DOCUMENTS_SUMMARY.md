@@ -1,4 +1,4 @@
-# NeuroNexa Legal Documents - Completion Summary
+# Nexa Legal Documents - Completion Summary
 
 **Date:** October 2, 2025  
 **Status:** ✅ Complete and Ready for Deployment
@@ -81,12 +81,12 @@ All URLs have been configured in the app:
 
 ### Environment Variables (.env.example)
 ```bash
-EXPO_PUBLIC_PRIVACY_POLICY_URL=https://neuronexa.app/legal/privacy
-EXPO_PUBLIC_TERMS_URL=https://neuronexa.app/legal/terms
-EXPO_PUBLIC_ACCESSIBILITY_URL=https://neuronexa.app/legal/accessibility
-EXPO_PUBLIC_DATA_RETENTION_URL=https://neuronexa.app/legal/data-retention
-EXPO_PUBLIC_SUPPORT_URL=https://neuronexa.app/support
-EXPO_PUBLIC_MARKETING_URL=https://neuronexa.app
+EXPO_PUBLIC_PRIVACY_POLICY_URL=https://nexa.app/legal/privacy
+EXPO_PUBLIC_TERMS_URL=https://nexa.app/legal/terms
+EXPO_PUBLIC_ACCESSIBILITY_URL=https://nexa.app/legal/accessibility
+EXPO_PUBLIC_DATA_RETENTION_URL=https://nexa.app/legal/data-retention
+EXPO_PUBLIC_SUPPORT_URL=https://nexa.app/support
+EXPO_PUBLIC_MARKETING_URL=https://nexa.app
 ```
 
 ### In-App Links (Settings Screen)
@@ -216,7 +216,7 @@ EXPO_PUBLIC_MARKETING_URL=https://neuronexa.app
 1. **Deploy Legal Documents** (Required)
    - Choose hosting platform (Netlify recommended)
    - Deploy legal documents to production
-   - Configure custom domain (neuronexa.app)
+   - Configure custom domain (nexa.app)
    - Verify all URLs are accessible
    - Test on mobile devices
 
@@ -252,10 +252,10 @@ EXPO_PUBLIC_MARKETING_URL=https://neuronexa.app
 
 ### Email Addresses to Set Up
 Before submission, set up these email addresses:
-- **privacy@neuronexa.app** - Privacy inquiries
-- **legal@neuronexa.app** - Legal inquiries
-- **support@neuronexa.app** - General support
-- **accessibility@neuronexa.app** - Accessibility feedback
+- **privacy@nexa.app** - Privacy inquiries
+- **legal@nexa.app** - Legal inquiries
+- **support@nexa.app** - General support
+- **accessibility@nexa.app** - Accessibility feedback
 
 ### Physical Address
 Consider adding a physical address to legal documents (required in some jurisdictions):
@@ -345,7 +345,7 @@ All legal documents have been:
 
 ## 🎉 Conclusion
 
-**NeuroNexa's legal documents are complete and ready for deployment!**
+**Nexa's legal documents are complete and ready for deployment!**
 
 You have comprehensive, compliant legal documentation that covers:
 - Privacy and data protection (GDPR, CCPA, COPPA)

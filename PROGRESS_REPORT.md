@@ -1,4 +1,4 @@
-# NeuroNexa — Development Progress Report
+# Nexa — Development Progress Report
 
 **Generated:** 2025-10-02  
 **Session:** Next Phase Development  
@@ -99,7 +99,7 @@
 **Blocker:** Required for submission
 
 **Options:**
-- Purchase neuronexa.app domain + deploy to Netlify/Vercel
+- Purchase nexa.app domain + deploy to Netlify/Vercel
 - Use GitHub Pages with custom domain
 - Use temporary placeholder domain
 

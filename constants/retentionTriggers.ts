@@ -21,7 +21,7 @@ export const RETENTION_TRIGGERS: RetentionTrigger[] = [
     id: 'inactive_7_days',
     type: 'win_back',
     condition: 'inactive_7d',
-    message: 'We\'ve added new features! Check out what\'s new in NeuroNexa.',
+    message: 'We\'ve added new features! Check out what\'s new in Nexa.',
     action: 'show_whats_new',
     priority: 3,
   },

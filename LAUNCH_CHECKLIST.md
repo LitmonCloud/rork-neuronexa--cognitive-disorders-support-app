@@ -1,4 +1,4 @@
-# NeuroNexa — Launch Checklist
+# Nexa — Launch Checklist
 
 **Current Status:** 98% Ready  
 **Target Launch Date:** [Your Date]  
@@ -12,7 +12,7 @@
 
 - [ ] **Host Legal Documents** (3 hours)
   - [ ] Choose hosting solution:
-    - [ ] Option A: Purchase neuronexa.app domain + Netlify/Vercel
+    - [ ] Option A: Purchase nexa.app domain + Netlify/Vercel
     - [ ] Option B: Use GitHub Pages (free)
   - [ ] Deploy legal documents:
     - [ ] `legal/PRIVACY_POLICY.md`
@@ -107,7 +107,7 @@
 - [ ] **App Store Connect** (3 hours)
   - [ ] Create app listing
   - [ ] Fill in metadata from `store/ios-metadata.md`:
-    - [ ] App name: NeuroNexa
+    - [ ] App name: Nexa
     - [ ] Subtitle: "Cognitive support that adapts"
     - [ ] Description (copy from metadata file)
     - [ ] Keywords (copy from metadata file)
@@ -122,7 +122,7 @@
 - [ ] **Google Play Console** (3 hours)
   - [ ] Create app listing
   - [ ] Fill in metadata from `store/android-metadata.md`:
-    - [ ] App name: NeuroNexa
+    - [ ] App name: Nexa
     - [ ] Short description (80 chars)
     - [ ] Full description (copy from metadata file)
     - [ ] Tags/keywords

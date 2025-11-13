@@ -1,8 +1,8 @@
-# NeuroNexa - Test Suite Report
+# Nexa - Test Suite Report
 
 ## Test Coverage Overview
 
-This document provides a comprehensive overview of the test suite for NeuroNexa.
+This document provides a comprehensive overview of the test suite for Nexa.
 
 ## Test Structure
 

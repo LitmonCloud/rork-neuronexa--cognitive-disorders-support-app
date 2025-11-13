@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🖼️  NeuroNexa Image Optimization Script\n');
+console.log('🖼️  Nexa Image Optimization Script\n');
 console.log('This script helps identify images that may need optimization.\n');
 
 const assetsDir = path.join(__dirname, '..', 'assets', 'images');

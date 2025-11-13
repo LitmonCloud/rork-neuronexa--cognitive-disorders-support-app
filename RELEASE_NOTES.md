@@ -1,4 +1,4 @@
-# NeuroNexa — App Store 100% Readiness Tracker
+# Nexa — App Store 100% Readiness Tracker
 
 **Current Status: 78-82% → Target: 100%**
 
@@ -31,7 +31,7 @@
   - [ ] Generate Terms of Service
   - [ ] Generate Accessibility Statement
   - [ ] Generate Data Retention Policy
-  - [ ] Host at neuronexa.app/legal/* (or placeholder URLs)
+  - [ ] Host at nexa.app/legal/* (or placeholder URLs)
   - [ ] Update store metadata with legal URLs
 
 - [ ] **0.4** Store Metadata (CRITICAL)
@@ -287,7 +287,7 @@ SENDGRID_API_KEY=
 EXPO_PUBLIC_PROJECT_ID=
 
 # App Config
-EXPO_PUBLIC_APP_NAME=NeuroNexa
+EXPO_PUBLIC_APP_NAME=Nexa
 EXPO_PUBLIC_APP_VERSION=1.0.0
 EXPO_PUBLIC_ENABLE_ANALYTICS=true
 EXPO_PUBLIC_ENABLE_CRASH_REPORTING=true
@@ -344,7 +344,7 @@ npm run build:android:prod
 3. **No Sentry account** → Need to create project and get DSN
 4. **No Supabase project** → Need to create project and set up database
 5. **No legal docs** → Need to generate or hire lawyer
-6. **No hosting for legal docs** → Need neuronexa.app domain or use placeholder
+6. **No hosting for legal docs** → Need nexa.app domain or use placeholder
 
 ### Risks
 - **IAP Review Rejection:** Ensure clear value proposition and no misleading claims

@@ -1,4 +1,4 @@
-# NeuroNexa - Complete Test Suite Summary
+# Nexa - Complete Test Suite Summary
 
 ## 🎯 Test Suite Status
 

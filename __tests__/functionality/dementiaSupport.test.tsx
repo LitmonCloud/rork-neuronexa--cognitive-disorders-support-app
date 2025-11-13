@@ -2,6 +2,7 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
 import { DementiaProvider, useDementia } from '@/contexts/DementiaContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TestWrapper } from '../__mocks__/contextMocks';
 
 jest.mock('@react-native-async-storage/async-storage');
 
@@ -35,9 +36,11 @@ describe('Dementia Support Functionality', () => {
     };
 
     render(
-      <DementiaProvider>
-        <TestComponent />
-      </DementiaProvider>
+      <TestWrapper>
+        <DementiaProvider>
+          <TestComponent />
+        </DementiaProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -50,7 +53,7 @@ describe('Dementia Support Functionality', () => {
 
     const TestComponent = () => {
       const { emergencyContacts, addEmergencyContact } = useDementia();
-      
+
       React.useEffect(() => {
         contactCount = emergencyContacts.length;
       }, [emergencyContacts]);
@@ -69,9 +72,11 @@ describe('Dementia Support Functionality', () => {
     };
 
     render(
-      <DementiaProvider>
-        <TestComponent />
-      </DementiaProvider>
+      <TestWrapper>
+        <DementiaProvider>
+          <TestComponent />
+        </DementiaProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -82,7 +87,7 @@ describe('Dementia Support Functionality', () => {
   it('should update dementia settings', async () => {
     const TestComponent = () => {
       const { updateSettings } = useDementia();
-      
+
       React.useEffect(() => {
         updateSettings({
           enabled: true,
@@ -94,9 +99,11 @@ describe('Dementia Support Functionality', () => {
     };
 
     render(
-      <DementiaProvider>
-        <TestComponent />
-      </DementiaProvider>
+      <TestWrapper>
+        <DementiaProvider>
+          <TestComponent />
+        </DementiaProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -107,7 +114,7 @@ describe('Dementia Support Functionality', () => {
   it('should track daily routine', async () => {
     const TestComponent = () => {
       const { addRoutineAnchor } = useDementia();
-      
+
       React.useEffect(() => {
         addRoutineAnchor({
           time: '08:00',
@@ -123,9 +130,11 @@ describe('Dementia Support Functionality', () => {
     };
 
     render(
-      <DementiaProvider>
-        <TestComponent />
-      </DementiaProvider>
+      <TestWrapper>
+        <DementiaProvider>
+          <TestComponent />
+        </DementiaProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -158,7 +167,7 @@ describe('Dementia Support Functionality', () => {
 
     const TestComponent = () => {
       const { settings } = useDementia();
-      
+
       React.useEffect(() => {
         if (settings) {
           settingsLoaded = true;
@@ -169,9 +178,11 @@ describe('Dementia Support Functionality', () => {
     };
 
     render(
-      <DementiaProvider>
-        <TestComponent />
-      </DementiaProvider>
+      <TestWrapper>
+        <DementiaProvider>
+          <TestComponent />
+        </DementiaProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -197,7 +208,7 @@ describe('Dementia Support Functionality', () => {
 
     const TestComponent = () => {
       const { deleteEmergencyContact } = useDementia();
-      
+
       React.useEffect(() => {
         deleteEmergencyContact('1');
       }, []);
@@ -206,9 +217,11 @@ describe('Dementia Support Functionality', () => {
     };
 
     render(
-      <DementiaProvider>
-        <TestComponent />
-      </DementiaProvider>
+      <TestWrapper>
+        <DementiaProvider>
+          <TestComponent />
+        </DementiaProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {

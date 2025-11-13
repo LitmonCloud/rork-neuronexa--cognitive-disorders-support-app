@@ -3,6 +3,7 @@ import { render, waitFor } from '@testing-library/react-native';
 import { TaskProvider, useTasks } from '@/contexts/TaskContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Task, TaskStatus } from '@/types/task';
+import { TestWrapper } from '../__mocks__/contextMocks';
 
 jest.mock('@react-native-async-storage/async-storage');
 
@@ -31,9 +32,11 @@ describe('Task Management Functionality', () => {
     };
 
     render(
-      <TaskProvider>
-        <TestComponent />
-      </TaskProvider>
+      <TestWrapper>
+        <TaskProvider>
+          <TestComponent />
+        </TaskProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -70,9 +73,11 @@ describe('Task Management Functionality', () => {
     };
 
     render(
-      <TaskProvider>
-        <TestComponent />
-      </TaskProvider>
+      <TestWrapper>
+        <TaskProvider>
+          <TestComponent />
+        </TaskProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -109,9 +114,11 @@ describe('Task Management Functionality', () => {
     };
 
     render(
-      <TaskProvider>
-        <TestComponent />
-      </TaskProvider>
+      <TestWrapper>
+        <TaskProvider>
+          <TestComponent />
+        </TaskProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -164,13 +171,15 @@ describe('Task Management Functionality', () => {
     };
 
     render(
-      <TaskProvider>
-        <TestComponent />
-      </TaskProvider>
+      <TestWrapper>
+        <TaskProvider>
+          <TestComponent />
+        </TaskProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
-      expect(AsyncStorage.getItem).toHaveBeenCalledWith('tasks');
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith('@nexa_tasks');
     });
   });
 
@@ -210,9 +219,11 @@ describe('Task Management Functionality', () => {
     };
 
     render(
-      <TaskProvider>
-        <TestComponent />
-      </TaskProvider>
+      <TestWrapper>
+        <TaskProvider>
+          <TestComponent />
+        </TaskProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -251,13 +262,15 @@ describe('Task Management Functionality', () => {
     };
 
     render(
-      <TaskProvider>
-        <TestComponent />
-      </TaskProvider>
+      <TestWrapper>
+        <TaskProvider>
+          <TestComponent />
+        </TaskProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
-      expect(AsyncStorage.getItem).toHaveBeenCalledWith('tasks');
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith('@nexa_tasks');
     });
   });
 });

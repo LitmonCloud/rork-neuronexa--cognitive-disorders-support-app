@@ -2,6 +2,7 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
 import { SubscriptionProvider, useSubscription } from '@/contexts/SubscriptionContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TestWrapper } from '../__mocks__/contextMocks';
 
 jest.mock('@react-native-async-storage/async-storage');
 
@@ -26,9 +27,11 @@ describe('Subscription Functionality', () => {
     };
 
     render(
-      <SubscriptionProvider>
+      <TestWrapper>
+        <SubscriptionProvider>
         <TestComponent />
       </SubscriptionProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -59,9 +62,11 @@ describe('Subscription Functionality', () => {
     };
 
     render(
-      <SubscriptionProvider>
+      <TestWrapper>
+        <SubscriptionProvider>
         <TestComponent />
       </SubscriptionProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -81,9 +86,11 @@ describe('Subscription Functionality', () => {
     };
 
     render(
-      <SubscriptionProvider>
+      <TestWrapper>
+        <SubscriptionProvider>
         <TestComponent />
       </SubscriptionProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -105,9 +112,11 @@ describe('Subscription Functionality', () => {
     };
 
     render(
-      <SubscriptionProvider>
+      <TestWrapper>
+        <SubscriptionProvider>
         <TestComponent />
       </SubscriptionProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -127,9 +136,11 @@ describe('Subscription Functionality', () => {
     };
 
     render(
-      <SubscriptionProvider>
+      <TestWrapper>
+        <SubscriptionProvider>
         <TestComponent />
       </SubscriptionProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -166,9 +177,11 @@ describe('Subscription Functionality', () => {
     };
 
     render(
-      <SubscriptionProvider>
+      <TestWrapper>
+        <SubscriptionProvider>
         <TestComponent />
       </SubscriptionProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {

@@ -1,4 +1,4 @@
-# Accessibility Statement for NeuroNexa
+# Accessibility Statement for Nexa
 
 **Effective Date:** October 2, 2025  
 **Last Updated:** October 2, 2025
@@ -7,7 +7,7 @@
 
 ## Our Commitment to Accessibility
 
-NeuroNexa is committed to ensuring digital accessibility for people with disabilities, cognitive differences, and neurodivergent individuals. We are continually improving the user experience for everyone and applying the relevant accessibility standards.
+Nexa is committed to ensuring digital accessibility for people with disabilities, cognitive differences, and neurodivergent individuals. We are continually improving the user experience for everyone and applying the relevant accessibility standards.
 
 **Our mission is to provide cognitive support that is accessible to all users, regardless of their abilities.**
 
@@ -107,7 +107,7 @@ NeuroNexa is committed to ensuring digital accessibility for people with disabil
 
 ## Standards Compliance
 
-NeuroNexa strives to conform to the following accessibility standards:
+Nexa strives to conform to the following accessibility standards:
 
 **WCAG 2.1 Level AA**
 - Web Content Accessibility Guidelines
@@ -177,11 +177,11 @@ We are aware of the following accessibility limitations and are working to addre
 
 ## Feedback and Support
 
-We welcome your feedback on the accessibility of NeuroNexa. Please let us know if you encounter accessibility barriers:
+We welcome your feedback on the accessibility of Nexa. Please let us know if you encounter accessibility barriers:
 
 **Contact Methods:**
-- **Email:** accessibility@neuronexa.app
-- **Support Form:** https://neuronexa.app/support
+- **Email:** accessibility@nexa.app
+- **Support Form:** https://nexa.app/support
 - **In-App:** Settings → Help & Support → Report Accessibility Issue
 
 **Response Time:** We aim to respond to accessibility inquiries within 2 business days.
@@ -190,7 +190,7 @@ We welcome your feedback on the accessibility of NeuroNexa. Please let us know i
 
 ## Third-Party Content
 
-NeuroNexa links to third-party resources (mental health hotlines, support organizations). We are not responsible for the accessibility of third-party websites or services.
+Nexa links to third-party resources (mental health hotlines, support organizations). We are not responsible for the accessibility of third-party websites or services.
 
 We encourage third-party providers to maintain accessible services and will prioritize linking to accessible resources.
 
@@ -198,7 +198,7 @@ We encourage third-party providers to maintain accessible services and will prio
 
 ## Assistive Technology Compatibility
 
-NeuroNexa is compatible with the following assistive technologies:
+Nexa is compatible with the following assistive technologies:
 
 **iOS:**
 - VoiceOver (screen reader)
@@ -280,6 +280,6 @@ We review and update this Accessibility Statement regularly to reflect our ongoi
 
 ---
 
-**Thank you for helping us make NeuroNexa accessible to everyone.**
+**Thank you for helping us make Nexa accessible to everyone.**
 
 *Simplify. Scaffold. Support independence.*

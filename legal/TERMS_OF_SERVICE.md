@@ -1,19 +1,19 @@
-# Terms of Service for NeuroNexa
+# Terms of Service for Nexa
 
 **Effective Date:** October 2, 2025  
 **Last Updated:** October 2, 2025
 
 ## 1. Acceptance of Terms
 
-Welcome to NeuroNexa. By downloading, installing, or using our mobile application ("App"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the App.
+Welcome to Nexa. By downloading, installing, or using our mobile application ("App"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the App.
 
-**These Terms constitute a legally binding agreement between you and NeuroNexa ("we," "our," or "us").**
+**These Terms constitute a legally binding agreement between you and Nexa ("we," "our," or "us").**
 
 ---
 
 ## 2. Description of Service
 
-NeuroNexa is a cognitive support application designed to help individuals with ADHD, autism, executive function challenges, mild cognitive impairment, early-stage dementia, and other cognitive differences. Our services include:
+Nexa is a cognitive support application designed to help individuals with ADHD, autism, executive function challenges, mild cognitive impairment, early-stage dementia, and other cognitive differences. Our services include:
 
 - AI-powered task management and breakdowns
 - Personalized coaching with Nexa, our AI coach
@@ -28,7 +28,7 @@ NeuroNexa is a cognitive support application designed to help individuals with A
 
 ## 3. Eligibility
 
-**Age Requirement:** You must be at least 13 years old to use NeuroNexa. Users aged 13-17 should use the App under parental or guardian supervision.
+**Age Requirement:** You must be at least 13 years old to use Nexa. Users aged 13-17 should use the App under parental or guardian supervision.
 
 **Capacity:** You represent that you have the legal capacity to enter into these Terms.
 
@@ -53,7 +53,7 @@ When account creation is enabled:
 
 ### 5.1 Permitted Use
 
-You may use NeuroNexa for:
+You may use Nexa for:
 - Personal cognitive support and task management
 - Wellness and breathing exercises
 - Connecting with caregivers and support networks
@@ -77,7 +77,7 @@ You may NOT:
 
 ## 6. Medical Disclaimer
 
-**IMPORTANT: NeuroNexa is NOT a medical device and does NOT provide medical advice, diagnosis, or treatment.**
+**IMPORTANT: Nexa is NOT a medical device and does NOT provide medical advice, diagnosis, or treatment.**
 
 - The App is a productivity and wellness tool only
 - It is not a substitute for professional medical care
@@ -86,7 +86,7 @@ You may NOT:
 - We are not liable for any medical decisions made based on App use
 
 **Dementia and Cognitive Impairment Disclaimer:**
-- NeuroNexa provides supportive tools for individuals with mild cognitive impairment and early-stage dementia
+- Nexa provides supportive tools for individuals with mild cognitive impairment and early-stage dementia
 - The App is NOT a diagnostic tool and cannot detect, diagnose, or treat dementia
 - Memory aids and cognitive support features are supplementary tools only
 - Always work with qualified healthcare professionals for dementia care planning
@@ -104,7 +104,7 @@ You may NOT:
 
 ### 7.1 Our Rights
 
-All content, features, and functionality of NeuroNexa are owned by us and protected by copyright, trademark, and other intellectual property laws.
+All content, features, and functionality of Nexa are owned by us and protected by copyright, trademark, and other intellectual property laws.
 
 This includes:
 - App design and user interface
@@ -137,7 +137,7 @@ If you provide feedback or suggestions about the App, we may use them without an
 
 ### 8.1 Free Features
 
-NeuroNexa offers a free tier with limited features:
+Nexa offers a free tier with limited features:
 - Up to 10 total tasks
 - 3 tasks per day
 - Basic AI breakdowns
@@ -184,7 +184,7 @@ We may change subscription prices at any time. Price changes will not affect you
 
 ## 9. Privacy and Data
 
-Your privacy is important to us. Please review our [Privacy Policy](https://neuronexa.app/legal/privacy) to understand how we collect, use, and protect your information.
+Your privacy is important to us. Please review our [Privacy Policy](https://nexa.app/legal/privacy) to understand how we collect, use, and protect your information.
 
 **Key Points:**
 - All data is stored locally by default
@@ -198,7 +198,7 @@ Your privacy is important to us. Please review our [Privacy Policy](https://neur
 
 ## 10. Third-Party Services
 
-NeuroNexa integrates with third-party services:
+Nexa integrates with third-party services:
 
 **Current:**
 - Rork Toolkit SDK (AI features)
@@ -240,7 +240,7 @@ Some jurisdictions do not allow the exclusion of certain warranties or limitatio
 
 ## 12. Indemnification
 
-You agree to indemnify, defend, and hold harmless NeuroNexa and its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including legal fees) arising from:
+You agree to indemnify, defend, and hold harmless Nexa and its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including legal fees) arising from:
 - Your use of the App
 - Your violation of these Terms
 - Your violation of any third-party rights
@@ -287,7 +287,7 @@ These Terms are governed by the laws of the State of [State TBD], United States,
 
 ### 15.2 Dispute Resolution
 
-**Informal Resolution:** Before filing a claim, you agree to contact us at legal@neuronexa.app to attempt to resolve the dispute informally.
+**Informal Resolution:** Before filing a claim, you agree to contact us at legal@nexa.app to attempt to resolve the dispute informally.
 
 **Arbitration:** If informal resolution fails, disputes will be resolved through binding arbitration in accordance with the American Arbitration Association rules. You waive your right to a jury trial or class action.
 
@@ -299,7 +299,7 @@ These Terms are governed by the laws of the State of [State TBD], United States,
 
 ### 16.1 Entire Agreement
 
-These Terms, together with our Privacy Policy, constitute the entire agreement between you and NeuroNexa regarding the App.
+These Terms, together with our Privacy Policy, constitute the entire agreement between you and Nexa regarding the App.
 
 ### 16.2 Severability
 
@@ -323,12 +323,12 @@ We are not liable for any failure or delay in performance due to circumstances b
 
 If you have questions about these Terms, please contact us:
 
-**Email:** legal@neuronexa.app  
-**Website:** https://neuronexa.app/legal/terms  
-**Mail:** NeuroNexa Legal Team, [Address TBD]
+**Email:** legal@nexa.app  
+**Website:** https://nexa.app/legal/terms  
+**Mail:** Nexa Legal Team, [Address TBD]
 
 ---
 
-**Thank you for using NeuroNexa. We're honored to support your cognitive wellness journey.**
+**Thank you for using Nexa. We're honored to support your cognitive wellness journey.**
 
 *Simplify. Scaffold. Support independence.*

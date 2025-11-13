@@ -159,3 +159,20 @@ export const mockFunnelContext = {
   completeStep: jest.fn(),
   resetFunnel: jest.fn(),
 };
+
+// Mock Provider Wrappers
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import { UserProfileProvider } from '@/contexts/UserProfileContext';
+
+// Just use the actual providers - they handle their own state
+export const MockThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <ThemeProvider>
+    {children}
+  </ThemeProvider>
+);
+
+export const MockUserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <UserProfileProvider>
+    {children}
+  </UserProfileProvider>
+);

@@ -5,9 +5,9 @@ import { useCallback, useMemo, useState } from 'react';
 import { Patient, PatientTask } from '@/types/patient';
 import { useNotifications } from './NotificationContext';
 
-const PATIENTS_KEY = '@neuronexa_patients';
-const PATIENT_TASKS_KEY = '@neuronexa_patient_tasks';
-const SELECTED_PATIENT_KEY = '@neuronexa_selected_patient';
+const PATIENTS_KEY = '@nexa_patients';
+const PATIENT_TASKS_KEY = '@nexa_patient_tasks';
+const SELECTED_PATIENT_KEY = '@nexa_selected_patient';
 
 async function loadPatients(): Promise<Patient[]> {
   try {

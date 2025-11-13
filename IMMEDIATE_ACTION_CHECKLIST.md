@@ -1,4 +1,4 @@
-# ✅ NeuroNexa: Immediate Action Checklist
+# ✅ Nexa: Immediate Action Checklist
 
 **Goal**: Configure all backend integrations in 4-5 hours
 **Status**: All integrations already implemented, just need configuration!
@@ -11,7 +11,7 @@
 
 #### 1.1 Create Production Environment File
 ```bash
-cd /Users/bobbylitmon/rork-neuronexa--cognitive-disorders-support-app
+cd /Users/bobbylitmon/rork-nexa--cognitive-disorders-support-app
 cp .env .env.local
 ```
 
@@ -31,17 +31,17 @@ Open these links in browser to get your API keys:
 
 #### 2.1 Account Setup (15 mins)
 - [ ] Sign up at https://app.revenuecat.com/signup
-- [ ] Create new project: "NeuroNexa"
+- [ ] Create new project: "Nexa"
 - [ ] Select platform: "Cross-platform (iOS + Android)"
 
 #### 2.2 App Configuration (15 mins)
 - [ ] Add iOS app:
-  - App name: "NeuroNexa iOS"
-  - Bundle ID: `com.litmoncloud.neuronexa`
+  - App name: "Nexa iOS"
+  - Bundle ID: `com.litmoncloud.nexa`
   - Copy iOS Public SDK Key → `.env.local`
 - [ ] Add Android app:
-  - App name: "NeuroNexa Android"
-  - Package name: `com.litmoncloud.neuronexa`
+  - App name: "Nexa Android"
+  - Package name: `com.litmoncloud.nexa`
   - Copy Android Public SDK Key → `.env.local`
 
 #### 2.3 Create Entitlement (5 mins)
@@ -52,19 +52,19 @@ Open these links in browser to get your API keys:
 
 #### 2.4 Create Products (30 mins)
 **Monthly Subscription**:
-- [ ] Product ID: `neuronexa_premium_monthly`
+- [ ] Product ID: `nexa_premium_monthly`
 - [ ] Price: $9.99/month
 - [ ] Free trial: 7 days (optional)
 - [ ] Attach to: `premium` entitlement
 
 **Annual Subscription**:
-- [ ] Product ID: `neuronexa_premium_annual`
+- [ ] Product ID: `nexa_premium_annual`
 - [ ] Price: $59.99/year
 - [ ] Free trial: 7 days (optional)
 - [ ] Attach to: `premium` entitlement
 
 **Lifetime Purchase**:
-- [ ] Product ID: `neuronexa_premium_lifetime`
+- [ ] Product ID: `nexa_premium_lifetime`
 - [ ] Type: Non-consumable
 - [ ] Price: $149.99
 - [ ] Attach to: `premium` entitlement
@@ -73,20 +73,20 @@ Open these links in browser to get your API keys:
 - [ ] Go to "Offerings" → "+ New Offering"
 - [ ] Identifier: `default` (⚠️ **MUST BE "default"**)
 - [ ] Add 3 packages:
-  - Package 1: `monthly` → `neuronexa_premium_monthly`
-  - Package 2: `annual` → `neuronexa_premium_annual`
-  - Package 3: `lifetime` → `neuronexa_premium_lifetime`
+  - Package 1: `monthly` → `nexa_premium_monthly`
+  - Package 2: `annual` → `nexa_premium_annual`
+  - Package 3: `lifetime` → `nexa_premium_lifetime`
 - [ ] Click "Make current"
 
 #### 2.6 App Store Connect Setup (30 mins)
 - [ ] Go to https://appstoreconnect.apple.com
-- [ ] Navigate to "My Apps" → "NeuroNexa" → "In-App Purchases"
+- [ ] Navigate to "My Apps" → "Nexa" → "In-App Purchases"
 - [ ] Create 3 products (monthly, annual, lifetime)
 - [ ] Match Product IDs exactly with RevenueCat
 
 #### 2.7 Google Play Console Setup (15 mins)
 - [ ] Go to https://play.google.com/console
-- [ ] Navigate to "NeuroNexa" → "Monetize" → "In-app products"
+- [ ] Navigate to "Nexa" → "Monetize" → "In-app products"
 - [ ] Create 3 products matching RevenueCat Product IDs
 
 ---
@@ -95,7 +95,7 @@ Open these links in browser to get your API keys:
 
 #### 3.1 Account Setup (10 mins)
 - [ ] Sign up at https://app.posthog.com/signup
-- [ ] Create new project: "NeuroNexa"
+- [ ] Create new project: "Nexa"
 - [ ] Copy API key → `.env.local` as `EXPO_PUBLIC_POSTHOG_KEY`
 
 #### 3.2 Initialize in App (20 mins)
@@ -136,7 +136,7 @@ posthog.trackTaskCreated(true, 'high');
 
 #### 4.1 Account Setup (10 mins)
 - [ ] Sign up at https://sentry.io/signup
-- [ ] Create new project: "NeuroNexa" (React Native platform)
+- [ ] Create new project: "Nexa" (React Native platform)
 - [ ] Copy DSN → `.env.local` as `EXPO_PUBLIC_SENTRY_DSN`
 
 #### 4.2 Initialize in App (10 mins)
@@ -169,7 +169,7 @@ Edit `eas.json`:
     "production": {
       "env": {
         "SENTRY_ORG": "your-org",
-        "SENTRY_PROJECT": "neuronexa"
+        "SENTRY_PROJECT": "nexa"
       }
     }
   }
@@ -190,7 +190,7 @@ Add test button to trigger crash:
 
 #### 5.1 Account Setup (10 mins)
 - [ ] Sign up at https://app.supabase.com/sign-up
-- [ ] Create new project: "NeuroNexa"
+- [ ] Create new project: "Nexa"
 - [ ] Wait for provisioning (~2 mins)
 - [ ] Go to "Settings" → "API"
 - [ ] Copy URL → `.env.local` as `EXPO_PUBLIC_SUPABASE_URL`

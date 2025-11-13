@@ -1,4 +1,4 @@
-# NeuroNexa — Screenshot Capture Guide
+# Nexa — Screenshot Capture Guide
 
 **Version:** 1.0.0  
 **Last Updated:** 2025-10-02
@@ -42,7 +42,7 @@ This guide explains how to capture, frame, and prepare screenshots for App Store
 
 ## 🎯 Recommended Screenshots
 
-Capture these 7 key screens to showcase NeuroNexa's features:
+Capture these 7 key screens to showcase Nexa's features:
 
 1. **Home / Today View**
    - Show Nexa AI coach greeting
@@ -160,7 +160,7 @@ Capture these 7 key screens to showcase NeuroNexa's features:
 **Steps:**
 1. Upload your screenshot
 2. Select device frame (iPhone 15 Pro Max, etc.)
-3. Adjust background color (use NeuroNexa brand colors)
+3. Adjust background color (use Nexa brand colors)
 4. Add optional text overlay
 5. Download framed image
 
@@ -343,7 +343,7 @@ Before uploading to stores:
 If you need help with screenshots:
 - **Figma Template:** [Coming Soon]
 - **Video Tutorial:** [Coming Soon]
-- **Support Email:** support@neuronexa.app
+- **Support Email:** support@nexa.app
 
 ---
 

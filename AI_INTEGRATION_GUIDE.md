@@ -1,8 +1,8 @@
-# AI Integration Guide - NeuroNexa
+# AI Integration Guide - Nexa
 
 ## Overview
 
-NeuroNexa uses **Rork Toolkit AI** for task breakdown and cognitive support. The AI is specifically tuned for people with ADHD, autism, dementia, brain injury, and other cognitive disabilities.
+Nexa uses **Rork Toolkit AI** for task breakdown and cognitive support. The AI is specifically tuned for people with ADHD, autism, dementia, brain injury, and other cognitive disabilities.
 
 ---
 

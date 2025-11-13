@@ -18,7 +18,7 @@ import { traceExercises } from '@/constants/traceExercises';
 import { TraceExercise, TraceSession } from '@/types/fingerTrace';
 import FingerTraceExercise from '@/components/FingerTraceExercise';
 
-const TRACE_SESSIONS_KEY = '@neuronexa_trace_sessions';
+const TRACE_SESSIONS_KEY = '@nexa_trace_sessions';
 
 export default function FingerTraceScreen() {
   const { colors } = useTheme();

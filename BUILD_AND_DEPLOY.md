@@ -1,4 +1,4 @@
-# NeuroNexa — Build & Deployment Guide
+# Nexa — Build & Deployment Guide
 
 **Version:** 1.0.0  
 **Last Updated:** 2025-10-02  
@@ -59,11 +59,11 @@ For production builds, set secrets in EAS (not in .env file):
 
 ```bash
 # Required for MVP
-eas secret:create --scope project --name EXPO_PUBLIC_PRIVACY_POLICY_URL --value "https://neuronexa.app/legal/privacy"
-eas secret:create --scope project --name EXPO_PUBLIC_TERMS_URL --value "https://neuronexa.app/legal/terms"
-eas secret:create --scope project --name EXPO_PUBLIC_ACCESSIBILITY_URL --value "https://neuronexa.app/legal/accessibility"
-eas secret:create --scope project --name EXPO_PUBLIC_SUPPORT_URL --value "https://neuronexa.app/support"
-eas secret:create --scope project --name EXPO_PUBLIC_MARKETING_URL --value "https://neuronexa.app"
+eas secret:create --scope project --name EXPO_PUBLIC_PRIVACY_POLICY_URL --value "https://nexa.app/legal/privacy"
+eas secret:create --scope project --name EXPO_PUBLIC_TERMS_URL --value "https://nexa.app/legal/terms"
+eas secret:create --scope project --name EXPO_PUBLIC_ACCESSIBILITY_URL --value "https://nexa.app/legal/accessibility"
+eas secret:create --scope project --name EXPO_PUBLIC_SUPPORT_URL --value "https://nexa.app/support"
+eas secret:create --scope project --name EXPO_PUBLIC_MARKETING_URL --value "https://nexa.app"
 
 # Optional (for v1.1)
 eas secret:create --scope project --name EXPO_PUBLIC_RC_API_KEY --value "your_revenuecat_key"
@@ -190,18 +190,18 @@ eas build --profile production --platform android
 Go to [App Store Connect](https://appstoreconnect.apple.com/) and fill in:
 
 **App Information:**
-- Name: NeuroNexa
+- Name: Nexa
 - Subtitle: Cognitive support that adapts to you
 - Primary Language: English (U.S.)
-- Bundle ID: app.rork.neuronexa-cognitive-disorders-support-ykokwhv
-- SKU: neuronexa-1
+- Bundle ID: app.rork.nexa-cognitive-disorders-support-ykokwhv
+- SKU: nexa-1
 
 **Pricing and Availability:**
 - Price: Free
 - Availability: All countries
 
 **App Privacy:**
-- Privacy Policy URL: https://neuronexa.app/legal/privacy
+- Privacy Policy URL: https://nexa.app/legal/privacy
 - Data Collection: See `store/ios-metadata.md`
 
 #### 2. Upload Screenshots
@@ -228,8 +228,8 @@ Copy content from `store/ios-metadata.md`:
 
 - **Description:** Full app description
 - **Keywords:** ADHD,autism,neurodiversity,cognitive support,task coach,breathing,focus,executive function,reminders,routines,anxiety
-- **Support URL:** https://neuronexa.app/support
-- **Marketing URL:** https://neuronexa.app
+- **Support URL:** https://nexa.app/support
+- **Marketing URL:** https://nexa.app
 - **Promotional Text:** (Optional) Highlight new features
 
 #### 4. Configure Age Rating
@@ -257,10 +257,10 @@ eas submit --platform ios --latest
 2. Add "What's New in This Version" text
 3. Add reviewer notes (if needed):
    ```
-   NeuroNexa is a cognitive support app designed for individuals with ADHD, autism, and other cognitive disabilities. It does not provide medical advice or diagnosis.
+   Nexa is a cognitive support app designed for individuals with ADHD, autism, and other cognitive disabilities. It does not provide medical advice or diagnosis.
    
    Test Account (if needed):
-   - Email: test@neuronexa.app
+   - Email: test@nexa.app
    - Password: TestPass123!
    
    Key Features to Test:
@@ -305,7 +305,7 @@ eas submit --platform ios --latest
 1. Go to [Google Play Console](https://play.google.com/console/)
 2. Click "Create app"
 3. Fill in:
-   - App name: NeuroNexa
+   - App name: Nexa
    - Default language: English (United States)
    - App or game: App
    - Free or paid: Free
@@ -317,7 +317,7 @@ eas submit --platform ios --latest
 
 Copy content from `store/android-metadata.md`:
 
-- **App name:** NeuroNexa
+- **App name:** Nexa
 - **Short description:** (80 chars) Adaptive task coach for ADHD, autism, and cognitive support
 - **Full description:** (4000 chars) Full app description
 - **App icon:** 512 × 512 PNG
@@ -331,12 +331,12 @@ Copy content from `store/android-metadata.md`:
 - Tags: Productivity, Accessibility, Mental Health
 
 **Contact details:**
-- Email: support@neuronexa.app
+- Email: support@nexa.app
 - Phone: (Optional)
-- Website: https://neuronexa.app
+- Website: https://nexa.app
 
 **Privacy Policy:**
-- URL: https://neuronexa.app/legal/privacy
+- URL: https://nexa.app/legal/privacy
 
 #### 3. Complete Content Rating
 
@@ -390,7 +390,7 @@ eas submit --platform android --latest
 3. Upload .aab file
 4. Add release notes:
    ```
-   Initial release of NeuroNexa!
+   Initial release of Nexa!
    
    Features:
    • AI-powered task breakdown

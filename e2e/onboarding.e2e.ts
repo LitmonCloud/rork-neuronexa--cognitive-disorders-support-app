@@ -8,11 +8,11 @@ describe('Onboarding Flow', () => {
   });
 
   it('should show onboarding on first launch', async () => {
-    await expect(element(by.text('Welcome to NeuroNexa'))).toBeVisible();
+    await expect(element(by.text('Welcome to Nexa'))).toBeVisible();
   });
 
   it('should navigate through onboarding screens', async () => {
-    await expect(element(by.text('Welcome to NeuroNexa'))).toBeVisible();
+    await expect(element(by.text('Welcome to Nexa'))).toBeVisible();
     
     await element(by.text('Next')).tap();
     await expect(element(by.text('Designed for Neurodiversity'))).toBeVisible();

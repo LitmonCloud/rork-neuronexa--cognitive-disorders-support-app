@@ -104,7 +104,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </TouchableOpacity>
 
             <Text style={styles.helpText}>
-              If this problem persists, please contact support at support@neuronexa.app
+              If this problem persists, please contact support at support@nexa.app
             </Text>
           </View>
         </View>

@@ -1,8 +1,8 @@
-# NeuroNexa Legal Compliance Checklist
+# Nexa Legal Compliance Checklist
 
 **Last Updated:** October 2, 2025
 
-This checklist ensures NeuroNexa meets all legal and compliance requirements for App Store and Google Play submission.
+This checklist ensures Nexa meets all legal and compliance requirements for App Store and Google Play submission.
 
 ---
 
@@ -144,10 +144,10 @@ This checklist ensures NeuroNexa meets all legal and compliance requirements for
 - [ ] **TODO:** Add to marketing website
 
 ### Contact Information
-- [x] Privacy email: privacy@neuronexa.app
-- [x] Legal email: legal@neuronexa.app
-- [x] Support email: support@neuronexa.app
-- [x] Accessibility email: accessibility@neuronexa.app
+- [x] Privacy email: privacy@nexa.app
+- [x] Legal email: legal@nexa.app
+- [x] Support email: support@nexa.app
+- [x] Accessibility email: accessibility@nexa.app
 - [ ] **TODO:** Set up email addresses
 - [ ] **TODO:** Configure email forwarding
 - [ ] **TODO:** Add physical address (if required)
@@ -199,7 +199,7 @@ This checklist ensures NeuroNexa meets all legal and compliance requirements for
 ### Legal Documents Hosting
 - [ ] **TODO:** Choose hosting platform (Netlify, Vercel, GitHub Pages)
 - [ ] **TODO:** Deploy legal documents to production
-- [ ] **TODO:** Configure custom domain (neuronexa.app)
+- [ ] **TODO:** Configure custom domain (nexa.app)
 - [ ] **TODO:** Set up SSL certificate
 - [ ] **TODO:** Test all URLs are accessible
 - [ ] **TODO:** Set up monitoring for uptime
@@ -251,7 +251,7 @@ vercel --prod
 
 ### Alternative: Legal Templates
 - Use LegalZoom or Rocket Lawyer templates
-- Customize for NeuroNexa specifics
+- Customize for Nexa specifics
 - Have reviewed by attorney (lower cost)
 - **Cost:** $500 - $1,500
 

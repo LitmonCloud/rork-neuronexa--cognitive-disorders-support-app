@@ -1,13 +1,13 @@
-# Privacy Policy for NeuroNexa
+# Privacy Policy for Nexa
 
 **Effective Date:** October 2, 2025  
 **Last Updated:** October 2, 2025
 
 ## Introduction
 
-Welcome to NeuroNexa ("we," "our," or "us"). We are committed to protecting your privacy and ensuring you have a positive experience using our cognitive support application designed for individuals with ADHD, autism, executive function challenges, mild cognitive impairment, early-stage dementia, and other cognitive differences. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application.
+Welcome to Nexa ("we," "our," or "us"). We are committed to protecting your privacy and ensuring you have a positive experience using our cognitive support application designed for individuals with ADHD, autism, executive function challenges, mild cognitive impairment, early-stage dementia, and other cognitive differences. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application.
 
-**By using NeuroNexa, you agree to the collection and use of information in accordance with this policy.**
+**By using Nexa, you agree to the collection and use of information in accordance with this policy.**
 
 ---
 
@@ -161,7 +161,7 @@ We may disclose your information if required by law or in response to:
 
 ### 4.4 Business Transfers
 
-If NeuroNexa is acquired or merged with another company, your information may be transferred to the new owner. We will notify you before your data is transferred and becomes subject to a different privacy policy.
+If Nexa is acquired or merged with another company, your information may be transferred to the new owner. We will notify you before your data is transferred and becomes subject to a different privacy policy.
 
 ---
 
@@ -185,13 +185,13 @@ You have the right to:
 - Toggle "Analytics" off to stop data collection
 
 **Contact Us:**
-- Email: privacy@neuronexa.app
+- Email: privacy@nexa.app
 - We will respond within 30 days
 
 ### 5.3 Analytics Opt-Out
 
 You can disable analytics at any time:
-1. Open NeuroNexa
+1. Open Nexa
 2. Go to Settings
 3. Toggle "Analytics" off
 
@@ -201,9 +201,9 @@ When disabled, we will not collect any usage data or analytics events.
 
 ## 6. Children's Privacy
 
-NeuroNexa is not directed to children under 13. We do not knowingly collect personal information from children under 13.
+Nexa is not directed to children under 13. We do not knowingly collect personal information from children under 13.
 
-**If you are a parent or guardian and believe your child has provided us with personal information, please contact us at privacy@neuronexa.app. We will delete such information promptly.**
+**If you are a parent or guardian and believe your child has provided us with personal information, please contact us at privacy@nexa.app. We will delete such information promptly.**
 
 For users aged 13-17, we recommend parental or guardian supervision.
 
@@ -211,9 +211,9 @@ For users aged 13-17, we recommend parental or guardian supervision.
 
 ## 7. International Users
 
-NeuroNexa is operated in the United States. If you are located outside the U.S., your information may be transferred to and processed in the U.S.
+Nexa is operated in the United States. If you are located outside the U.S., your information may be transferred to and processed in the U.S.
 
-**By using NeuroNexa, you consent to the transfer of your information to the U.S.**
+**By using Nexa, you consent to the transfer of your information to the U.S.**
 
 ### 7.1 GDPR Rights (European Users)
 
@@ -239,7 +239,7 @@ If you are a California resident, you have the right to:
 - Request deletion of your information
 - Non-discrimination for exercising your rights
 
-**To exercise these rights, contact us at privacy@neuronexa.app.**
+**To exercise these rights, contact us at privacy@nexa.app.**
 
 ---
 
@@ -259,7 +259,7 @@ If you are a California resident, you have the right to:
 
 ## 10. Third-Party Links
 
-NeuroNexa may contain links to third-party websites or services (e.g., mental health resources). We are not responsible for the privacy practices of these third parties. Please review their privacy policies before providing any information.
+Nexa may contain links to third-party websites or services (e.g., mental health resources). We are not responsible for the privacy practices of these third parties. Please review their privacy policies before providing any information.
 
 ---
 
@@ -270,7 +270,7 @@ We may update this Privacy Policy from time to time. We will notify you of any c
 - Updating the "Last Updated" date
 - Sending an in-app notification (for material changes)
 
-**Your continued use of NeuroNexa after changes constitutes acceptance of the updated policy.**
+**Your continued use of Nexa after changes constitutes acceptance of the updated policy.**
 
 ---
 
@@ -278,20 +278,20 @@ We may update this Privacy Policy from time to time. We will notify you of any c
 
 If you have questions or concerns about this Privacy Policy, please contact us:
 
-**Email:** privacy@neuronexa.app  
-**Website:** https://neuronexa.app/legal/privacy  
-**Mail:** NeuroNexa Privacy Team, [Address TBD]
+**Email:** privacy@nexa.app  
+**Website:** https://nexa.app/legal/privacy  
+**Mail:** Nexa Privacy Team, [Address TBD]
 
 ---
 
 ## 13. Medical Disclaimer
 
-**NeuroNexa is not a medical device and does not provide medical advice, diagnosis, or treatment.** It is a productivity and wellness tool designed to support individuals with cognitive challenges.
+**Nexa is not a medical device and does not provide medical advice, diagnosis, or treatment.** It is a productivity and wellness tool designed to support individuals with cognitive challenges.
 
 Always consult with qualified healthcare professionals for medical concerns. In case of emergency, call 911 or your local emergency number.
 
 ---
 
-**Thank you for trusting NeuroNexa with your cognitive support needs.**
+**Thank you for trusting Nexa with your cognitive support needs.**
 
 *Simplify. Scaffold. Support independence.*

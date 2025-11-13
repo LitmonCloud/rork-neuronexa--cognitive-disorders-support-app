@@ -1,8 +1,8 @@
-# Welcome to your Rork app
+# NeuroNexa: Cognitive Disorders Support
 
 ## Project info
 
-This is a native cross-platform mobile app created with [Rork](https://rork.com)
+NeuroNexa is a native cross-platform mobile app created with [Rork](https://rork.com) to provide compassionate support for individuals with ADHD, autism, dementia, and other cognitive challenges.
 
 **Platform**: Native iOS & Android app, exportable to web
 **Framework**: Expo Router + React Native

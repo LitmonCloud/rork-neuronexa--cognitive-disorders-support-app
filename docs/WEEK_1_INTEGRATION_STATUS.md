@@ -7,7 +7,7 @@
 
 ## 🎉 Summary
 
-**Incredible discovery**: NeuroNexa already has **complete implementations** for all Week 1 backend integrations! The codebase is far more advanced than initially assessed.
+**Incredible discovery**: Nexa already has **complete implementations** for all Week 1 backend integrations! The codebase is far more advanced than initially assessed.
 
 ---
 

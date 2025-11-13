@@ -2,46 +2,55 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import Button from '@/components/Button';
 import { Text, View } from 'react-native';
+import { MockThemeProvider } from '../__mocks__/contextMocks';
 
 describe('Accessibility', () => {
   describe('Button Accessibility', () => {
     it('should have accessible label', () => {
       const { getByText } = render(
-        <Button 
-          title="Submit Form" 
-          onPress={() => {}} 
-          testID="submit-button"
-        />
+        <MockThemeProvider>
+          <Button
+            title="Submit Form"
+            onPress={() => {}}
+            testID="submit-button"
+          />
+        </MockThemeProvider>
       );
-      
+
       expect(getByText('Submit Form')).toBeTruthy();
     });
 
     it('should have accessible hint', () => {
       const { getByTestId } = render(
-        <Button 
-          title="Delete" 
-          onPress={() => {}} 
-          testID="delete-button"
-        />
+        <MockThemeProvider>
+          <Button
+            title="Delete"
+            onPress={() => {}}
+            testID="delete-button"
+          />
+        </MockThemeProvider>
       );
-      
+
       expect(getByTestId('delete-button')).toBeTruthy();
     });
 
     it('should have button role', () => {
       const { getByRole } = render(
-        <Button title="Click Me" onPress={() => {}} />
+        <MockThemeProvider>
+          <Button title="Click Me" onPress={() => {}} />
+        </MockThemeProvider>
       );
-      
+
       expect(getByRole('button')).toBeTruthy();
     });
 
     it('should indicate disabled state', () => {
       const { getByTestId } = render(
-        <Button title="Disabled" onPress={() => {}} disabled testID="disabled-button" />
+        <MockThemeProvider>
+          <Button title="Disabled" onPress={() => {}} disabled testID="disabled-button" />
+        </MockThemeProvider>
       );
-      
+
       expect(getByTestId('disabled-button')).toBeTruthy();
     });
   });
@@ -123,24 +132,28 @@ describe('Accessibility', () => {
   describe('Navigation Accessibility', () => {
     it('should have navigation landmarks', () => {
       const { getByTestId } = render(
-        <View testID="navigation">
-          <Button title="Home" onPress={() => {}} />
-          <Button title="Settings" onPress={() => {}} />
-        </View>
+        <MockThemeProvider>
+          <View testID="navigation">
+            <Button title="Home" onPress={() => {}} />
+            <Button title="Settings" onPress={() => {}} />
+          </View>
+        </MockThemeProvider>
       );
-      
+
       expect(getByTestId('navigation')).toBeTruthy();
     });
 
     it('should indicate current page', () => {
       const { getByText } = render(
-        <Button 
-          title="Home" 
-          onPress={() => {}} 
-          testID="home-button"
-        />
+        <MockThemeProvider>
+          <Button
+            title="Home"
+            onPress={() => {}}
+            testID="home-button"
+          />
+        </MockThemeProvider>
       );
-      
+
       expect(getByText('Home')).toBeTruthy();
     });
   });
