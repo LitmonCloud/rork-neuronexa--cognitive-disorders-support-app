@@ -90,6 +90,7 @@ export default function Button({
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.7}
+      accessibilityRole="button"
       testID={testID}
     >
       {renderContent()}

@@ -40,6 +40,16 @@ jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(() => Promise.resolve()),
   notificationAsync: jest.fn(() => Promise.resolve()),
   selectionAsync: jest.fn(() => Promise.resolve()),
+  ImpactFeedbackStyle: {
+    Light: 'light',
+    Medium: 'medium',
+    Heavy: 'heavy',
+  },
+  NotificationFeedbackType: {
+    Success: 'success',
+    Warning: 'warning',
+    Error: 'error',
+  },
 }));
 
 jest.mock('expo-linking', () => ({
@@ -95,6 +105,15 @@ jest.mock('@shopify/react-native-skia', () => ({
   Path: jest.fn(),
   Skia: {
     Path: { Make: jest.fn(() => ({ addPath: jest.fn(), close: jest.fn() })) },
+    Paint: jest.fn(() => ({
+      setColor: jest.fn(),
+      setStyle: jest.fn(),
+      setStrokeWidth: jest.fn(),
+      setStrokeCap: jest.fn(),
+      setStrokeJoin: jest.fn(),
+      setBlendMode: jest.fn(),
+    })),
+    Color: jest.fn((color) => color),
   },
   BlurMask: jest.fn(),
   useSharedValueEffect: jest.fn(),

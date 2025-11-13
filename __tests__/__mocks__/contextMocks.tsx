@@ -163,6 +163,7 @@ export const mockFunnelContext = {
 // Mock Provider Wrappers
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { UserProfileProvider } from '@/contexts/UserProfileContext';
+import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 
 // Just use the actual providers - they handle their own state
 export const MockThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -175,4 +176,10 @@ export const MockUserProfileProvider: React.FC<{ children: React.ReactNode }> = 
   <UserProfileProvider>
     {children}
   </UserProfileProvider>
+);
+
+export const MockAccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <AccessibilityProvider>
+    {children}
+  </AccessibilityProvider>
 );

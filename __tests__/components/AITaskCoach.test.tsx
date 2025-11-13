@@ -1,14 +1,22 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import AITaskCoach from '@/components/AITaskCoach';
-import { ThemeProvider } from '@/contexts/ThemeContext';
+import { MockThemeProvider, MockAccessibilityProvider, TestWrapper } from '../__mocks__/contextMocks';
 import { useRorkAgent } from '@rork-ai/toolkit-sdk';
 import { Task } from '@/types/task';
 
 jest.mock('@rork-ai/toolkit-sdk');
 
 const renderWithTheme = (component: React.ReactElement) => {
-  return render(<ThemeProvider>{component}</ThemeProvider>);
+  return render(
+    <TestWrapper>
+      <MockThemeProvider>
+        <MockAccessibilityProvider>
+          {component}
+        </MockAccessibilityProvider>
+      </MockThemeProvider>
+    </TestWrapper>
+  );
 };
 
 describe('AITaskCoach', () => {
