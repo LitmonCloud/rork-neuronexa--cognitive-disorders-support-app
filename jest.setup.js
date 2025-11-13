@@ -57,6 +57,7 @@ jest.mock('expo-linking', () => ({
   openURL: jest.fn(() => Promise.resolve()),
   addEventListener: jest.fn(() => ({ remove: jest.fn() })),
   removeEventListener: jest.fn(),
+  getInitialURL: jest.fn(() => Promise.resolve(null)),
   createURL: jest.fn((path) => `nexa://${path}`),
   parse: jest.fn((url) => ({ hostname: null, path: null, queryParams: {} })),
 }));
@@ -123,7 +124,13 @@ jest.mock('@shopify/react-native-skia', () => ({
 
 jest.mock('react-native-gesture-handler', () => ({
   Gesture: {
-    Pan: jest.fn(() => ({ onStart: jest.fn(), onUpdate: jest.fn(), onEnd: jest.fn() })),
+    Pan: jest.fn(() => ({
+      runOnJS: jest.fn(function() { return this; }),
+      onStart: jest.fn(function() { return this; }),
+      onUpdate: jest.fn(function() { return this; }),
+      onEnd: jest.fn(function() { return this; }),
+      onFinalize: jest.fn(function() { return this; }),
+    })),
   },
   GestureDetector: 'GestureDetector',
   GestureHandlerRootView: 'GestureHandlerRootView',
@@ -170,6 +177,36 @@ jest.doMock('react-native', () => {
     }),
   });
 });
+
+// Mock browser geolocation API for web platform
+if (!global.navigator) {
+  global.navigator = {};
+}
+
+global.navigator.geolocation = {
+  getCurrentPosition: jest.fn((success) =>
+    success({
+      coords: {
+        latitude: 37.7749,
+        longitude: -122.4194,
+        accuracy: 10,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        speed: null,
+      },
+      timestamp: Date.now(),
+    })
+  ),
+  watchPosition: jest.fn(() => 1),
+  clearWatch: jest.fn(),
+};
+
+global.navigator.permissions = {
+  query: jest.fn(() =>
+    Promise.resolve({ state: 'granted' })
+  ),
+};
 
 global.console = {
   ...console,
