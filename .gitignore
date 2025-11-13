@@ -35,3 +35,11 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 .vercel
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.swp
+*~
