@@ -9,9 +9,7 @@ describe('Logger', () => {
     logger.info('Test info message', { data: 'test' });
 
     expect(console.log).toHaveBeenCalledWith(
-      expect.stringContaining('[INFO]'),
-      expect.stringContaining('Test info message'),
-      expect.objectContaining({ data: 'test' })
+      expect.stringMatching(/\[.*\] \[INFO\] Test info message {"data":"test"}/)
     );
   });
 
@@ -20,10 +18,8 @@ describe('Logger', () => {
     logger.error('Error occurred', error, { context: 'test' });
 
     expect(console.error).toHaveBeenCalledWith(
-      expect.stringContaining('[ERROR]'),
-      expect.stringContaining('Error occurred'),
-      error,
-      expect.objectContaining({ context: 'test' })
+      expect.stringMatching(/\[.*\] \[ERROR\] Error occurred {"context":"test"}/),
+      error
     );
   });
 
@@ -31,9 +27,7 @@ describe('Logger', () => {
     logger.warn('Test warning', { severity: 'medium' });
 
     expect(console.warn).toHaveBeenCalledWith(
-      expect.stringContaining('[WARN]'),
-      expect.stringContaining('Test warning'),
-      expect.objectContaining({ severity: 'medium' })
+      expect.stringMatching(/\[.*\] \[WARN\] Test warning {"severity":"medium"}/)
     );
   });
 
@@ -41,9 +35,7 @@ describe('Logger', () => {
     logger.debug('Debug message', { detail: 'test' });
 
     expect(console.log).toHaveBeenCalledWith(
-      expect.stringContaining('[DEBUG]'),
-      expect.stringContaining('Debug message'),
-      expect.objectContaining({ detail: 'test' })
+      expect.stringMatching(/\[.*\] \[DEBUG\] Debug message {"detail":"test"}/)
     );
   });
 
@@ -51,9 +43,7 @@ describe('Logger', () => {
     logger.info('Test message');
 
     expect(console.log).toHaveBeenCalledWith(
-      expect.stringContaining('[INFO]'),
-      expect.stringContaining('Test message'),
-      expect.any(Object)
+      expect.stringMatching(/\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z\] \[INFO\] Test message/)
     );
   });
 
@@ -65,10 +55,10 @@ describe('Logger', () => {
 
     logger.info('Complex log', complexObject);
 
-    expect(console.log).toHaveBeenCalledWith(
-      expect.any(String),
-      expect.stringContaining('Complex log'),
-      expect.objectContaining(complexObject)
-    );
+    const call = (console.log as jest.Mock).mock.calls[0][0];
+    expect(call).toContain('[INFO]');
+    expect(call).toContain('Complex log');
+    expect(call).toContain('"nested"');
+    expect(call).toContain('"array"');
   });
 });

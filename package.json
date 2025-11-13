@@ -1,12 +1,15 @@
 {
-  "name": "expo-app",
+  "name": "neuronexa-app",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
     "start": "bunx rork start -p 6tuh8c62m4ia6mu6tckkt --tunnel",
     "start-web": "bunx rork start -p 6tuh8c62m4ia6mu6tckkt --web --tunnel",
     "start-web-dev": "DEBUG=expo* bunx rork start -p 6tuh8c62m4ia6mu6tckkt --web --tunnel",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -81,6 +84,7 @@
     "@types/react": "~19.1.10",
     "eslint": "^9.31.0",
     "eslint-config-expo": "~10.0.0",
+    "react-test-renderer": "^19.1.0",
     "typescript": "~5.9.2"
   },
   "private": true

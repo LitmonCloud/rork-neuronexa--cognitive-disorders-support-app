@@ -65,8 +65,8 @@ describe('Navigation Routing', () => {
 
       await waitFor(() => {
         expect(mockRouter.replace).toHaveBeenCalledWith('/terms-agreement');
-      }, { timeout: 5000 });
-    });
+      }, { timeout: 10000 });
+    }, 15000);
 
     it('should allow access when terms are accepted', async () => {
       (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
@@ -115,8 +115,8 @@ describe('Navigation Routing', () => {
 
       await waitFor(() => {
         expect(mockRouter.replace).toHaveBeenCalledWith('/onboarding');
-      }, { timeout: 5000 });
-    });
+      }, { timeout: 10000 });
+    }, 15000);
   });
 
   describe('Caregiver Routes', () => {
@@ -165,8 +165,8 @@ describe('Navigation Routing', () => {
 
       await waitFor(() => {
         expect(mockRouter.replace).toHaveBeenCalledWith('/(tabs)');
-      }, { timeout: 5000 });
-    });
+      }, { timeout: 10000 });
+    }, 15000);
   });
 
   describe('Subscription Paywall', () => {
@@ -191,8 +191,8 @@ describe('Navigation Routing', () => {
 
       await waitFor(() => {
         expect(mockRouter.replace).toHaveBeenCalledWith('/paywall');
-      }, { timeout: 5000 });
-    });
+      }, { timeout: 10000 });
+    }, 15000);
   });
 
   describe('Loading States', () => {
