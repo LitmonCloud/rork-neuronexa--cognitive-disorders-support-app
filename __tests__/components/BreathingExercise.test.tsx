@@ -38,39 +38,39 @@ describe('BreathingExercise', () => {
   });
 
   it('should render breathing exercise', () => {
-    const { getByText } = renderWithTheme(<BreathingExercise pattern={mockPattern} />);
+    const { getByTestId } = renderWithTheme(<BreathingExercise pattern={mockPattern} />);
 
-    expect(getByText(/breathe/i)).toBeTruthy();
+    expect(getByTestId('breathing-phase-text')).toBeTruthy();
   });
 
   it('should start exercise when button is pressed', () => {
-    const { getByText } = renderWithTheme(<BreathingExercise pattern={mockPattern} />);
+    const { getByText, getByTestId } = renderWithTheme(<BreathingExercise pattern={mockPattern} />);
 
     const startButton = getByText(/start/i);
     fireEvent.press(startButton);
 
-    expect(getByText(/breathe in/i)).toBeTruthy();
+    expect(getByTestId('breathing-phase-text')).toHaveTextContent(/breathe in/i);
   });
 
   it('should cycle through breathing phases', () => {
-    const { getByText } = renderWithTheme(<BreathingExercise pattern={mockPattern} />);
+    const { getByText, getByTestId } = renderWithTheme(<BreathingExercise pattern={mockPattern} />);
 
     const startButton = getByText(/start/i);
     fireEvent.press(startButton);
 
-    expect(getByText(/breathe in/i)).toBeTruthy();
+    expect(getByTestId('breathing-phase-text')).toHaveTextContent(/breathe in/i);
 
     act(() => {
       jest.advanceTimersByTime(4000);
     });
 
-    expect(getByText(/hold/i)).toBeTruthy();
+    expect(getByTestId('breathing-phase-text')).toHaveTextContent(/hold/i);
 
     act(() => {
       jest.advanceTimersByTime(4000);
     });
 
-    expect(getByText(/breathe out/i)).toBeTruthy();
+    expect(getByTestId('breathing-phase-text')).toHaveTextContent(/breathe out/i);
   });
 
   it('should pause exercise when pause button is pressed', () => {

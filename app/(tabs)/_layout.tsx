@@ -98,6 +98,12 @@ export default function TabLayout() {
             href: null,
           }}
         />
+        <Tabs.Screen
+          name="caregiver"
+          options={{
+            href: null,
+          }}
+        />
       </Tabs>
     );
   }
@@ -155,6 +161,12 @@ export default function TabLayout() {
         />
         <Tabs.Screen
           name="progress"
+          options={{
+            href: null,
+          }}
+        />
+        <Tabs.Screen
+          name="caregiver"
           options={{
             href: null,
           }}
@@ -217,6 +229,12 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="dementia-support"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="caregiver"
         options={{
           href: null,
         }}

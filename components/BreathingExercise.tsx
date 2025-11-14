@@ -366,7 +366,7 @@ export default function BreathingExercise({ pattern, onComplete }: BreathingExer
           ]}
         >
           <View style={styles.innerCircle}>
-            <Text style={styles.phaseText}>{getPhaseText()}</Text>
+            <Text style={styles.phaseText} testID="breathing-phase-text">{getPhaseText()}</Text>
             <Text style={styles.timerText}>{timeLeft}</Text>
           </View>
         </Animated.View>
