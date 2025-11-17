@@ -130,7 +130,7 @@ describe('Location Tracking Functionality', () => {
   it('should stop location tracking', async () => {
     const TestComponent = () => {
       const { startTracking, stopTracking } = useLocation();
-      
+
       React.useEffect(() => {
         const start = async () => {
           await startTracking();
@@ -145,9 +145,13 @@ describe('Location Tracking Functionality', () => {
     };
 
     const { unmount } = render(
-      <LocationProvider>
-        <TestComponent />
-      </LocationProvider>
+      <TestWrapper>
+        <MockUserProfileProvider>
+          <LocationProvider>
+            <TestComponent />
+          </LocationProvider>
+        </MockUserProfileProvider>
+      </TestWrapper>
     );
 
     await waitFor(() => {
